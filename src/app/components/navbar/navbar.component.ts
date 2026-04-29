@@ -1,6 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { Category } from '../../core/models/product.model';
+import { ProductsApiService } from '../../core/services/products-api.service';
 // import { CartService } from '../services/cart.service'; // مثال لو عندك Service للكرتونة
 
 @Component({
@@ -18,24 +20,24 @@ export class NavbarComponent implements OnInit {
   navLinks = [
     { name: 'الرئيسية', href: '/' },
     { name: 'منتجاتنا', href: '/products', hasMegaMenu: true },
-    { name: 'عروض', href: '/products', queryParams: { filter: 'offers' } },
+    { name: 'جديد', href: '/products', queryParams: { filter: 'new' } },
     { name: 'من نحن', href: '/about-us' },
     { name: 'تواصل معنا', href: '/contact' },
-    { name: 'الطلبات السابقة', href: '/orders' },
+    // { name: 'الطلبات السابقة', href: '/orders' },
   ];
 
-  // الأقسام الحقيقية بناءً على مشروعك
-  categories = [
-    { id: 'all', name: 'جميع المنتجات' },
-    { id: 'adhesives', name: 'لواصق البلاط' },
-    { id: 'waterproofing', name: 'أنظمة العزل المائي' },
-    { id: 'sealants', name: 'موانع التسرب' },
-    { id: 'grouts', name: 'الترويبة (الجراوت)' }
-  ];
+  categories: Category[] = [];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private productsApi: ProductsApiService
+  ) {}
 
   ngOnInit() {
+    this.productsApi.getCategories().subscribe((categories) => {
+      this.categories = categories;
+    });
+
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
@@ -50,6 +52,10 @@ export class NavbarComponent implements OnInit {
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  goToSearch(): void {
+    this.router.navigate(['/products']);
   }
 
 

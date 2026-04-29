@@ -1,7 +1,10 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as AOS from 'aos';
+import { Category, Product } from '../../core/models/product.model';
+import { ProductsApiService } from '../../core/services/products-api.service';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,46 +14,17 @@ gsap.registerPlugin(ScrollTrigger);
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+  private categoryLabels: Record<string, string> = {};
+  private readonly brokenCategoryImageKeys = new Set<string>();
+  categories: Category[] = [];
 
-  categories = [
-    { id: 'adhesives', name: 'لواصق البلاط' },
-    { id: 'waterproofing', name: 'عوازل مائية' },
-    { id: 'grouts', name: 'ترويبة' },
-    { id: 'sealants', name: 'سيلان' }
-  ];
+  bestSellers: Product[] = [];
+  randomProducts: Product[] = [];
 
-bestSellers = [
-    {
-      id: 'p1',
-      nameAr: 'بلاتينيوم فيكس بول تك C2FTES2',
-      category: 'لواصق البلاط',
-      price: 12.500,
-      image: 'assets/images/product-1.png'
-    },
-    {
-      id: 'p2',
-      nameAr: 'واتر ستوب 200 - عازل مائي أسمنتي',
-      category: 'أنظمة العزل',
-      price: 45.000,
-      image: 'assets/images/product-2.png'
-    },
-    {
-      id: 'p3',
-      nameAr: 'إيبوكسي جروت - ترويبة مقاومة للكيميائيات',
-      category: 'الترويبات',
-      price: 8.750,
-      image: 'assets/images/product-3.png'
-    },
-    {
-      id: 'p4',
-      nameAr: 'سيلانت بولي يوريثان عالي المرونة',
-      category: 'سيلان',
-      price: 3.250,
-      image: 'assets/images/product-4.png'
-    }
-  ];
-
-  constructor() {}
+  constructor(
+    private readonly productsApi: ProductsApiService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     // 1. تشغيل AOS بإعدادات تضمن الظهور المتتابع
@@ -61,6 +35,44 @@ bestSellers = [
       easing: 'ease-out-quad',
       delay: 0,
     });
+
+    this.productsApi.getBestSellers().subscribe((products) => {
+      this.bestSellers = products.slice(0, 4);
+    });
+
+    this.productsApi.getRandomProducts().subscribe((products) => {
+      this.randomProducts = products.slice(0, 4);
+    });
+
+    this.productsApi.getCategories().subscribe((categories) => {
+      this.brokenCategoryImageKeys.clear();
+      this.categories = categories.filter((category) => category.id !== 'all');
+      this.categoryLabels = this.categories.reduce((acc, category) => {
+        acc[category.id] = category.name;
+        return acc;
+      }, {} as Record<string, string>);
+    });
+  }
+
+  getCategoryName(categoryId: string): string {
+    return this.categoryLabels[categoryId] || categoryId;
+  }
+
+  getCategoryImage(category: Category): string {
+    return category.image?.trim() || '';
+  }
+
+  hasCategoryImage(category: Category): boolean {
+    const hasImagePath = Boolean(category.image?.trim());
+    return hasImagePath && !this.brokenCategoryImageKeys.has(this.getCategoryImageKey(category));
+  }
+
+  onCategoryImageError(category: Category): void {
+    this.brokenCategoryImageKeys.add(this.getCategoryImageKey(category));
+  }
+
+  private getCategoryImageKey(category: Category): string {
+    return `${category.id}::${category.image?.trim() || ''}`;
   }
 
   ngAfterViewInit(): void {
@@ -162,6 +174,10 @@ productImg?.addEventListener('mouseleave', () => {
 addToCart(product: any) {
     console.log('تمت الإضافة للسلة:', product.nameAr);
     // هنا هتنادي الـ Cart Service بتاعتك
+  }
+
+  goToDetails(productId: string): void {
+    this.router.navigate(['/products', productId]);
   }
 
 }

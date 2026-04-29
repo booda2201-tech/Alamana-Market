@@ -1,5 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { gsap } from 'gsap';
+import { Product } from '../../core/models/product.model';
+import { ProductsApiService } from '../../core/services/products-api.service';
 
 @Component({
   selector: 'app-product-details',
@@ -7,28 +10,29 @@ import { gsap } from 'gsap';
   styleUrls: ['./product-details.component.scss']
 })
 export class ProductDetailsComponent implements OnInit, AfterViewInit {
-  // منتج ثابت واحد للعرض الفوري
-  product = {
-    id: "pf-pool-tech-c2ftes2",
-    nameAr: "بلاتينيوم فيكس بول تك C2FTES2",
-    nameEn: "Platinum Fix Pool Tech C2FTES2",
-    price: 12.500,
-    weight: "20 كجم",
-    description: "لاصق بلاط عالي الأداء مصمم خصيصاً لحمامات السباحة والمناطق المغمورة بالمياه.",
-    specs: { "المعيار": "C2FTE S2", "التغطية": "3-5 كجم / م٢" },
-    image: "assets/images/product-1.png",
-    isNew: true
-  };
+  product?: Product;
 
   quantity: number = 1;
   activeTab: 'specs' | 'desc' | 'docs' = 'specs';
   specsArray: [string, string][] = []; // هنخزن الـ specs هنا بشكل ثابت
 
-  constructor() {}
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly productsApi: ProductsApiService
+  ) {}
 
   ngOnInit(): void {
-    // استخراج الداتا مرة واحدة فقط عند التحميل
-    this.specsArray = Object.entries(this.product.specs);
+    this.route.paramMap.subscribe((params) => {
+      const productId = params.get('id');
+      if (!productId) {
+        return;
+      }
+
+      this.productsApi.getProductById(productId).subscribe((product) => {
+        this.product = product;
+        this.specsArray = Object.entries(product?.specs ?? {});
+      });
+    });
   }
 
   ngAfterViewInit(): void {
@@ -53,6 +57,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
   }
 
   addToCart() {
+    if (!this.product) {
+      return;
+    }
     console.log('تمت الإضافة:', this.product.nameAr);
   }
 }

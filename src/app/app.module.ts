@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { LucideAngularModule, Package, Clock, MapPin, ChevronDown, ChevronUp, Truck, CheckCircle2 } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -41,6 +42,7 @@ import { CheckoutComponent } from './features/checkout/checkout.component';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
 LucideAngularModule.pick({
       Package,
       Clock,
