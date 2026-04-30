@@ -19,6 +19,7 @@ import { ContactComponent } from './features/contact/contact.component';
 import { OrdersComponent } from './features/orders/orders.component';
 import { CartComponent } from './features/cart/cart.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
+import { VideosComponent } from './features/videos/videos.component';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { CheckoutComponent } from './features/checkout/checkout.component';
     OrdersComponent,
     CartComponent,
     CheckoutComponent,
+    VideosComponent,
   ],
   imports: [
     CommonModule,

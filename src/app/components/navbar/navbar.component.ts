@@ -20,6 +20,7 @@ export class NavbarComponent implements OnInit {
   navLinks = [
     { name: 'الرئيسية', href: '/' },
     { name: 'منتجاتنا', href: '/products', hasMegaMenu: true },
+    // { name: 'فيديوهات', href: '/videos' },
     { name: 'جديد', href: '/products', queryParams: { filter: 'new' } },
     { name: 'من نحن', href: '/about-us' },
     { name: 'تواصل معنا', href: '/contact' },
