@@ -1,0 +1,105 @@
+<footer class="bg-[#1a1a1a] text-white pt-8 pb-6 relative overflow-hidden" dir="rtl">
+  <div class="absolute inset-0 opacity-5 pointer-events-none"
+        style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);">
+  </div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+
+      <div data-aos="fade-up">
+        <div class="flex items-center gap-2 mb-6">
+          <div class="w-8 h-8 bg-[#0275d8] text-white rounded flex items-center justify-center font-bold text-lg">
+            A
+          </div>
+          <h2 class="font-bold text-xl leading-none">الأمانة
+            <span class="text-sm font-normal text-white/70">لمواد البناء</span>
+          </h2>
+        </div>
+        <p class="text-white/70 text-sm leading-relaxed mb-6">
+          شريكك الموثوق في توريد مواد البناء العالية الجودة. نقدم حلولاً متكاملة من لواصق البلاط والعوازل المائية والكيماويات الخاصة بالبناء للسوق الكويتي.
+        </p>
+          <div class="flex items-center gap-4">
+            <a *ngFor="let social of socialLinks"
+                [href]="social.href"
+                class="social rounded-4 bg-white/10 flex items-center justify-center transition-all duration-300 social-icon"
+                [ngClass]="{'insta-hover': social.id === 'instagram'}"
+                [style.--hover-color]="social.color">
+              <i [class]="'bi ' + social.icon"></i>
+            </a>
+          </div>
+      </div>
+
+      <div data-aos="fade-up" data-aos-delay="100">
+        <h3 class="font-bold text-lg mb-6 border-b border-white/20 pb-2 inline-block">ما نقوم به</h3>
+        <ul class="flex flex-col gap-3">
+          <li><a routerLink="/products" [queryParams]="{category: 'adhesives'}" class="text-white/70 hover:text-white transition-colors text-sm no-underline">توريد مواد البناء</a></li>
+          <li><a routerLink="/products" [queryParams]="{category: 'waterproofing'}" class="text-white/70 hover:text-white transition-colors text-sm no-underline">حلول العزل المائي</a></li>
+          <li><a routerLink="/products" [queryParams]="{category: 'sealants'}" class="text-white/70 hover:text-white transition-colors text-sm no-underline">مواد التأسيس واللواصق</a></li>
+          <li><a routerLink="/contact" class="text-white/70 hover:text-white transition-colors text-sm no-underline">استشارات هندسية</a></li>
+        </ul>
+      </div>
+
+      <div data-aos="fade-up" data-aos-delay="200">
+        <h3 class="font-bold text-lg mb-6 border-b border-white/20 pb-2 inline-block">أين توجد</h3>
+        <ul class="flex flex-col gap-4">
+          <li class="flex items-start gap-3">
+            <i class="bi bi-geo-alt text-[#0275d8] shrink-0 mt-0.5"></i>
+            <div>
+              <p class="font-semibold text-sm">فرع الشويخ الصناعية</p>
+              <p class="text-white/70 text-xs mt-1">شارع البنوك، مجمع مواد البناء</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <i class="bi bi-geo-alt text-[#0275d8] shrink-0 mt-0.5"></i>
+            <div>
+              <p class="font-semibold text-sm">فرع الجهراء</p>
+              <p class="text-white/70 text-xs mt-1">المنطقة الصناعية، قسيمة ٤</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3 opacity-60">
+            <i class="bi bi-geo-alt text-white/40 shrink-0 mt-0.5"></i>
+            <div>
+              <p class="font-semibold text-sm">فرع الأحمدي (قريباً)</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div data-aos="fade-up" data-aos-delay="300">
+        <h3 class="font-bold text-lg mb-6 border-b border-white/20 pb-2 inline-block">تواصل معنا</h3>
+        <ul class="flex flex-col gap-4 mb-6">
+          <li class="flex items-center gap-3">
+            <i class="bi bi-telephone text-[#0275d8] shrink-0"></i>
+            <span class="text-white/90 text-sm font-medium" dir="ltr">+965 2200 0000</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <i class="bi bi-envelope text-[#0275d8] shrink-0"></i>
+            <span class="text-white/90 text-sm">info@alamana.com.kw</span>
+          </li>
+        </ul>
+
+        <div>
+          <p class="text-sm font-semibold mb-3">اشترك في نشرتنا البريدية</p>
+          <div class="flex gap-2">
+            <input type="email" placeholder="البريد الإلكتروني"
+                    class="bg-white/10 border border-white/20 rounded-md px-3 py-2 text-sm w-full focus:outline-none focus:border-[#0275d8] text-white">
+            <button class="bg-[#0275d8] hover:bg-[#025bb0] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+              اشتراك
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-white/50 text-sm">
+        © {{ currentYear }} شركة الأمانة لمواد البناء. جميع الحقوق محفوظة.
+      </p>
+      <div class="flex items-center gap-6">
+        <a href="#" class="text-white/50 hover:text-white text-sm transition-colors no-underline">الشروط والأحكام</a>
+        <a href="#" class="text-white/50 hover:text-white text-sm transition-colors no-underline">سياسة الخصوصية</a>
+      </div>
+    </div>
+  </div>
+</footer>

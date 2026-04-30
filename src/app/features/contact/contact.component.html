@@ -1,0 +1,144 @@
+<div class="min-h-screen bg-gray-50/50 pt-28 pb-20 overflow-hidden" dir="rtl">
+
+  <div class="bg-[#0275d8] text-white py-16 mb-12 relative overflow-hidden">
+    <div class="container mx-auto px-4 text-center max-w-5xl header-content relative z-10">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6">تواصل معنا</h1>
+      <p class="text-white/80 text-lg leading-relaxed">
+        نحن هنا للإجابة على استفساراتكم وتقديم الدعم الفني اللازم. فريق المهندسين والخبراء في الأمانة مستعد دائماً لمساعدتك في اختيار أفضل الحلول لمشروعك.
+      </p>
+    </div>
+    <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+  </div>
+
+  <div class="container max-w-7xl mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mx-auto">
+
+      <div class="lg:col-span-1 space-y-6" data-aos="fade-left">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-8 h-auto">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-blue-50 text-[#0275d8] rounded-xl flex items-center justify-center shrink-0">
+              <i class="bi bi-geo-alt text-xl"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg mb-2">الإدارة الرئيسية</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">
+                الكويت، الشويخ الصناعية
+                شارع البنوك، مجمع مواد البناء
+                مبنى ٤، الطابق الثاني
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-blue-50 text-[#0275d8] rounded-xl flex items-center justify-center shrink-0">
+              <i class="bi bi-telephone text-xl"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg mb-2 text-right">الهاتف</h3>
+              <p class="text-gray-500 text-sm leading-relaxed font-medium" dir="ltr">
+                +965 2200 0000<br />
+                +965 2200 0001
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-blue-50 text-[#0275d8] rounded-xl flex items-center justify-center shrink-0">
+              <i class="bi bi-envelope text-xl"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg mb-2">البريد الإلكتروني</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">
+                info@alamana.com.kw<br />
+                sales@alamana.com.kw
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-blue-50 text-[#0275d8] rounded-xl flex items-center justify-center shrink-0">
+              <i class="bi bi-clock text-xl"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg mb-2">ساعات العمل</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">
+                الأحد - الخميس: ٨ صباحاً - ٥ مساءً
+                السبت: ٩ صباحاً - ٢ ظهراً
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2" data-aos="fade-right">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12 h-full">
+          <div class="flex items-center gap-3 mb-8">
+            <i class="bi bi-chat-dots text-[#0275d8] text-2xl"></i>
+            <h2 class="text-2xl font-bold">أرسل لنا رسالة</h2>
+          </div>
+
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-right">
+              <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-700">الاسم الكامل</label>
+                <input formControlName="name" placeholder="أحمد عبدالله"
+                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] focus:ring-1 focus:ring-[#0275d8] outline-none transition-all">
+              </div>
+              <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-700">الشركة (اختياري)</label>
+                <input formControlName="company" placeholder="شركة المقاولات الوطنية"
+                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-right">
+              <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-700">البريد الإلكتروني</label>
+                <input formControlName="email" type="email" placeholder="ahmed@example.com" dir="ltr"
+                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all">
+              </div>
+              <div class="space-y-2">
+                <label class="text-sm font-medium text-gray-700">رقم الهاتف</label>
+                <input formControlName="phone" type="tel" placeholder="+965" dir="ltr"
+                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all">
+              </div>
+            </div>
+
+            <div class="space-y-2 text-right">
+              <label class="text-sm font-medium text-gray-700">الموضوع</label>
+              <select formControlName="subject"
+                      class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all bg-white">
+                <option value="">اختر موضوع الرسالة</option>
+                <option value="sales">استفسار مبيعات</option>
+                <option value="support">دعم فني واستشارة هندسية</option>
+                <option value="other">أخرى</option>
+              </select>
+            </div>
+
+            <div class="space-y-2 text-right">
+              <label class="text-sm font-medium text-gray-700">الرسالة</label>
+              <textarea formControlName="message" rows="5" placeholder="كيف يمكننا مساعدتك؟"
+                        class="w-full p-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all resize-none"></textarea>
+            </div>
+
+            <button type="submit"
+                    [disabled]="isSubmitting || contactForm.invalid"
+                    class="w-full h-12 bg-[#0275d8] text-white rounded-xl font-bold hover:bg-[#025bb0] disabled:opacity-50 transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
+              <i *ngIf="!isSubmitting" class="bi bi-send"></i>
+              <span>{{ isSubmitting ? 'جاري الإرسال...' : 'إرسال الرسالة' }}</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 max-w-6xl mx-auto rounded-3xl overflow-hidden h-[400px] bg-gray-100 relative border border-gray-100" data-aos="zoom-in">
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="text-center">
+          <i class="bi bi-map text-5xl text-gray-300 mb-4 block"></i>
+          <p class="text-lg font-medium text-gray-400">خريطة الموقع التفاعلية</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

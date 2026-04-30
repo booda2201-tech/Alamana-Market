@@ -1,0 +1,187 @@
+
+
+
+<div class="w-full overflow-hidden">
+  <section class="hero-section relative h-[90vh] min-h-[600px] flex items-center bg-black overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="assets/images/hero.png" alt="Construction site" class="hero-bg-img w-full h-full object-cover opacity-60 object-center">
+      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10 text-right" dir="rtl">
+      <div class="max-w-3xl">
+        <span class="inline-block py-1 px-3 rounded-full bg-green-500/20 text-green-400 border border-green-200/30 text-sm font-medium mb-6"
+              data-aos="fade-down">
+          الجودة والثقة في البناء
+        </span>
+
+<h1 class="text-3xl md:text-6xl lg:text-6xl font-bold text-white leading-[1.1] mb-2">
+    أساس قوي لـ<br>
+    <span class="block mt-3 text-transparent bg-clip-text bg-gradient-to-r from-[#0275d8] to-blue-400">
+        مستقبل مستدام
+    </span>
+</h1>
+
+        <p class="text-l md:text-xl text-white/80 mb-8 max-w-2xl leading-relaxed"
+            data-aos="fade-left" data-aos-delay="400">
+          الأمانة لمواد البناء توفر أحدث حلول العزل المائي ولواصق البلاط المتطورة للمشاريع الإنشائية. دقة متناهية واعتمادية لا تضاهى.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4" data-aos="fade-up">
+          <a routerLink="/products" class="bg-[#0275d8] text-white px-3 py-2 rounded-lg font-bold hover:bg-[#025bb0] transition-all no-underline shadow-lg shadow-blue-500/20">
+            تصفح المنتجات
+            <i class="bi bi-arrow-left mr-2"></i>
+          </a>
+          <a routerLink="/about" class="border border-white/30 text-white px-3 py-2 rounded-lg font-bold hover:bg-white/10 transition-all no-underline">
+            تعرف علينا
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-4" data-aos="fade-up">حلول متكاملة للبناء</h2>
+      <p class="text-gray-500 max-w-2xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">نقدم مجموعة واسعة من الكيماويات ومواد البناء المصممة لتلبية أدق المعايير الهندسية</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div *ngFor="let cat of categories; let i = index"
+              class="group cursor-pointer border rounded-xl overflow-hidden hover:border-[#0275d8] transition-all duration-500 hover:shadow-xl hover:-translate-y-2"
+              data-aos="fade-up"
+             [attr.data-aos-delay]="(i % 4) * 150"> <a [routerLink]="['/products']" [queryParams]="{category: cat.id}" class="no-underline text-inherit">
+            <div class="h-48 bg-gray-50 flex items-center justify-center p-6 overflow-hidden">
+              <img [src]="'assets/images/cat-' + cat.id + '.png'" [alt]="cat.name" class="max-h-full group-hover:scale-110 transition-transform duration-700">
+            </div>
+            <div class="p-6 text-right">
+              <h3 class="font-bold text-lg mb-2 group-hover:text-[#0275d8] transition-colors">{{ cat.name }}</h3>
+              <div class="flex items-center text-sm text-[#0275d8] font-medium">
+                <i class="bi bi-chevron-left mr-1 transition-transform group-hover:-translate-x-1"></i>
+                تصفح المنتجات
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <section class="py-20 bg-white overflow-hidden">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between mb-12 flex-row-reverse" dir="rtl">
+          <a routerLink="/products" class="hidden md:flex items-center gap-2 text-[#0275d8] font-bold hover:gap-3 transition-all" data-aos="fade-right">
+            <span>عرض الكل</span>
+            <i class="bi bi-arrow-left"></i>
+          </a>
+
+          <div class="text-right" data-aos="fade-left">
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">الأكثر طلباً</h2>
+        <p class="text-gray-500">المنتجات التي يثق بها كبار المقاولين والمشاريع في الكويت</p>
+          </div>
+
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div *ngFor="let product of bestSellers; let i = index"
+                class="group bg-white rounded-3xl border border-gray-100 p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-100"
+                data-aos="fade-up"
+               [attr.data-aos-delay]="i * 100">
+
+            <div class="relative aspect-square bg-gray-50 rounded-2xl overflow-hidden mb-6 flex items-center justify-center p-8">
+              <div class="absolute top-3 right-3 z-10 bg-white/90 backdrop-blur px-3 py-1 rounded-full border border-orange-100 shadow-sm">
+                <span class="text-[10px] font-bold text-orange-600 flex items-center gap-1">
+                  <i class="bi bi-fire"></i> الأكثر طلباً
+                </span>
+              </div>
+
+              <img [src]="product.image" [alt]="product.nameAr"
+                    class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110">
+
+              <button (click)="addToCart(product)"
+                      class="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-[#0275d8] text-white w-[85%] py-3 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2">
+                <i class="bi bi-cart-plus"></i>
+                أضف للسلة
+              </button>
+            </div>
+
+            <div class="text-right px-2">
+              <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2">{{ product.category }}</div>
+              <h3 class="font-bold text-gray-900 mb-3 group-hover:text-[#0275d8] transition-colors leading-snug h-12 overflow-hidden">
+                {{ product.nameAr }}
+              </h3>
+
+              <div class="flex items-center justify-between flex-row-reverse border-t border-gray-50 pt-4">
+                <div class="text-lg font-black text-[#0275d8]">
+                  {{ product.price | number:'1.3-3' }} <span class="text-[10px] font-bold">د.ك</span>
+                </div>
+                <div class="flex items-center gap-1 text-yellow-400 text-xs">
+                  <i class="bi bi-star-fill"></i>
+                  <span class="text-gray-500 font-bold">(4.9)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-12 md:hidden text-center">
+          <a routerLink="/products" class="inline-block bg-gray-100 text-gray-800 px-8 py-4 rounded-2xl font-bold">
+            عرض جميع المنتجات
+          </a>
+        </div>
+      </div>
+    </section>
+
+  <section class="py-24 relative overflow-hidden bg-[#0275d8]">
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center text-right" dir="rtl">
+        <div class="text-white" data-aos="fade-left">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm mb-6">
+            <span class="text-2xl font-bold">20%</span>
+          </div>
+          <h2 class="text-3xl md:text-5xl font-bold mb-5 leading-[1.3]">
+            <span>خصم حصري على</span>
+                  <span class="block mt-4">مجموعة بلاتينيوم فيكس</span>
+          </h2>
+          <p class="text-white/80 text-l mb-8 max-w-md">استفد من العرض المحدود على جميع لواصق البلاط والبورسلين. جودة أعلى بتكلفة أقل لمشاريعك.</p>
+          <button class="bg-white text-[#0275d8] px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-all shadow-lg">تسوق العروض الآن</button>
+        </div>
+        <div class="hidden lg:block relative" data-aos="zoom-in-right" data-aos-duration="1000">
+            <img src="assets/images/product-1.png"
+                  class="relative z-20 w-[80%] mx-auto -rotate-6 hover:rotate-0 transition-all duration-700 cursor-pointer">
+
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/10 blur-3xl rounded-full z-0"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100" data-aos="zoom-in" data-aos-delay="100">
+          <div class="w-16 h-16 mx-auto bg-blue-100 text-[#0275d8] rounded-2xl flex items-center justify-center mb-6 text-3xl">
+            <i class="bi bi-patch-check"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">جودة معتمدة</h3>
+          <p class="text-gray-500">منتجاتنا خاضعة لأدق اختبارات الجودة ومطابقة للمواصفات العالمية</p>
+        </div>
+
+        <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100" data-aos="zoom-in" data-aos-delay="300">
+          <div class="w-16 h-16 mx-auto bg-blue-100 text-[#0275d8] rounded-2xl flex items-center justify-center mb-6 text-3xl">
+            <i class="bi bi-truck"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">توصيل سريع</h3>
+          <p class="text-gray-500">نضمن وصول الطلبات لموقع العمل في أسرع وقت ممكن</p>
+        </div>
+
+        <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100" data-aos="zoom-in" data-aos-delay="500">
+          <div class="w-16 h-16 mx-auto bg-blue-100 text-[#0275d8] rounded-2xl flex items-center justify-center mb-6 text-3xl">
+            <i class="bi bi-shield-lock"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">ضمان الأمانة</h3>
+          <p class="text-gray-500">نلتزم بأعلى معايير المصداقية والشفافية مع عملائنا</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

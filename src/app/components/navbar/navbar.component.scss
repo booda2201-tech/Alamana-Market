@@ -1,0 +1,18 @@
+.bttn{
+  background-color: #1D76B9;
+}
+
+
+// نضمن إن الـ header نفسه مش قافل على اللي جواه
+// ده عشان نضمن إن القائمة تطلع بره حدود الهيدر
+header, .container {
+  overflow: visible !important;
+}
+
+// تعديل مكان القائمة وقوتها
+.group:hover .absolute {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  z-index: 9999 !important;
+}

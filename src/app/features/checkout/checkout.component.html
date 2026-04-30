@@ -1,0 +1,138 @@
+<div class="min-h-screen bg-gray-50/50 pt-28 pb-20" dir="rtl">
+  <div class="container mx-auto px-4 max-w-7xl">
+
+    <div *ngIf="isSuccess" class="min-h-[80vh] flex flex-col items-center justify-center text-center">
+      <div class="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
+        <i class="bi bi-check-circle-fill text-5xl"></i>
+      </div>
+      <h2 class="text-3xl font-bold mb-4">تم استلام طلبك بنجاح</h2>
+      <button routerLink="/products" class="px-8 py-3 rounded-lg bg-[#0275d8] text-white font-bold">العودة للتسوق</button>
+    </div>
+
+    <div *ngIf="!isSuccess">
+      <div class="flex items-center text-sm text-gray-500 mb-8 justify-start">
+        <a routerLink="/cart" class="hover:text-[#0275d8] cursor-pointer transition-colors flex items-center no-underline text-inherit">
+          العودة للسلة <i class="bi bi-chevron-left mr-1"></i>
+        </a>
+      </div>
+
+      <h1 class="text-3xl font-bold mb-8 text-right">إتمام الطلب</h1>
+
+<form (ngSubmit)="handleSubmit()" #checkoutForm="ngForm">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <div class="lg:col-span-2 order-1 space-y-6">
+      <div class="bg-white rounded-xl shadow-sm border p-6 text-right">
+        <h2 class="text-xl font-bold mb-6 flex items-center justify-start border-b pb-4">
+          <span class="w-8 h-8 rounded-full bg-[#0275d8] text-white flex items-center justify-center ml-3 text-sm">1</span>
+          بيانات التوصيل
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="text-sm font-medium">الاسم الكامل</label>
+            <input type="text" name="fullName" [(ngModel)]="formData.fullName" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none text-right focus:border-[#0275d8]">
+          </div>
+          <div class="space-y-2 text-right">
+            <label class="text-sm font-medium">رقم الهاتف</label>
+            <input type="tel" name="phone" [(ngModel)]="formData.phone" required placeholder="965" class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none text-left">
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium">المحافظة</label>
+            <select name="governorate" [(ngModel)]="formData.governorate" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
+              <option value="">اختر المحافظة</option>
+              <option *ngFor="let g of governorates" [value]="g">{{ g }}</option>
+            </select>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium">المنطقة / المدينة</label>
+            <input type="text" name="city" [(ngModel)]="formData.city" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
+          </div>
+          <div class="space-y-2 md:col-span-2">
+            <label class="text-sm font-medium">العنوان التفصيلي (القطعة، الشارع، المبنى)</label>
+            <input type="text" name="address" [(ngModel)]="formData.address" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border p-6 text-right">
+        <h2 class="text-xl font-bold mb-6 flex items-center justify-start border-b pb-4">
+          <span class="w-8 h-8 rounded-full bg-[#0275d8] text-white flex items-center justify-center ml-3 text-sm">2</span>
+          طريقة الدفع
+        </h2>
+        <div class="space-y-4">
+          <label (click)="setPaymentMethod('knet')" class="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-all" [class.border-[#0275d8]]="formData.paymentMethod === 'knet'">
+            <div class="flex items-center gap-3">
+              <i class="bi bi-credit-card text-xl text-[#0275d8]"></i>
+              <span class="font-bold">كي نت (K-NET)</span>
+            </div>
+            <input type="radio" name="payment" [checked]="formData.paymentMethod === 'knet'" class="w-5 h-5 accent-[#0275d8]">
+          </label>
+
+          <label (click)="setPaymentMethod('visa')" class="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-all" [class.border-[#0275d8]]="formData.paymentMethod === 'visa'">
+            <div class="flex items-center gap-3">
+              <i class="bi bi-credit-card-2-front text-xl text-[#0275d8]"></i>
+              <span class="font-bold">بطاقة ائتمان (Visa / Mastercard)</span>
+            </div>
+            <input type="radio" name="payment" [checked]="formData.paymentMethod === 'visa'" class="w-5 h-5 accent-[#0275d8]">
+          </label>
+
+          <label (click)="setPaymentMethod('cod')" class="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-all" [class.border-[#0275d8]]="formData.paymentMethod === 'cod'">
+            <div class="flex items-center gap-3">
+              <i class="bi bi-cash-stack text-xl text-[#0275d8]"></i>
+              <span class="font-bold">الدفع عند الاستلام</span>
+            </div>
+            <input type="radio" name="payment" [checked]="formData.paymentMethod === 'cod'" class="w-5 h-5 accent-[#0275d8]">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-1 order-2" dir="ltr">
+      <div class="bg-white rounded-xl shadow-sm border p-6 text-right sticky top-32">
+        <h2 class="text-xl font-bold mb-6 border-b pb-4">ملخص الطلب</h2>
+
+        <div class="space-y-4 mb-6">
+          <div *ngFor="let item of items" class="flex justify-between items-start gap-4 border-b border-gray-50 pb-4">
+            <span class="font-bold whitespace-nowrap text-[#0275d8]">{{ (item.product.price * item.quantity) | number:'1.3-3' }}</span>
+            <div class="flex gap-3">
+              <div class="text-right">
+                <div class="text-sm font-bold line-clamp-1">{{ item.product.nameAr }}</div>
+                <div class="text-xs text-gray-400 mt-1">الكمية: {{ item.quantity }}</div>
+              </div>
+              <div class="w-16 h-16 bg-gray-50 rounded p-1 border shrink-0">
+                <img [src]="item.product.image" class="w-full h-full object-contain">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3 pt-2 text-sm">
+          <div class="flex justify-between text-gray-500">
+            <span class="font-medium">{{ totalPrice | number:'1.3-3' }} د.ك</span>
+            <span>المنتجات ({{ items.length }})</span>
+          </div>
+          <div class="flex justify-between text-green-600">
+            <span class="font-medium">مجاني</span>
+            <span>رسوم التوصيل</span>
+          </div>
+          <div class="flex justify-between text-lg font-black pt-4 border-t mt-2 text-[#0275d8]">
+            <span>{{ totalPrice | number:'1.3-3' }} د.ك</span>
+            <span class="text-black">الإجمالي المطلوب</span>
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="!checkoutForm.valid || isSubmitting"
+                class="w-full h-14 mt-8 bg-[#0275d8] text-white rounded-xl font-bold text-lg hover:bg-[#025bb0] shadow-lg shadow-blue-100 transition-all transform active:scale-95">
+          {{ isSubmitting ? 'جاري التأكيد...' : 'تأكيد الطلب' }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>
+
+
+    </div>
+  </div>
+</div>

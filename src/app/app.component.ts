@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import * as AOS from 'aos';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,15 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'AlamanaMarket';
+
+  ngOnInit() {
+    AOS.init({
+      duration: 2000,
+      once: false, 
+      mirror: true
+    });
+  }
+
+
+
 }

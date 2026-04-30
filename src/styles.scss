@@ -1,1 +1,80 @@
 /* You can add global styles to this file, and also import other style files */
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+@import 'aos/dist/aos.css';
+// 2. Tailwind
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+// 3. استدعاء الخطوط الفخمة (Cairo و Inter للإنجليزية)
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&display=swap');
+
+// 4. متغيرات الألوان (الأمانة ماركت باليتة)
+:root {
+  --primary-brand: #1D76B9; // الأزرق البراند اللي في الصور
+  --primary-dark: #1A1A1A;  // الأسود الفخم
+  --primary-light: #fcfcfc;
+  --accent-gold: #D4AF37;   // لمسة ذهبية للمنتجات المميزة
+  --transition-luxury: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); // انتقالات فائقة النعومة
+}
+
+[data-aos] {
+  opacity: 0;
+  transition-property: transform, opacity;
+
+  &.aos-animate {
+    opacity: 1;
+  }
+}
+
+
+// 5. الستايلات العالمية
+body {
+  font-family: 'Cairo', sans-serif; // العربي هو الأساسي
+  background-color: #ffffff; // أبيض ناصع زي الصورة
+  color: var(--primary-dark);
+  overflow-x: hidden; // لمنع أي سكرول عرضي أثناء الأنيميشن
+  scroll-behavior: smooth; // سكرول ناعم بين الأقسام
+}
+
+// كلاس خاص بالأرقام أو الإنجليزي عشان يطلع فخم
+.font-en {
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+// 6. Custom Component Classes (تايلوند كومبوننتس)
+@layer components {
+
+  // Luxury Card Style (نفس اللي في صور الأقسام)
+  .luxury-card {
+    @apply bg-white rounded-3xl transition-all duration-500 overflow-hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.03); // شادو خفيف جداً وغير مرئي تقريباً
+    border: 1px solid rgba(0,0,0,0.01);
+
+    &:hover {
+      @apply -translate-y-2; // حركة لفوق عند الهوفر
+      box-shadow: 0 20px 60px rgba(0,117,216,0.05); // شادو أزرق خفيف جداً
+      border-color: rgba(2,117,216,0.1);
+    }
+  }
+
+  // Premium Button Style (نفس اللي في صور الهيرو)
+  .btn-premium {
+    @apply bg-[#1A1A1A] text-white rounded-full px-8 py-3 font-semibold transition-all duration-300;
+
+    &:hover {
+      @apply bg-[#D4AF37]; // يقلب ذهبي عند الهوفر
+      transform: translateY(-2px);
+    }
+  }
+
+  // Section Title Style
+  .section-title {
+    @apply text-3xl md:text-4xl font-black mb-3;
+  }
+}

@@ -1,0 +1,41 @@
+/* إخفاء العناصر التي تستخدم AOS قبل ظهورها */
+@media screen and (min-width: 768px) {
+  [data-aos] {
+    opacity: 0;
+    transition-property: transform, opacity;
+
+    &.aos-animate {
+      opacity: 1;
+    }
+  }
+}
+
+/* تحسين سلاسة السكرول */
+:host {
+  display: block;
+  overflow-x: hidden;
+}
+
+.hero-section {
+  /* لضمان ثبات الخلفية أثناء الـ Parallax */
+  will-change: transform;
+}
+
+
+.group:hover .group-hover\:translate-y-0 {
+  transform: translate(-50%, 0); /* لتصحيح وضع الزرار في النص */
+}
+
+/* تأثير التدرج الخفيف خلف الصور */
+.aspect-square {
+  background: radial-gradient(circle, #fcfcfc 0%, #f3f4f6 100%);
+}
+
+
+.block {
+  height: 80px;
+  // الميديا كويري بتتكتب مباشرة جوه الكلاس في الـ SCSS
+  @media (max-width: 500px) {
+    height: 50px;
+  }
+}
