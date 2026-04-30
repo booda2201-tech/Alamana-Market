@@ -18,6 +18,8 @@ import { ContactComponent } from './features/contact/contact.component';
 import { OrdersComponent } from './features/orders/orders.component';
 import { CartComponent } from './features/cart/cart.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
+import { LoginComponent } from './components/login/login.component';
+import { CreateAccountComponent } from './components/create-account/create-account.component';
 
 
 @NgModule({
@@ -33,6 +35,8 @@ import { CheckoutComponent } from './features/checkout/checkout.component';
     OrdersComponent,
     CartComponent,
     CheckoutComponent,
+    LoginComponent,
+    CreateAccountComponent,
   ],
   imports: [
     CommonModule,

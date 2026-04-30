@@ -1,0 +1,95 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 relative overflow-hidden pt-28 pb-12">
+
+  <!-- تأثيرات الخلفية -->
+  <div class="absolute top-0 -left-20 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
+  <div class="absolute bottom-0 -right-20 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-30"></div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-2xl mx-auto">
+
+      <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-gray-100 overflow-hidden" data-aos="fade-up">
+        <div class="p-8 sm:p-12 text-right" dir="rtl">
+
+          <div class="logo w-25 h-25 mb-6 mx-auto">
+            <img src="../../../assets/images/logo.png" alt="">
+          </div>
+          <div class="text-center mb-10">
+            <h2 class="text-3xl font-black text-gray-900 mb-2">إنشاء حساب جديد</h2>
+            <p class="text-gray-400 font-medium">انضم إلى عملاء الأمانة واستمتع بأفضل مواد البناء</p>
+          </div>
+
+              <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- الاسم الكامل -->
+                <div class="space-y-2 md:col-span-2">
+                  <label class="text-sm font-bold text-gray-700 mr-1">الاسم الكامل</label>
+                  <div class="relative">
+                    <!-- أضفنا pr-12 عشان الكلام يبعد عن الأيقونة اليمين -->
+                    <input type="text" class="form-input-custom pr-12" placeholder="أدخل اسمك الكامل">
+                    <i class="bi bi-person absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  </div>
+                </div>
+
+                <!-- البريد الإلكتروني -->
+                <div class="space-y-2">
+                  <label class="text-sm font-bold text-gray-700 mr-1">البريد الإلكتروني</label>
+                  <div class="relative">
+                    <input type="email" class="form-input-custom pr-12" placeholder="example@mail.com">
+                    <i class="bi bi-envelope absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  </div>
+                </div>
+
+                <!-- رقم الهاتف -->
+                <div class="space-y-2">
+                  <label class="text-sm font-bold text-gray-700 mr-1">رقم الهاتف (الكويت)</label>
+                  <div class="relative">
+                    <input type="tel" class="form-input-custom pr-12" placeholder="90000000">
+                    <i class="bi bi-phone absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  </div>
+                </div>
+
+                <!-- كلمة المرور -->
+                <div class="space-y-2">
+                  <label class="text-sm font-bold text-gray-700 mr-1">كلمة المرور</label>
+                  <div class="relative">
+                    <input type="password" class="form-input-custom pr-12" placeholder="••••••••">
+                    <i class="bi bi-shield-lock absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  </div>
+                </div>
+
+                <!-- تأكيد كلمة المرور -->
+                <div class="space-y-2">
+                  <label class="text-sm font-bold text-gray-700 mr-1">تأكيد كلمة المرور</label>
+                  <div class="relative">
+                    <input type="password" class="form-input-custom pr-12" placeholder="••••••••">
+                    <i class="bi bi-shield-check absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  </div>
+                </div>
+
+            <!-- الشروط والأحكام -->
+            <div class="md:col-span-2 flex items-center justify-start gap-2 py-2">
+              <input type="checkbox" id="terms" class="w-4 h-4 rounded border-gray-300 text-[#0275d8] focus:ring-[#0275d8]">
+              <label class="text-sm text-gray-500 font-medium cursor-pointer" for="terms">
+                أوافق على <span class="text-[#0275d8] underline">الشروط والأحكام</span> وسياسة الخصوصية
+              </label>
+            </div>
+
+            <!-- زر التسجيل -->
+            <button type="submit"
+                    class="md:col-span-2 w-full h-14 bg-[#0275d8] text-white rounded-2xl font-bold text-lg hover:bg-[#025bb0] shadow-lg shadow-blue-200 transition-all duration-300 transform hover:-translate-y-1 mt-2">
+              إنشاء الحساب
+            </button>
+          </form>
+
+          <!-- العودة للوجين -->
+          <div class="mt-10 pt-8 border-t border-gray-50 text-center">
+            <p class="text-gray-500 text-sm">
+              لديك حساب بالفعل؟
+              <a routerLink="/login" class="text-[#0275d8] font-bold hover:underline">سجل دخولك هنا</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

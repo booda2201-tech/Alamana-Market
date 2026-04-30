@@ -1,0 +1,31 @@
+:host {
+  .form-input-custom {
+    @apply w-full h-14 bg-gray-50 border-none rounded-2xl px-6 pr-12 text-right transition-all outline-none border border-transparent;
+
+    &::placeholder {
+      @apply text-gray-400 text-sm opacity-60;
+    }
+
+    &:focus {
+      @apply bg-white border-[#0275d8]/20 ring-4 ring-[#0275d8]/5 shadow-sm;
+    }
+  }
+
+  // ضبط مكان الأيقونة وتفاعلها مع الفوكس
+  .relative i {
+    @apply transition-all duration-300 pointer-events-none;
+    font-size: 1.2rem;
+  }
+
+  input:focus + i {
+    @apply text-[#0275d8] scale-110;
+  }
+
+  // ستايل خاص للـ Checkbox عشان يبان Premium
+  input[type="checkbox"] {
+    cursor: pointer;
+    &:checked {
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+    }
+  }
+}

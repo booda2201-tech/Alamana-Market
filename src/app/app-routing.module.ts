@@ -8,6 +8,8 @@ import { ContactComponent } from './features/contact/contact.component';
 import { OrdersComponent } from './features/orders/orders.component';
 import { CartComponent } from './features/cart/cart.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
+import { LoginComponent } from './components/login/login.component';
+import { CreateAccountComponent } from './components/create-account/create-account.component';
 
 const routes: Routes = [
   // الصفحة الرئيسية
@@ -29,8 +31,12 @@ const routes: Routes = [
 
   // الدفع
   { path: 'checkout', component: CheckoutComponent },
-  // حماية من المسارات الغلط (Redirect to Home)
-  // دي مهمة جداً عشان لو اليوزر كتب أي حاجة عشوائية يرجع للرئيسية بدل ما الصفحة تضرب
+
+  // تسجيل الدخول وإنشاء حساب
+  { path: 'login', component: LoginComponent },
+  { path: 'create-account', component: CreateAccountComponent },
+
+
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
