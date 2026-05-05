@@ -20,6 +20,8 @@ import { OrdersComponent } from './features/orders/orders.component';
 import { CartComponent } from './features/cart/cart.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { VideosComponent } from './features/videos/videos.component';
+import { LoginComponent } from './components/login/login.component';
+import { CreateAccountComponent } from './components/create-account/create-account.component';
 
 
 @NgModule({
@@ -36,6 +38,8 @@ import { VideosComponent } from './features/videos/videos.component';
     CartComponent,
     CheckoutComponent,
     VideosComponent,
+    LoginComponent,
+    CreateAccountComponent,
   ],
   imports: [
     CommonModule,
