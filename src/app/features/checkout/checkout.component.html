@@ -1,15 +1,23 @@
 <div class="min-h-screen bg-gray-50/50 pt-28 pb-20" dir="rtl">
   <div class="container mx-auto px-4 max-w-7xl">
+    <div *ngIf="isLoading" class="min-h-[50vh] flex items-center justify-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0275d8]"></div>
+    </div>
 
-    <div *ngIf="isSuccess" class="min-h-[80vh] flex flex-col items-center justify-center text-center">
+    <div *ngIf="!isLoading && errorMessage && !isSuccess" class="min-h-[40vh] flex flex-col items-center justify-center text-center">
+      <p class="text-red-600 mb-6">{{ errorMessage }}</p>
+      <button (click)="goToLogin()" class="px-8 py-3 rounded-lg bg-[#0275d8] text-white font-bold">تسجيل الدخول</button>
+    </div>
+
+    <div *ngIf="!isLoading && isSuccess" class="min-h-[80vh] flex flex-col items-center justify-center text-center">
       <div class="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
         <i class="bi bi-check-circle-fill text-5xl"></i>
       </div>
-      <h2 class="text-3xl font-bold mb-4">تم استلام طلبك بنجاح</h2>
+      <h2 class="text-3xl font-bold mb-4">{{ successMessage || 'تم استلام طلبك بنجاح' }}</h2>
       <button routerLink="/products" class="px-8 py-3 rounded-lg bg-[#0275d8] text-white font-bold">العودة للتسوق</button>
     </div>
 
-    <div *ngIf="!isSuccess">
+    <div *ngIf="!isLoading && !isSuccess && !errorMessage">
       <div class="flex items-center text-sm text-gray-500 mb-8 justify-start">
         <a routerLink="/cart" class="hover:text-[#0275d8] cursor-pointer transition-colors flex items-center no-underline text-inherit">
           العودة للسلة <i class="bi bi-chevron-left mr-1"></i>
@@ -34,23 +42,60 @@
             <input type="text" name="fullName" [(ngModel)]="formData.fullName" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none text-right focus:border-[#0275d8]">
           </div>
           <div class="space-y-2 text-right">
+            <label class="text-sm font-medium">البريد الإلكتروني</label>
+            <input type="email" name="email" [(ngModel)]="formData.email" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none text-left">
+          </div>
+          <div class="space-y-2 text-right">
             <label class="text-sm font-medium">رقم الهاتف</label>
             <input type="tel" name="phone" [(ngModel)]="formData.phone" required placeholder="965" class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none text-left">
           </div>
           <div class="space-y-2">
-            <label class="text-sm font-medium">المحافظة</label>
-            <select name="governorate" [(ngModel)]="formData.governorate" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
-              <option value="">اختر المحافظة</option>
-              <option *ngFor="let g of governorates" [value]="g">{{ g }}</option>
+            <label class="text-sm font-medium">البلد</label>
+            <select name="countryId" [(ngModel)]="formData.countryId" (change)="onCountryChange()" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
+              <option [ngValue]="0">اختر البلد</option>
+              <option *ngFor="let country of countries" [ngValue]="country.id">{{ country.name }}</option>
             </select>
           </div>
           <div class="space-y-2">
-            <label class="text-sm font-medium">المنطقة / المدينة</label>
-            <input type="text" name="city" [(ngModel)]="formData.city" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
+            <label class="text-sm font-medium">المحافظة</label>
+            <select name="governorateId" [(ngModel)]="formData.governorateId" (change)="onGovernorateChange()" [disabled]="!formData.countryId" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none disabled:bg-gray-100 disabled:text-gray-400">
+              <option [ngValue]="0">اختر المحافظة</option>
+              <option *ngFor="let g of governorates" [ngValue]="g.id">{{ g.name }}</option>
+            </select>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium">المدينة</label>
+            <select name="cityId" [(ngModel)]="formData.cityId" (change)="onCityChange()" [disabled]="!formData.governorateId" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none disabled:bg-gray-100 disabled:text-gray-400">
+              <option [ngValue]="0">اختر المدينة</option>
+              <option *ngFor="let city of cities" [ngValue]="city.id">{{ city.name }}</option>
+            </select>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium">الحي</label>
+            <select name="districtId" [(ngModel)]="formData.districtId" [disabled]="!formData.cityId" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none disabled:bg-gray-100 disabled:text-gray-400">
+              <option [ngValue]="0">اختر الحي</option>
+              <option *ngFor="let district of districts" [ngValue]="district.id">{{ district.name }}</option>
+            </select>
           </div>
           <div class="space-y-2 md:col-span-2">
-            <label class="text-sm font-medium">العنوان التفصيلي (القطعة، الشارع، المبنى)</label>
-            <input type="text" name="address" [(ngModel)]="formData.address" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
+            <label class="text-sm font-medium">الشارع</label>
+            <input type="text" name="street" [(ngModel)]="formData.street" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium">المبنى</label>
+            <input type="text" name="buildingNumber" [(ngModel)]="formData.buildingNumber" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium">الدور</label>
+            <input type="text" name="floor" [(ngModel)]="formData.floor" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium">الشقة</label>
+            <input type="text" name="apartment" [(ngModel)]="formData.apartment" required class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium">علامة مميزة (اختياري)</label>
+            <input type="text" name="landmark" [(ngModel)]="formData.landmark" class="w-full h-11 px-4 rounded-lg border border-gray-200 outline-none">
           </div>
         </div>
       </div>
@@ -61,28 +106,15 @@
           طريقة الدفع
         </h2>
         <div class="space-y-4">
-          <label (click)="setPaymentMethod('knet')" class="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-all" [class.border-[#0275d8]]="formData.paymentMethod === 'knet'">
-            <div class="flex items-center gap-3">
-              <i class="bi bi-credit-card text-xl text-[#0275d8]"></i>
-              <span class="font-bold">كي نت (K-NET)</span>
-            </div>
-            <input type="radio" name="payment" [checked]="formData.paymentMethod === 'knet'" class="w-5 h-5 accent-[#0275d8]">
-          </label>
-
-          <label (click)="setPaymentMethod('visa')" class="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-all" [class.border-[#0275d8]]="formData.paymentMethod === 'visa'">
-            <div class="flex items-center gap-3">
-              <i class="bi bi-credit-card-2-front text-xl text-[#0275d8]"></i>
-              <span class="font-bold">بطاقة ائتمان (Visa / Mastercard)</span>
-            </div>
-            <input type="radio" name="payment" [checked]="formData.paymentMethod === 'visa'" class="w-5 h-5 accent-[#0275d8]">
-          </label>
-
-          <label (click)="setPaymentMethod('cod')" class="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-all" [class.border-[#0275d8]]="formData.paymentMethod === 'cod'">
+          <label *ngFor="let method of paymentMethods"
+                 (click)="setPaymentMethod(method.id)"
+                 class="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition-all"
+                 [class.border-[#0275d8]]="formData.paymentMethodId === method.id">
             <div class="flex items-center gap-3">
               <i class="bi bi-cash-stack text-xl text-[#0275d8]"></i>
-              <span class="font-bold">الدفع عند الاستلام</span>
+              <span class="font-bold">{{ method.name }}</span>
             </div>
-            <input type="radio" name="payment" [checked]="formData.paymentMethod === 'cod'" class="w-5 h-5 accent-[#0275d8]">
+            <input type="radio" name="paymentMethodId" [checked]="formData.paymentMethodId === method.id" class="w-5 h-5 accent-[#0275d8]">
           </label>
         </div>
       </div>
@@ -94,14 +126,14 @@
 
         <div class="space-y-4 mb-6">
           <div *ngFor="let item of items" class="flex justify-between items-start gap-4 border-b border-gray-50 pb-4">
-            <span class="font-bold whitespace-nowrap text-[#0275d8]">{{ (item.product.price * item.quantity) | number:'1.3-3' }}</span>
+            <span class="font-bold whitespace-nowrap text-[#0275d8]">{{ (item.price * item.quantity) | number:'1.3-3' }}</span>
             <div class="flex gap-3">
               <div class="text-right">
-                <div class="text-sm font-bold line-clamp-1">{{ item.product.nameAr }}</div>
+                <div class="text-sm font-bold line-clamp-1">{{ item.name }}</div>
                 <div class="text-xs text-gray-400 mt-1">الكمية: {{ item.quantity }}</div>
               </div>
               <div class="w-16 h-16 bg-gray-50 rounded p-1 border shrink-0">
-                <img [src]="item.product.image" class="w-full h-full object-contain">
+                <img [src]="item.image" class="w-full h-full object-contain">
               </div>
             </div>
           </div>
@@ -110,7 +142,7 @@
         <div class="space-y-3 pt-2 text-sm">
           <div class="flex justify-between text-gray-500">
             <span class="font-medium">{{ totalPrice | number:'1.3-3' }} د.ك</span>
-            <span>المنتجات ({{ items.length }})</span>
+            <span>المنتجات ({{ totalItems }})</span>
           </div>
           <div class="flex justify-between text-green-600">
             <span class="font-medium">مجاني</span>

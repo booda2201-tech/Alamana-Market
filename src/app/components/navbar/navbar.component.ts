@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Category } from '../../core/models/product.model';
+import { CartApiService } from '../../core/services/cart-api.service';
 import { ProductsApiService } from '../../core/services/products-api.service';
 // import { CartService } from '../services/cart.service'; // مثال لو عندك Service للكرتونة
 
@@ -16,6 +17,7 @@ export class NavbarComponent implements OnInit {
   isScrolled = false;
   currentUrl = '/';
   totalItems = 0;
+  cartMessage = '';
 
   navLinks = [
     { name: 'الرئيسية', href: '/' },
@@ -24,14 +26,15 @@ export class NavbarComponent implements OnInit {
     { name: 'جديد', href: '/products', queryParams: { filter: 'new' } },
     { name: 'من نحن', href: '/about-us' },
     { name: 'تواصل معنا', href: '/contact' },
-    // { name: 'الطلبات السابقة', href: '/orders' },
+    { name: 'الطلبات السابقة', href: '/orders' },
   ];
 
   categories: Category[] = [];
 
   constructor(
     private router: Router,
-    private productsApi: ProductsApiService
+    private productsApi: ProductsApiService,
+    private cartApi: CartApiService
   ) {}
 
   ngOnInit() {
@@ -44,6 +47,16 @@ export class NavbarComponent implements OnInit {
     ).subscribe((event: any) => {
       this.currentUrl = event.urlAfterRedirects.split('?')[0];
     });
+
+    this.cartApi.cartCount$.subscribe((count) => {
+      this.totalItems = count;
+    });
+
+    this.cartApi.cartMessage$.subscribe((message) => {
+      this.cartMessage = message;
+    });
+
+    this.cartApi.refreshCartCount(this.cartApi.getCurrentUserId());
   }
 
   @HostListener('window:scroll', [])
@@ -58,7 +71,5 @@ export class NavbarComponent implements OnInit {
   goToSearch(): void {
     this.router.navigate(['/products']);
   }
-
-
 
 }

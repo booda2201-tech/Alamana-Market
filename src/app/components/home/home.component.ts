@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as AOS from 'aos';
 import { Category, Product } from '../../core/models/product.model';
+import { CartApiService } from '../../core/services/cart-api.service';
 import { ProductsApiService } from '../../core/services/products-api.service';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -23,6 +24,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private readonly productsApi: ProductsApiService,
+    private readonly cartApi: CartApiService,
     private readonly router: Router
   ) {}
 
@@ -171,9 +173,22 @@ productImg?.addEventListener('mouseleave', () => {
     ScrollTrigger.getAll().forEach(t => t.kill());
   }
 
-addToCart(product: any) {
-    console.log('تمت الإضافة للسلة:', product.nameAr);
-    // هنا هتنادي الـ Cart Service بتاعتك
+addToCart(product: Product): void {
+    const userId = this.cartApi.getCurrentUserId();
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.cartApi.addCartItem(userId, product, 1).subscribe({
+      next: () => {
+        this.cartApi.refreshCartCount(userId);
+        this.cartApi.showCartMessage('تمت إضافة المنتج إلى السلة');
+      },
+      error: () => {
+        this.cartApi.showCartMessage('تعذر إضافة المنتج للسلة');
+      }
+    });
   }
 
   goToDetails(productId: string): void {

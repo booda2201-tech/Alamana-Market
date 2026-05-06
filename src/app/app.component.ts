@@ -15,6 +15,7 @@ export class AppComponent {
   private readonly defaultTitle = 'الأمانة لمواد البناء';
   private readonly defaultDescription = 'الأمانة لمواد البناء توفر حلول متكاملة تشمل اللواصق، العوازل، الترميم، وموانع التسرب بجودة عالية.';
   private readonly siteUrl = 'https://alamanamarket.com';
+  showLayout = true;
 
   constructor(
     private readonly router: Router,
@@ -33,9 +34,13 @@ export class AppComponent {
 
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd)
-    ).subscribe(() => this.updateSeoFromRoute());
+    ).subscribe(() => {
+      this.updateSeoFromRoute();
+      this.updateLayoutVisibility();
+    });
 
     this.updateSeoFromRoute();
+    this.updateLayoutVisibility();
   }
 
   private updateSeoFromRoute(): void {
@@ -74,6 +79,12 @@ export class AppComponent {
       this.document.head.appendChild(canonical);
     }
     canonical.setAttribute('href', url);
+  }
+
+  private updateLayoutVisibility(): void {
+    const currentPath = this.router.url.split('?')[0];
+    const authRoutes = ['/login', '/create-account'];
+    this.showLayout = !authRoutes.includes(currentPath);
   }
 
 

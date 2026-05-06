@@ -5,10 +5,10 @@
   <div class="absolute bottom-0 -right-20 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-30"></div>
 
   <div class="container mx-auto px-4 relative z-10">
-    <div class="max-w-2xl mx-auto">
+    <div class="max-w-xl mx-auto">
 
       <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-gray-100 overflow-hidden" data-aos="fade-up">
-        <div class="p-8 sm:p-12 text-right" dir="rtl">
+        <div class="p-7 sm:p-9 text-right" dir="rtl">
 
           <div class="logo w-25 h-25 mb-6 mx-auto">
             <img src="../../../assets/images/logo.png" alt="">
@@ -18,65 +18,72 @@
             <p class="text-gray-400 font-medium">انضم إلى عملاء الأمانة واستمتع بأفضل مواد البناء</p>
           </div>
 
-              <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <form class="grid grid-cols-1 md:grid-cols-2 gap-6" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
                 <!-- الاسم الكامل -->
                 <div class="space-y-2 md:col-span-2">
                   <label class="text-sm font-bold text-gray-700 mr-1">الاسم الكامل</label>
                   <div class="relative">
-                    <!-- أضفنا pr-12 عشان الكلام يبعد عن الأيقونة اليمين -->
-                    <input type="text" class="form-input-custom pr-12" placeholder="أدخل اسمك الكامل">
+                    <input type="text" class="form-input-custom pr-12" placeholder="أدخل اسمك الكامل" formControlName="fullName">
                     <i class="bi bi-person absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
                   </div>
+                  <p *ngIf="fullNameControl.touched && fullNameControl.invalid" class="text-red-500 text-xs">
+                    الاسم الكامل مطلوب (3 حروف على الأقل).
+                  </p>
                 </div>
 
                 <!-- البريد الإلكتروني -->
                 <div class="space-y-2">
                   <label class="text-sm font-bold text-gray-700 mr-1">البريد الإلكتروني</label>
                   <div class="relative">
-                    <input type="email" class="form-input-custom pr-12" placeholder="example@mail.com">
+                    <input type="email" class="form-input-custom pr-12" placeholder="example@mail.com" formControlName="email">
                     <i class="bi bi-envelope absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
                   </div>
-                </div>
-
-                <!-- رقم الهاتف -->
-                <div class="space-y-2">
-                  <label class="text-sm font-bold text-gray-700 mr-1">رقم الهاتف (الكويت)</label>
-                  <div class="relative">
-                    <input type="tel" class="form-input-custom pr-12" placeholder="90000000">
-                    <i class="bi bi-phone absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                  </div>
+                  <p *ngIf="emailControl.touched && emailControl.invalid" class="text-red-500 text-xs">
+                    أدخل بريد إلكتروني صحيح.
+                  </p>
                 </div>
 
                 <!-- كلمة المرور -->
                 <div class="space-y-2">
                   <label class="text-sm font-bold text-gray-700 mr-1">كلمة المرور</label>
                   <div class="relative">
-                    <input type="password" class="form-input-custom pr-12" placeholder="••••••••">
+                    <input type="password" class="form-input-custom pr-12" placeholder="••••••••" formControlName="password">
                     <i class="bi bi-shield-lock absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
                   </div>
-                </div>
-
-                <!-- تأكيد كلمة المرور -->
-                <div class="space-y-2">
-                  <label class="text-sm font-bold text-gray-700 mr-1">تأكيد كلمة المرور</label>
-                  <div class="relative">
-                    <input type="password" class="form-input-custom pr-12" placeholder="••••••••">
-                    <i class="bi bi-shield-check absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                  </div>
+                  <p *ngIf="passwordControl.touched && passwordControl.errors?.['required']" class="text-red-500 text-xs">
+                    كلمة المرور مطلوبة.
+                  </p>
+                  <ul *ngIf="passwordRulesErrors.length" class="text-red-500 text-xs space-y-1 pr-4 list-disc">
+                    <li *ngFor="let ruleError of passwordRulesErrors">{{ ruleError }}</li>
+                  </ul>
                 </div>
 
             <!-- الشروط والأحكام -->
             <div class="md:col-span-2 flex items-center justify-start gap-2 py-2">
-              <input type="checkbox" id="terms" class="w-4 h-4 rounded border-gray-300 text-[#0275d8] focus:ring-[#0275d8]">
+              <input type="checkbox" id="terms" class="w-4 h-4 rounded border-gray-300 text-[#0275d8] focus:ring-[#0275d8]" formControlName="terms">
               <label class="text-sm text-gray-500 font-medium cursor-pointer" for="terms">
                 أوافق على <span class="text-[#0275d8] underline">الشروط والأحكام</span> وسياسة الخصوصية
               </label>
             </div>
+            <p *ngIf="signupForm.controls.terms.touched && signupForm.controls.terms.invalid" class="md:col-span-2 text-red-500 text-xs -mt-4">
+              يجب الموافقة على الشروط والأحكام.
+            </p>
+
+            <div *ngIf="errorMessage" class="md:col-span-2 text-red-600 text-sm bg-red-50 border border-red-100 rounded-xl p-3">
+              <p>{{ errorMessage }}</p>
+              <ul *ngIf="errorDetails.length" class="mt-2 list-disc pr-5 space-y-1 text-xs sm:text-sm">
+                <li *ngFor="let err of errorDetails">{{ err }}</li>
+              </ul>
+            </div>
+            <p *ngIf="successMessage" class="md:col-span-2 text-green-700 text-sm bg-green-50 border border-green-100 rounded-xl p-3">
+              {{ successMessage }}
+            </p>
 
             <!-- زر التسجيل -->
             <button type="submit"
+                    [disabled]="isSubmitting"
                     class="md:col-span-2 w-full h-14 bg-[#0275d8] text-white rounded-2xl font-bold text-lg hover:bg-[#025bb0] shadow-lg shadow-blue-200 transition-all duration-300 transform hover:-translate-y-1 mt-2">
-              إنشاء الحساب
+              {{ isSubmitting ? 'جاري إنشاء الحساب...' : 'إنشاء الحساب' }}
             </button>
           </form>
 
@@ -86,6 +93,11 @@
               لديك حساب بالفعل؟
               <a routerLink="/login" class="text-[#0275d8] font-bold hover:underline">سجل دخولك هنا</a>
             </p>
+            <div class="mt-4 flex items-center justify-center gap-4 text-sm">
+              <a routerLink="/" class="text-gray-500 hover:text-[#0275d8] transition-colors">العودة للرئيسية</a>
+              <span class="text-gray-300">|</span>
+              <a routerLink="/products" class="text-gray-500 hover:text-[#0275d8] transition-colors">تصفح المنتجات</a>
+            </div>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router'; // ماتنساش الـ import
 import { Category, Product } from '../../core/models/product.model';
+import { CartApiService } from '../../core/services/cart-api.service';
 import { ProductsApiService } from '../../core/services/products-api.service';
 
 @Component({
@@ -25,6 +26,7 @@ export class ProductsListComponent implements OnInit {
 constructor(
     private route: ActivatedRoute,
     private router: Router, // ضيف الـ Router هنا
+    private cartApi: CartApiService,
     private productsApi: ProductsApiService
   ) {}
 
@@ -73,8 +75,21 @@ constructor(
   }
 
   addToCart(product: Product): void {
-    console.log('تمت الإضافة للسلة:', product.nameAr);
-    // منطق إضافة المنتج للسلة يوضع هنا
+    const userId = this.cartApi.getCurrentUserId();
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.cartApi.addCartItem(userId, product, 1).subscribe({
+      next: () => {
+        this.cartApi.refreshCartCount(userId);
+        this.cartApi.showCartMessage('تمت إضافة المنتج إلى السلة');
+      },
+      error: () => {
+        this.cartApi.showCartMessage('تعذر إضافة المنتج للسلة');
+      }
+    });
   }
 
 

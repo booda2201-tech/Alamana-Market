@@ -61,15 +61,22 @@
       </button>
 
 
-      <!-- <a routerLink="/cart" class="relative p-2 rounded-full transition-colors no-underline"
+      <a routerLink="/cart" class="relative p-2 rounded-full transition-colors no-underline"
         [ngClass]="(isScrolled || currentUrl !== '/') ? 'text-gray-900 hover:bg-gray-100' : 'text-white hover:bg-white/20'">
         <i class="bi bi-basket3 text-xl"></i>
         <span *ngIf="totalItems > 0"
           class="absolute -top-1 -left-1 w-5 h-5 bg-[#8bc34a] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white">
           {{ totalItems }}
         </span>
-      </a> -->
+      </a>
 
+
+        <button routerLink="/login"
+          class="hidden lg:flex items-center gap-2 bttn text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md hover:bg-[#025bb0] transition-all flex-row-reverse">
+          <span>تسجيل الدخول</span>
+          <i class="bi bi-person-circle text-lg"></i>
+        </button>
+    
 
 
 
@@ -83,6 +90,11 @@
 
   </div>
 </header>
+
+<div *ngIf="cartMessage"
+  class="fixed top-24 left-1/2 -translate-x-1/2 z-[80] bg-[#1D76B9] text-white px-5 py-3 rounded-xl shadow-lg text-sm font-bold">
+  {{ cartMessage }}
+</div>
 
 
 
@@ -110,7 +122,8 @@
 
     <div class="px-3 pt-1 pb-2">
       <div class="text-xs text-gray-400 font-bold mb-2">أقسام المنتجات</div>
-      <a *ngFor="let cat of categories" [routerLink]="['/products']" [queryParams]="{category: cat.id}" (click)="toggleMobileMenu()"
+      <a *ngFor="let cat of categories" [routerLink]="['/products']" [queryParams]="{category: cat.id}"
+        (click)="toggleMobileMenu()"
         class="block p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-[#0275d8] transition-all no-underline">
         {{ cat.name }}
       </a>

@@ -2,7 +2,9 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { gsap } from 'gsap';
 import { Product } from '../../core/models/product.model';
+import { CartApiService } from '../../core/services/cart-api.service';
 import { ProductsApiService } from '../../core/services/products-api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-details',
@@ -18,7 +20,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly productsApi: ProductsApiService
+    private readonly productsApi: ProductsApiService,
+    private readonly cartApi: CartApiService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +64,21 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
     if (!this.product) {
       return;
     }
-    console.log('تمت الإضافة:', this.product.nameAr);
+    const userId = this.cartApi.getCurrentUserId();
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.cartApi.addCartItem(userId, this.product, this.quantity).subscribe({
+      next: () => {
+        this.cartApi.refreshCartCount(userId);
+        this.cartApi.showCartMessage('تمت إضافة المنتج إلى السلة');
+      },
+      error: () => {
+        this.cartApi.showCartMessage('تعذر إضافة المنتج للسلة');
+      }
+    });
   }
+
 }
