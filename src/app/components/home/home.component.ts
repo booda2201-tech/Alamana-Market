@@ -1,9 +1,10 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as AOS from 'aos';
 import { Category, Product } from '../../core/models/product.model';
+import { Advertisement, AdvertisementsApiService } from '../../core/services/advertisements-api.service';
 import { CartApiService } from '../../core/services/cart-api.service';
 import { ProductsApiService } from '../../core/services/products-api.service';
 
@@ -17,15 +18,21 @@ gsap.registerPlugin(ScrollTrigger);
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private categoryLabels: Record<string, string> = {};
   private readonly brokenCategoryImageKeys = new Set<string>();
+  private readonly preloadedAdvertisementImages = new Set<string>();
   categories: Category[] = [];
 
   bestSellers: Product[] = [];
   randomProducts: Product[] = [];
+  advertisements: Advertisement[] = [];
+  activeAdvertisementIndex = 0;
+  adAnimationActive = false;
 
   constructor(
     private readonly productsApi: ProductsApiService,
+    private readonly advertisementsApi: AdvertisementsApiService,
     private readonly cartApi: CartApiService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +51,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.productsApi.getRandomProducts().subscribe((products) => {
       this.randomProducts = products.slice(0, 4);
+    });
+
+    this.advertisementsApi.getAdvertisements().subscribe((advertisements) => {
+      this.advertisements = advertisements;
+      this.activeAdvertisementIndex = 0;
+      this.preloadAdvertisementImages(advertisements);
+      setTimeout(() => AOS.refresh(), 200);
     });
 
     this.productsApi.getCategories().subscribe((categories) => {
@@ -193,6 +207,55 @@ addToCart(product: Product): void {
 
   goToDetails(productId: string): void {
     this.router.navigate(['/products', productId]);
+  }
+
+  get activeAdvertisement(): Advertisement | undefined {
+    return this.advertisements[this.activeAdvertisementIndex];
+  }
+
+  setActiveAdvertisement(index: number): void {
+    this.changeAdvertisement(index);
+  }
+
+  nextAdvertisement(): void {
+    if (!this.advertisements.length) {
+      return;
+    }
+    this.changeAdvertisement((this.activeAdvertisementIndex + 1) % this.advertisements.length);
+  }
+
+  previousAdvertisement(): void {
+    if (!this.advertisements.length) {
+      return;
+    }
+    this.changeAdvertisement((this.activeAdvertisementIndex - 1 + this.advertisements.length) % this.advertisements.length);
+  }
+
+  private changeAdvertisement(index: number): void {
+    const advertisement = this.advertisements[index];
+    if (!advertisement || index === this.activeAdvertisementIndex) {
+      return;
+    }
+
+    this.adAnimationActive = false;
+    this.cdr.detectChanges();
+    this.activeAdvertisementIndex = index;
+    this.adAnimationActive = true;
+    window.setTimeout(() => {
+      this.adAnimationActive = false;
+    }, 1100);
+  }
+
+  private preloadAdvertisementImages(advertisements: Advertisement[]): void {
+    advertisements.forEach((ad) => {
+      if (!ad.imageUrl || this.preloadedAdvertisementImages.has(ad.imageUrl)) {
+        return;
+      }
+
+      const image = new Image();
+      image.src = ad.imageUrl;
+      this.preloadedAdvertisementImages.add(ad.imageUrl);
+    });
   }
 
 }

@@ -1,9 +1,9 @@
 <div class="min-h-screen bg-gray-50/50 pt-32 pb-20" dir="rtl">
   <div class="bg-[#0275d8] text-white py-16 mb-12 relative overflow-hidden">
     <div class="container mx-auto px-4 relative z-10 text-right">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4" data-aos="fade-left">منتجاتنا</h1>
+      <h1 class="text-4xl md:text-5xl font-bold mb-4" data-aos="fade-left">{{ pageTitle }}</h1>
       <p class="text-white/80 max-w-2xl text-lg" data-aos="fade-left" data-aos-delay="200">
-        استكشف مجموعتنا الكاملة من مواد البناء عالية الجودة المصممة لتحمل أصعب الظروف.
+        {{ pageDescription }}
       </p>
     </div>
     <div class="absolute top-0 left-0 w-full h-full bg-black/10"></div>
@@ -12,7 +12,7 @@
   <div class="container mx-auto px-4">
     <div class="flex flex-col lg:flex-row gap-8">
 
-      <aside class="hidden lg:block w-72 shrink-0">
+      <aside *ngIf="!isAdvertisementMode" class="hidden lg:block w-72 shrink-0">
         <div class="sticky top-32 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <h3 class="font-bold text-xl mb-6 border-r-4 border-[#0275d8] pr-3">الأقسام</h3>
           <div class="space-y-4">
@@ -56,8 +56,10 @@
         <div *ngIf="filteredProducts.length === 0" class="text-center py-24 bg-white rounded-3xl border border-dashed border-gray-300">
           <i class="bi bi-box-seam text-6xl text-gray-200 mb-4 block"></i>
           <h3 class="text-2xl font-bold text-gray-800">لا توجد نتائج بحث</h3>
-          <p class="text-gray-500 mt-2">جرب البحث بكلمات أخرى أو تغيير خيارات التصفية</p>
-          <button (click)="clearFilters()" class="mt-6 text-[#0275d8] font-bold hover:underline">مسح التصفية</button>
+          <p class="text-gray-500 mt-2">
+            {{ isAdvertisementMode ? 'لا توجد منتجات مرتبطة بهذا الإعلان حالياً' : 'جرب البحث بكلمات أخرى أو تغيير خيارات التصفية' }}
+          </p>
+          <button *ngIf="!isAdvertisementMode" (click)="clearFilters()" class="mt-6 text-[#0275d8] font-bold hover:underline">مسح التصفية</button>
         </div>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -81,7 +83,7 @@
     </div>
 
     <div class="p-4 text-right">
-      <p class="text-xs text-[#0275d8] font-bold mb-1 uppercase tracking-wider line-clamp-1">{{ product.nameEn }}</p>
+      <p class="text-xs text-[#0275d8] font-bold mb-1 uppercase tracking-wider line-clamp-1">{{ getCategoryName(product.category) }}</p>
       <h3 class="text-lg font-bold text-gray-900 mb-4 line-clamp-1 group-hover:text-[#0275d8] transition-colors">
         {{ product.nameAr }}
       </h3>

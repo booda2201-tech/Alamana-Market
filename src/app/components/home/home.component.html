@@ -1,5 +1,5 @@
 <div class="w-full overflow-hidden">
-  
+
   <section class="hero-section relative h-[90vh] min-h-[600px] flex items-center bg-black overflow-hidden">
     <div class="absolute inset-0">
       <img src="assets/images/hero.png" alt="Construction site"
@@ -42,6 +42,7 @@
       </div>
     </div>
   </section>
+
 
   <section class="py-20 bg-white">
     <div class="container mx-auto px-4 text-center">
@@ -149,6 +150,86 @@
     </div>
   </section>
 
+  <section *ngIf="activeAdvertisement as ad" class="py-8 bg-white">
+    <div class="container mx-auto px-4 text-center">
+      <span class="inline-block py-1 px-3 rounded-full bg-blue-50 text-[#0275d8] text-sm font-bold mb-3"
+        data-aos="fade-up">إعلانات الأمانة</span>
+      <h2 class="text-3xl font-bold mb-4" data-aos="fade-up">أحدث العروض والمشاريع</h2>
+      <p class="text-gray-500 max-w-2xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">
+        تابع آخر أخبار الأمانة، عروض مواد البناء، المشاريع المميزة، ونصائح استخدام منتجاتنا في مواقع العمل.
+      </p>
+    </div>
+    <div class=" mx-auto px-4">
+      <div class="max-w-7xl  mx-auto bg-white rounded-3xl shadow-lg shadow-blue-900/5 overflow-hidden"
+        data-aos="fade-up" dir="rtl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 items-center ">
+          <div class="relative h-56 lg:h-72 h-95 bg-gray-100 overflow-hidden order-1 lg:order-2 m-2 rounded-3xl"
+            [class.ad-image-enter-soft]="adAnimationActive">
+            <img *ngFor="let item of advertisements; let i = index"
+              [src]="item.imageUrl"
+              [alt]="item.title"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+              class="absolute inset-0 w-full h-full object-cover transition-opacity duration-200"
+              [class.opacity-100]="activeAdvertisementIndex === i"
+              [class.opacity-0]="activeAdvertisementIndex !== i">
+            <div class="absolute inset-0 bg-black/15"></div>
+            <!-- <button type="button"
+              class="absolute inset-0 m-auto w-16 h-16 rounded-full bg-white/90 text-[#0275d8] flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
+              <i class="bi bi-play-fill text-3xl pr-1"></i>
+            </button> -->
+          </div>
+
+          <div class="p-8 lg:p-10 text-right order-2 lg:order-1"
+            [class.ad-text-enter-soft]="adAnimationActive">
+            <span
+              class="inline-flex items-center gap-2 text-xs font-bold text-[#0275d8] bg-blue-50 px-3 py-1 rounded-full mb-4">
+              <i class="bi bi-megaphone"></i>
+              أحدث إعلانات الأمانة
+            </span>
+            <h2 class="text-2xl lg:text-3xl font-black text-gray-900 mb-4 leading-snug">
+              {{ ad.title || 'إعلان جديد من الأمانة لمواد البناء' }}
+            </h2>
+            <p class="text-gray-500 leading-relaxed mb-6 line-clamp-3">
+              {{ ad.description || 'اكتشف أحدث عروض ومشاريع الأمانة في مواد البناء، اللواصق، العوازل، ومنتجات التشطيبات الاحترافية.' }}
+            </p>
+
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <div class="min-h-[48px] flex items-center">
+                <button *ngIf="ad.productIds.length"
+                  routerLink="/products" [queryParams]="{ advertisementId: ad.id }"
+                  class="bg-[#0275d8] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#025bb0] transition-all shadow-lg shadow-blue-100">
+                 تسوق الآن
+                </button>
+              </div>
+
+              <div class="flex items-center gap-3" *ngIf="advertisements.length > 1">
+                <button type="button" (click)="previousAdvertisement()"
+                  class="w-10 h-10 rounded-full border border-gray-200 hover:border-[#0275d8] hover:text-[#0275d8] transition-colors">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+                <button type="button" (click)="nextAdvertisement()"
+                  class="w-10 h-10 rounded-full border border-gray-200 hover:border-[#0275d8] hover:text-[#0275d8] transition-colors">
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-center gap-2 mt-5" *ngIf="advertisements.length > 1">
+        <button *ngFor="let item of advertisements; let i = index" type="button"
+          (click)="setActiveAdvertisement(i)" class="h-2 rounded-full transition-all"
+          [class.w-8]="activeAdvertisementIndex === i" [class.w-2]="activeAdvertisementIndex !== i"
+          [class.bg-[#0275d8]]="activeAdvertisementIndex === i"
+          [class.bg-gray-300]="activeAdvertisementIndex !== i" [attr.aria-label]="'الإعلان ' + (i + 1)">
+        </button>
+      </div>
+    </div>
+  </section>
+
+
   <section class="py-20 bg-gray-50/60 overflow-hidden">
     <div class="container mx-auto px-4">
       <div class="flex items-center justify-between mb-12 flex-row-reverse" dir="rtl">
@@ -210,7 +291,7 @@
     <div class="container mx-auto px-4 relative z-10">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center text-right" dir="rtl">
         <div class="text-white" data-aos="fade-left">
-          
+
           <h2 class="text-3xl md:text-5xl font-bold mb-5 leading-[1.3]">
             <span>أداء احترافي يبدأ</span>
             <span class="block mt-4">من بلاتينيوم فيكس</span>
@@ -233,7 +314,8 @@
           <img src="https://res.cloudinary.com/dvo2qoi4s/image/upload/v1778065815/56_pwctbn.png"
             class="img relative z-20 w-[120%] mx-auto -rotate-6 hover:rotate-0 transition-all duration-700 cursor-pointer">
 
-          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/10 blur-3xl rounded-full z-0">
+          <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/10 blur-3xl rounded-full z-0">
           </div>
         </div>
       </div>
