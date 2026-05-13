@@ -14,6 +14,19 @@ export interface Product {
   isBestSeller?: boolean;
   hasOffer?: boolean;
   oldPrice?: number;
+  details?: ProductDetail[];
+  galleryUrls?: string[];
+  categoryName?: string;
+  categoryDescription?: string;
+  discount?: number;
+  priceAfterDiscount?: number;
+}
+
+export interface ProductDetail {
+  id: number;
+  key: string;
+  value: string;
+  sortOrder: number;
 }
 
 export interface Category {

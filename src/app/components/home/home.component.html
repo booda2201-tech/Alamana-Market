@@ -150,8 +150,8 @@
     </div>
   </section>
 
-  <section *ngIf="activeAdvertisement as ad" class="py-8 bg-white">
-    <div class="container mx-auto px-4 text-center">
+  <section *ngIf="activeAdvertisement as ad" class="py-8 ">
+    <div class=" mx-auto px-4 text-center">
       <span class="inline-block py-1 px-3 rounded-full bg-blue-50 text-[#0275d8] text-sm font-bold mb-3"
         data-aos="fade-up">إعلانات الأمانة</span>
       <h2 class="text-3xl font-bold mb-4" data-aos="fade-up">أحدث العروض والمشاريع</h2>
@@ -159,63 +159,59 @@
         تابع آخر أخبار الأمانة، عروض مواد البناء، المشاريع المميزة، ونصائح استخدام منتجاتنا في مواقع العمل.
       </p>
     </div>
-    <div class=" mx-auto px-4">
-      <div class="max-w-7xl  mx-auto bg-white rounded-3xl shadow-lg shadow-blue-900/5 overflow-hidden"
-        data-aos="fade-up" dir="rtl">
-        <div class="grid grid-cols-1 lg:grid-cols-2 items-center ">
-          <div class="relative h-56 lg:h-72 h-95 bg-gray-100 overflow-hidden order-1 lg:order-2 m-2 rounded-3xl"
-            [class.ad-image-enter-soft]="adAnimationActive">
-            <img *ngFor="let item of advertisements; let i = index"
-              [src]="item.imageUrl"
-              [alt]="item.title"
-              loading="eager"
-              decoding="async"
-              fetchpriority="high"
-              class="absolute inset-0 w-full h-full object-cover transition-opacity duration-200"
-              [class.opacity-100]="activeAdvertisementIndex === i"
-              [class.opacity-0]="activeAdvertisementIndex !== i">
-            <div class="absolute inset-0 bg-black/15"></div>
-            <!-- <button type="button"
-              class="absolute inset-0 m-auto w-16 h-16 rounded-full bg-white/90 text-[#0275d8] flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
-              <i class="bi bi-play-fill text-3xl pr-1"></i>
-            </button> -->
-          </div>
+    <div class="mx-auto px-4">
+      <div class="max-w-7xl mx-auto relative bg-white rounded-3xl shadow-lg shadow-blue-900/5 overflow-hidden md:min-h-[320px] lg:min-h-[340px]"
+        data-aos="fade-up" dir="rtl" (touchstart)="onAdvertisementTouchStart($event)"
+        (touchend)="onAdvertisementTouchEnd($event)">
+        <div class="relative h-56 md:absolute md:inset-0 md:h-auto" [class.ad-image-enter-soft]="adAnimationActive">
+          <img *ngFor="let item of advertisements; let i = index"
+            [src]="item.imageUrl"
+            [alt]="item.title"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+            class="absolute inset-0 w-full h-full object-cover transition-opacity duration-200"
+            [class.opacity-100]="activeAdvertisementIndex === i"
+            [class.opacity-0]="activeAdvertisementIndex !== i">
+        </div>
 
-          <div class="p-8 lg:p-10 text-right order-2 lg:order-1"
+        <div class="hidden md:block absolute inset-y-0 left-0 w-full lg:w-[76%] ad-copy-gradient"></div>
+
+        <div class="relative z-10 md:min-h-[320px] lg:min-h-[340px] flex items-center">
+          <div class="w-full md:w-[58%] lg:w-[54%] lg:mr-auto p-7 sm:p-8 lg:p-12 text-center flex flex-col items-center justify-center  md:bg-transparent"
             [class.ad-text-enter-soft]="adAnimationActive">
             <span
               class="inline-flex items-center gap-2 text-xs font-bold text-[#0275d8] bg-blue-50 px-3 py-1 rounded-full mb-4">
               <i class="bi bi-megaphone"></i>
               أحدث إعلانات الأمانة
             </span>
-            <h2 class="text-2xl lg:text-3xl font-black text-gray-900 mb-4 leading-snug">
+            <h2 class="text-2xl lg:text-[28px] font-black text-gray-900 mb-4 leading-snug">
               {{ ad.title || 'إعلان جديد من الأمانة لمواد البناء' }}
             </h2>
-            <p class="text-gray-500 leading-relaxed mb-6 line-clamp-3">
+            <p class="text-gray-500 leading-relaxed mb-6 line-clamp-3 max-w-xl mx-auto">
               {{ ad.description || 'اكتشف أحدث عروض ومشاريع الأمانة في مواد البناء، اللواصق، العوازل، ومنتجات التشطيبات الاحترافية.' }}
             </p>
 
-            <div class="flex flex-wrap items-center justify-between gap-4">
-              <div class="min-h-[48px] flex items-center">
-                <button *ngIf="ad.productIds.length"
-                  routerLink="/products" [queryParams]="{ advertisementId: ad.id }"
-                  class="bg-[#0275d8] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#025bb0] transition-all shadow-lg shadow-blue-100">
-                 تسوق الآن
-                </button>
-              </div>
-
-              <div class="flex items-center gap-3" *ngIf="advertisements.length > 1">
-                <button type="button" (click)="previousAdvertisement()"
-                  class="w-10 h-10 rounded-full border border-gray-200 hover:border-[#0275d8] hover:text-[#0275d8] transition-colors">
-                  <i class="bi bi-chevron-right"></i>
-                </button>
-                <button type="button" (click)="nextAdvertisement()"
-                  class="w-10 h-10 rounded-full border border-gray-200 hover:border-[#0275d8] hover:text-[#0275d8] transition-colors">
-                  <i class="bi bi-chevron-left"></i>
-                </button>
-              </div>
+            <div class="min-h-[48px] flex items-center justify-center">
+              <button *ngIf="ad.productIds.length"
+                routerLink="/products" [queryParams]="{ advertisementId: ad.id }"
+                class="bg-[#0275d8] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#025bb0] transition-all shadow-lg shadow-blue-100">
+                تسوق الآن
+              </button>
             </div>
+
           </div>
+        </div>
+
+        <div class="hidden md:flex absolute left-8 bottom-16 items-center gap-3 z-20" *ngIf="advertisements.length > 1">
+          <button type="button" (click)="previousAdvertisement()"
+            class="w-10 h-10 rounded-full border border-gray-200 bg-white/95 hover:border-[#0275d8] hover:text-[#0275d8] transition-colors shadow-sm">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+          <button type="button" (click)="nextAdvertisement()"
+            class="w-10 h-10 rounded-full border border-gray-200 bg-white/95 hover:border-[#0275d8] hover:text-[#0275d8] transition-colors shadow-sm">
+            <i class="bi bi-chevron-left"></i>
+          </button>
         </div>
       </div>
       <div class="flex justify-center gap-2 mt-5" *ngIf="advertisements.length > 1">

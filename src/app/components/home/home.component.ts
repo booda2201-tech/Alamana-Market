@@ -26,6 +26,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   advertisements: Advertisement[] = [];
   activeAdvertisementIndex = 0;
   adAnimationActive = false;
+  private advertisementTouchStartX = 0;
+  private advertisementTouchStartY = 0;
 
   constructor(
     private readonly productsApi: ProductsApiService,
@@ -229,6 +231,33 @@ addToCart(product: Product): void {
       return;
     }
     this.changeAdvertisement((this.activeAdvertisementIndex - 1 + this.advertisements.length) % this.advertisements.length);
+  }
+
+  onAdvertisementTouchStart(event: TouchEvent): void {
+    const touch = event.changedTouches[0];
+    this.advertisementTouchStartX = touch.clientX;
+    this.advertisementTouchStartY = touch.clientY;
+  }
+
+  onAdvertisementTouchEnd(event: TouchEvent): void {
+    if (this.advertisements.length < 2) {
+      return;
+    }
+
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - this.advertisementTouchStartX;
+    const deltaY = touch.clientY - this.advertisementTouchStartY;
+
+    if (Math.abs(deltaX) < 45 || Math.abs(deltaX) < Math.abs(deltaY)) {
+      return;
+    }
+
+    if (deltaX > 0) {
+      this.previousAdvertisement();
+      return;
+    }
+
+    this.nextAdvertisement();
   }
 
   private changeAdvertisement(index: number): void {

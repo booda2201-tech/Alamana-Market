@@ -15,8 +15,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
   product?: Product;
 
   quantity: number = 1;
-  activeTab: 'specs' | 'desc' | 'docs' = 'specs';
+  activeTab: 'overview' | 'details' | 'category' = 'overview';
   specsArray: [string, string][] = []; // هنخزن الـ specs هنا بشكل ثابت
+  activeImage = '';
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -35,6 +36,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
       this.productsApi.getProductById(productId).subscribe((product) => {
         this.product = product;
         this.specsArray = Object.entries(product?.specs ?? {});
+        this.activeImage = product?.galleryUrls?.[0] || product?.image || '';
       });
     });
   }
@@ -58,6 +60,26 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit {
     if (this.quantity + amount >= 1) {
       this.quantity += amount;
     }
+  }
+
+  setActiveImage(image: string): void {
+    this.activeImage = image;
+  }
+
+  get productDetails() {
+    return this.product?.details || [];
+  }
+
+  getDetailIcon(key: string): string {
+    const normalizedKey = key.trim();
+    if (normalizedKey.includes('وصف')) return 'bi-card-text';
+    if (normalizedKey.includes('خصائص')) return 'bi-stars';
+    if (normalizedKey.includes('استخدام')) return 'bi-tools';
+    if (normalizedKey.includes('تحذير')) return 'bi-exclamation-triangle';
+    if (normalizedKey.includes('تخزين') || normalizedKey.includes('تعبئة')) return 'bi-box-seam';
+    if (normalizedKey.includes('فنية')) return 'bi-clipboard-data';
+    if (normalizedKey.includes('الأداء') || normalizedKey.includes('اداء')) return 'bi-graph-up-arrow';
+    return 'bi-info-circle';
   }
 
   addToCart() {

@@ -27,6 +27,7 @@ interface ApiProduct {
   discount?: number | string;
   priceAfterDiscount?: number | string;
   specs?: Record<string, string>;
+  details?: Array<{ id?: number; key?: string; value?: string; sortOrder?: number }>;
   gallery?: Array<{ imageUrl?: string; url?: string; path?: string }>;
   galleryUrls?: Array<{ imageUrl?: string; url?: string; path?: string; type?: string }>;
 }
@@ -119,10 +120,15 @@ export class ProductsApiService {
       apiProduct.galleryUrls?.[0]?.imageUrl ||
       apiProduct.galleryUrls?.[0]?.url ||
       apiProduct.galleryUrls?.[0]?.path;
-    const productPrice = Number(apiProduct.price ?? apiProduct.priceAfterDiscount ?? 0);
-    const oldPrice = apiProduct.oldPrice !== undefined ? Number(apiProduct.oldPrice) : Number(apiProduct.price ?? 0);
-    const inferredOffer = Number(apiProduct.discount ?? 0) > 0 || oldPrice > productPrice;
+    const originalPrice = Number(apiProduct.price ?? 0);
+    const discountedPrice = Number(apiProduct.priceAfterDiscount ?? 0);
+    const discount = Number(apiProduct.discount ?? 0);
+    const hasDiscountPrice = discountedPrice > 0 && discountedPrice < originalPrice;
+    const productPrice = hasDiscountPrice ? discountedPrice : originalPrice;
+    const oldPrice = apiProduct.oldPrice !== undefined ? Number(apiProduct.oldPrice) : originalPrice;
+    const inferredOffer = discount > 0 || oldPrice > productPrice;
     const hasOffer = apiProduct.hasOffer ?? inferredOffer;
+    const galleryUrls = this.getGalleryUrls(apiProduct);
 
     return {
       id,
@@ -137,8 +143,33 @@ export class ProductsApiService {
       image: this.normalizeImageUrl(apiProduct.imageUrl || apiProduct.image || galleryImage) || 'assets/images/product-1.png',
       isNew: Boolean(apiProduct.isNew ?? apiProduct.new),
       isBestSeller: Boolean(apiProduct.isBestSeller),
-      hasOffer
+      hasOffer,
+      details: (apiProduct.details || [])
+        .map((detail) => ({
+          id: Number(detail.id || 0),
+          key: detail.key || '',
+          value: detail.value || '',
+          sortOrder: Number(detail.sortOrder || 0)
+        }))
+        .filter((detail) => detail.key.trim() && detail.value.trim())
+        .sort((a, b) => a.sortOrder - b.sortOrder),
+      galleryUrls: galleryUrls.length ? galleryUrls : [this.normalizeImageUrl(apiProduct.imageUrl || apiProduct.image || galleryImage) || 'assets/images/product-1.png'],
+      categoryName: this.getCategoryName(apiProduct),
+      categoryDescription: typeof apiProduct.category === 'object' ? apiProduct.category.description || '' : '',
+      discount,
+      priceAfterDiscount: discountedPrice
     };
+  }
+
+  private getGalleryUrls(apiProduct: ApiProduct): string[] {
+    const gallery = [
+      ...(apiProduct.gallery || []).map((item) => item.imageUrl || item.url || item.path),
+      ...(apiProduct.galleryUrls || []).map((item) => item.imageUrl || item.url || item.path)
+    ];
+
+    return gallery
+      .map((url) => this.normalizeImageUrl(url))
+      .filter((url): url is string => Boolean(url));
   }
 
   private normalizeCategory(category?: string): Product['category'] {

@@ -122,7 +122,7 @@ export class AppComponent {
           '@type': ['Organization', 'Store'],
           '@id': `${this.siteUrl}/#organization`,
           name: 'الأمانة لمواد البناء',
-          alternateName: ['الامانة', 'الامانة مواد البناء', 'Alamana Market', 'Alamana Building Materials'],
+          alternateName: ['الامانة','الأمانة','الامانه','الأمانه', 'الامانة مواد البناء', 'Alamana Market', 'Alamana Building Materials'],
           url: this.siteUrl,
           logo: this.defaultImage,
           image: this.defaultImage,
