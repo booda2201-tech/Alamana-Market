@@ -19,6 +19,10 @@ export class NavbarComponent implements OnInit {
   totalItems = 0;
   cartMessage = '';
 
+  get isErrorMessage(): boolean {
+    return /تعذر|خطأ|فشل/.test(this.cartMessage);
+  }
+
   navLinks = [
     { name: 'الرئيسية', href: '/' },
     { name: 'منتجاتنا', href: '/products', hasMegaMenu: true },

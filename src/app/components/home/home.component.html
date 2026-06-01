@@ -50,9 +50,9 @@
       <p class="text-gray-500 max-w-2xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">نقدم مجموعة واسعة من
         الكيماويات ومواد البناء المصممة لتلبية أدق المعايير الهندسية</p>
 
-      <div class="flex flex-wrap justify-center items-stretch gap-6 ">
+      <div class="flex md:flex-wrap justify-start md:justify-center items-stretch gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth hide-scrollbar -mx-4 px-4 pb-2">
         <div *ngFor="let cat of categories; let i = index"
-          class="group w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)] max-w-[320px] cursor-pointer border rounded-xl overflow-hidden hover:border-[#0275d8] transition-all duration-500 hover:shadow-xl hover:-translate-y-2"
+          class="group shrink-0 snap-start w-[78%] sm:w-[45%] md:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)] max-w-[320px] cursor-pointer border rounded-xl overflow-hidden hover:border-[#0275d8] transition-all duration-500 hover:shadow-xl hover:-translate-y-2"
           data-aos="fade-up" [attr.data-aos-delay]="(i % 4) * 150"> <a [routerLink]="['/products']"
             [queryParams]="{category: cat.id}" class="no-underline text-inherit ">
             <div class="h-48 bg-gray-50 flex items-center justify-center overflow-hidden ">
@@ -93,9 +93,9 @@
 
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-smooth hide-scrollbar -mx-4 px-4 pb-2">
         <div *ngFor="let product of bestSellers; let i = index" (click)="goToDetails(product.id)"
-          class="group bg-white rounded-3xl border border-gray-100 p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-100 cursor-pointer"
+          class="group shrink-0 snap-start w-[78%] sm:w-auto bg-white rounded-3xl border border-gray-100 p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-100 cursor-pointer"
           data-aos="fade-up" [attr.data-aos-delay]="i * 100">
 
           <div
@@ -242,9 +242,9 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-smooth hide-scrollbar -mx-4 px-4 pb-2">
         <div *ngFor="let product of randomProducts; let i = index" (click)="goToDetails(product.id)"
-          class="group bg-white rounded-3xl border border-gray-100 p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-100 cursor-pointer"
+          class="group shrink-0 snap-start w-[78%] sm:w-auto bg-white rounded-3xl border border-gray-100 p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-100 cursor-pointer"
           data-aos="fade-up" [attr.data-aos-delay]="i * 100">
 
           <div

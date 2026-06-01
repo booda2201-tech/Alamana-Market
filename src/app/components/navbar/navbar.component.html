@@ -92,8 +92,13 @@
 </header>
 
 <div *ngIf="cartMessage"
-  class="fixed top-24 left-1/2 -translate-x-1/2 z-[80] bg-[#1D76B9] text-white px-5 py-3 rounded-xl shadow-lg text-sm font-bold">
-  {{ cartMessage }}
+  dir="rtl"
+  class="cart-toast fixed bottom-5 sm:bottom-auto sm:top-24 left-1/2 -translate-x-1/2 z-[80] w-[calc(100%-2rem)] sm:w-auto max-w-sm flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl shadow-black/15 text-sm font-bold text-white backdrop-blur-md"
+  [ngClass]="isErrorMessage ? 'bg-red-600/95' : 'bg-[#1D76B9]/95'">
+  <span class="shrink-0 w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-lg">
+    <i class="bi" [ngClass]="isErrorMessage ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill'"></i>
+  </span>
+  <span class="flex-1 leading-snug">{{ cartMessage }}</span>
 </div>
 
 
