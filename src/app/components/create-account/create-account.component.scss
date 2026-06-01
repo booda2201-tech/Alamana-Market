@@ -1,6 +1,6 @@
 :host {
   .form-input-custom {
-    @apply w-full h-14 bg-gray-50 border-none rounded-2xl px-6 pr-12 text-right transition-all outline-none border border-transparent;
+    @apply w-full h-12 bg-gray-50 border-none rounded-xl px-6 pr-12 text-right transition-all outline-none border border-transparent;
 
     &::placeholder {
       @apply text-gray-400 text-sm opacity-60;
