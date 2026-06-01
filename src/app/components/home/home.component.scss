@@ -65,12 +65,46 @@
 .ad-copy-gradient {
   background: linear-gradient(
     to right,
-    #ffffff 0%,
-    #ffffff 68%,
-    rgba(255, 255, 255, 0.92) 78%,
-    rgba(255, 255, 255, 0.55) 90%,
+    rgba(255, 255, 255, 0.72) 40%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.4) 58%,
+    rgba(255, 255, 255, 0.2) 78%,
+    rgba(255, 255, 255, 0.06) 92%,
     rgba(255, 255, 255, 0) 100%
   );
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  /* قناع يجعل البلور نفسه يتلاشى تدريجياً بدل القطع المفاجئ */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 45%,
+    rgba(0, 0, 0, 0.5) 72%,
+    rgba(0, 0, 0, 0.15) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 45%,
+    rgba(0, 0, 0, 0.5) 72%,
+    rgba(0, 0, 0, 0.15) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+/* لجعل النص واضحًا فوق الصورة الظاهرة من الخلف */
+.ad-text-readable {
+  h2 {
+    text-shadow: 0 1px 6px rgba(255, 255, 255, 0.9), 0 0 2px rgba(255, 255, 255, 0.9);
+  }
+  p {
+    text-shadow: 0 1px 4px rgba(255, 255, 255, 0.95);
+  }
+  .ad-badge {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
 }
 
 @keyframes adImageFromRight {
