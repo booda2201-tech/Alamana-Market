@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as AOS from 'aos';
 import { gsap } from 'gsap';
+import { LanguageService } from '../../core/services/language.service';
+import { TranslationKey } from '../../core/i18n/translations';
 
 @Component({
   selector: 'app-about-us',
@@ -9,12 +11,14 @@ import { gsap } from 'gsap';
 })
 export class AboutUsComponent implements OnInit, AfterViewInit {
 
-  stats = [
-    { label: 'سنوات الخبرة', value: '+15', icon: 'bi bi-clock-history' },
-    { label: 'مشروع منجز', value: '+1000', icon: 'bi bi-building' },
-    { label: 'عميل راضٍ', value: '+5000', icon: 'bi bi-people' },
-    { label: 'فرع محلي', value: '5', icon: 'bi bi-geo-alt' },
+  readonly stats: Array<{ labelKey: TranslationKey; value: string; icon: string }> = [
+    { labelKey: 'about.statYears', value: '+15', icon: 'bi bi-clock-history' },
+    { labelKey: 'about.statProjects', value: '+1000', icon: 'bi bi-building' },
+    { labelKey: 'about.statClients', value: '+5000', icon: 'bi bi-people' },
+    { labelKey: 'about.statBranches', value: '5', icon: 'bi bi-geo-alt' },
   ];
+
+  constructor(public readonly language: LanguageService) {}
 
   ngOnInit(): void {
     AOS.init({

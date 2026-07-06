@@ -3,6 +3,8 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AppCartItem, CartApiService } from '../../core/services/cart-api.service';
 import { CheckoutApiService, CreateOrderPayload, LocationOption, PaymentMethodOption } from '../../core/services/checkout-api.service';
+import { CountryService } from '../../core/services/country.service';
+import { LanguageService } from '../../core/services/language.service';
 import { Router } from '@angular/router';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -52,14 +54,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   constructor(
     private readonly cartApi: CartApiService,
     private readonly checkoutApi: CheckoutApiService,
-    private readonly router: Router
+    private readonly countryService: CountryService,
+    private readonly router: Router,
+    public readonly language: LanguageService
   ) {}
 
 ngOnInit(): void {
   this.userId = this.cartApi.getCurrentUserId();
   if (!this.userId) {
     this.isLoading = false;
-    this.errorMessage = 'لازم تسجل دخول أولاً لإتمام الطلب.';
+    this.errorMessage = this.language.translate('checkout.loginRequired');
     return;
   }
 
@@ -77,6 +81,7 @@ ngOnInit(): void {
   this.loadCart();
   this.loadCountries();
   this.loadPaymentMethods();
+  this.countryService.loadCountries().subscribe();
 }
 
 calculateTotal(): void {
@@ -116,12 +121,12 @@ calculateTotal(): void {
       next: () => {
         this.isSubmitting = false;
         this.isSuccess = true;
-        this.successMessage = 'تم استلام طلبك بنجاح';
+        this.successMessage = this.language.translate('checkout.success');
         window.scrollTo(0, 0);
       },
       error: (error) => {
         this.isSubmitting = false;
-        this.errorMessage = error?.error?.message || 'تعذر إتمام الطلب حالياً. حاول مرة أخرى.';
+        this.errorMessage = error?.error?.message || this.language.translate('checkout.submitFailed');
       }
     });
   }
@@ -188,10 +193,18 @@ calculateTotal(): void {
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'تعذر تحميل بيانات السلة.';
+        this.errorMessage = this.language.translate('checkout.loadCartFailed');
         this.isLoading = false;
       }
     });
+  }
+
+  getCountryLabel(country: LocationOption): string {
+    const catalogCountry = this.countryService.getCountries().find((item) => item.id === country.id);
+    if (catalogCountry) {
+      return this.countryService.getLocalizedName(catalogCountry);
+    }
+    return country.name;
   }
 
   private loadCountries(): void {
@@ -200,7 +213,7 @@ calculateTotal(): void {
         this.countries = options;
       },
       error: () => {
-        this.errorMessage = 'تعذر تحميل بيانات المناطق.';
+        this.errorMessage = this.language.translate('checkout.locationsFailed');
       }
     });
   }
@@ -214,7 +227,7 @@ calculateTotal(): void {
         }
       },
       error: () => {
-        this.errorMessage = 'تعذر تحميل طرق الدفع.';
+        this.errorMessage = this.language.translate('checkout.paymentFailed');
       }
     });
   }

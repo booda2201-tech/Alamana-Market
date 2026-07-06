@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 // ضيف group هنا في الـ imports
 import { trigger, style, transition, animate, group } from '@angular/animations';
 import { CartApiService } from '../../core/services/cart-api.service';
+import { LanguageService } from '../../core/services/language.service';
 import { OrdersApiService, UserOrder } from '../../core/services/orders-api.service';
 
 @Component({
@@ -36,7 +37,8 @@ orders: UserOrder[] = [];
 
 constructor(
   private readonly ordersApi: OrdersApiService,
-  private readonly cartApi: CartApiService
+  private readonly cartApi: CartApiService,
+  public readonly language: LanguageService
 ) {
   this.loadOrders();
 }
@@ -57,11 +59,15 @@ toggleOrder(id: string) {
     }
   }
 
+  get dateLocale(): string {
+    return this.language.current === 'ar' ? 'ar-KW' : 'en-US';
+  }
+
   private loadOrders(): void {
     const userId = this.cartApi.getCurrentUserId();
     if (!userId) {
       this.isLoading = false;
-      this.errorMessage = 'لازم تسجل دخول أولاً لعرض الطلبات.';
+      this.errorMessage = this.language.translate('orders.loginRequired');
       return;
     }
 
@@ -71,7 +77,7 @@ toggleOrder(id: string) {
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'تعذر تحميل الطلبات السابقة حالياً.';
+        this.errorMessage = this.language.translate('orders.loadFailed');
         this.isLoading = false;
       }
     });

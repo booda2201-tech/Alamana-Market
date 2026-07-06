@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import * as AOS from 'aos';
 import { AuthApiService } from '../../core/services/auth-api.service';
 import { CartApiService } from '../../core/services/cart-api.service';
+import { LanguageService } from '../../core/services/language.service';
 
 interface LoginApiResponse {
   token?: string;
@@ -43,7 +44,8 @@ export class LoginComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly authApi: AuthApiService,
     private readonly cartApi: CartApiService,
-    private readonly router: Router
+    private readonly router: Router,
+    public readonly language: LanguageService
   ) { }
 
   ngOnInit(): void {
@@ -89,20 +91,20 @@ export class LoginComponent implements OnInit {
         this.isSubmitting = false;
         const loginData = this.extractLoginData(response);
         if (!loginData.token) {
-          this.errorMessage = 'تم تسجيل الدخول لكن لم يتم استلام token من الخادم.';
+          this.errorMessage = this.language.translate('login.tokenError');
           return;
         }
 
         this.persistAuthData(loginData);
         this.cartApi.refreshCartCount(this.cartApi.getCurrentUserId());
-        this.successMessage = 'تم تسجيل الدخول بنجاح. جاري تحويلك...';
+        this.successMessage = this.language.translate('login.success');
         setTimeout(() => this.router.navigate(['/']), 900);
       },
       error: (error) => {
         this.isSubmitting = false;
         const apiErrors = error?.error?.errors;
         const apiMessage = error?.error?.message || error?.error?.title;
-        this.errorMessage = apiMessage || 'فشل تسجيل الدخول. تأكد من البيانات وحاول مرة أخرى.';
+        this.errorMessage = apiMessage || this.language.translate('login.failed');
         this.errorDetails = Array.isArray(apiErrors)
           ? apiErrors.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
           : [];

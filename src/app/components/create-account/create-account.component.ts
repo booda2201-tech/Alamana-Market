@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as AOS from 'aos';
 import { AuthApiService } from '../../core/services/auth-api.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-create-account',
@@ -31,7 +32,8 @@ export class CreateAccountComponent implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly authApi: AuthApiService,
-    private readonly router: Router
+    private readonly router: Router,
+    public readonly language: LanguageService
   ) { }
 
   ngOnInit(): void {
@@ -68,18 +70,18 @@ export class CreateAccountComponent implements OnInit {
 
     const errors: string[] = [];
     if (control.errors['minlength']) {
-      errors.push('كلمة المرور لازم تكون 8 أحرف على الأقل.');
+      errors.push(this.language.translate('signup.passwordMin'));
     }
     if (control.errors['pattern']) {
       const value = String(control.value || '');
       if (!/[a-z]/.test(value)) {
-        errors.push('لازم تحتوي على حرف صغير واحد على الأقل (a-z).');
+        errors.push(this.language.translate('signup.passwordLower'));
       }
       if (!/[A-Z]/.test(value)) {
-        errors.push('لازم تحتوي على حرف كبير واحد على الأقل (A-Z).');
+        errors.push(this.language.translate('signup.passwordUpper'));
       }
       if (!/[^A-Za-z0-9]/.test(value)) {
-        errors.push('لازم تحتوي على رمز خاص واحد على الأقل (مثل !@#$).');
+        errors.push(this.language.translate('signup.passwordSpecial'));
       }
     }
 
@@ -107,7 +109,7 @@ export class CreateAccountComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.successMessage = 'تم إنشاء الحساب بنجاح. جاري تحويلك لتسجيل الدخول...';
+        this.successMessage = this.language.translate('signup.success');
         this.signupForm.reset({ terms: false });
         setTimeout(() => this.router.navigate(['/login']), 1200);
       },
@@ -115,7 +117,7 @@ export class CreateAccountComponent implements OnInit {
         this.isSubmitting = false;
         const apiErrors = error?.error?.errors;
         const apiMessage = error?.error?.message || error?.error?.title;
-        this.errorMessage = apiMessage || 'حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.';
+        this.errorMessage = apiMessage || this.language.translate('signup.failed');
         this.errorDetails = Array.isArray(apiErrors)
           ? apiErrors.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
           : [];

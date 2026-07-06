@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router'; // ماتنساش الـ import
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { Category, Product } from '../../core/models/product.model';
 import { AdvertisementsApiService } from '../../core/services/advertisements-api.service';
 import { CartApiService } from '../../core/services/cart-api.service';
+import { CountryService } from '../../core/services/country.service';
+import { LanguageService } from '../../core/services/language.service';
 import { ProductsApiService } from '../../core/services/products-api.service';
 
 @Component({
@@ -11,7 +15,7 @@ import { ProductsApiService } from '../../core/services/products-api.service';
   templateUrl: './products-list.component.html',
   styleUrls: ['./products-list.component.scss']
 })
-export class ProductsListComponent implements OnInit {
+export class ProductsListComponent implements OnInit, OnDestroy {
 
   // 2. البيانات (Data)
   categories: Category[] = [];
@@ -23,36 +27,26 @@ export class ProductsListComponent implements OnInit {
   selectedCategory: string = 'all';
   showNewOnly: boolean = false;
   isAdvertisementMode = false;
-  pageTitle = 'منتجاتنا';
-  pageDescription = 'استكشف مجموعتنا الكاملة من مواد البناء عالية الجودة المصممة لتحمل أصعب الظروف.';
+  pageTitle = '';
+  pageDescription = '';
   private pendingCategoryParam = 'all';
   private advertisementProductIds = new Set<string>();
+  private countrySubscription?: Subscription;
+  private languageSubscription?: Subscription;
 
 constructor(
     private route: ActivatedRoute,
-    private router: Router, // ضيف الـ Router هنا
+    private router: Router,
     private advertisementsApi: AdvertisementsApiService,
     private cartApi: CartApiService,
-    private productsApi: ProductsApiService
+    private countryService: CountryService,
+    private productsApi: ProductsApiService,
+    public readonly language: LanguageService
   ) {}
 
   ngOnInit(): void {
-    this.loadData();
-  }
+    this.resetAdvertisementMode();
 
-  private loadData(): void {
-    this.productsApi.getCategories().subscribe((categories) => {
-      this.categories = categories;
-      this.selectedCategory = this.resolveCategoryParam(this.pendingCategoryParam);
-      this.applyFilters();
-    });
-
-    this.productsApi.getProducts().subscribe((products) => {
-      this.allProducts = products;
-      this.applyFilters();
-    });
-
-    // مراقبة الـ Query Params للفلترة التلقائية عند الدخول للصفحة
     this.route.queryParams.subscribe(params => {
       const advertisementId = params['advertisementId'];
       if (advertisementId) {
@@ -64,6 +58,38 @@ constructor(
       this.pendingCategoryParam = params['category'] || 'all';
       this.selectedCategory = this.resolveCategoryParam(this.pendingCategoryParam);
       this.showNewOnly = params['filter'] === 'new';
+      this.applyFilters();
+    });
+
+    this.countrySubscription = this.countryService.selectedCountryId$.pipe(
+      filter((countryId): countryId is number => !!countryId && countryId > 0),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.loadData();
+    });
+
+    this.countryService.loadCountries().subscribe();
+    this.languageSubscription = this.language.language$.subscribe(() => {
+      if (!this.isAdvertisementMode) {
+        this.resetAdvertisementMode();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.countrySubscription?.unsubscribe();
+    this.languageSubscription?.unsubscribe();
+  }
+
+  private loadData(): void {
+    this.productsApi.getCategories().subscribe((categories) => {
+      this.categories = categories;
+      this.selectedCategory = this.resolveCategoryParam(this.pendingCategoryParam);
+      this.applyFilters();
+    });
+
+    this.productsApi.getProducts().subscribe((products) => {
+      this.allProducts = products;
       this.applyFilters();
     });
   }
@@ -100,10 +126,10 @@ constructor(
     this.cartApi.addCartItem(userId, product, 1).subscribe({
       next: () => {
         this.cartApi.refreshCartCount(userId);
-        this.cartApi.showCartMessage('تمت إضافة المنتج إلى السلة');
+        this.cartApi.showCartMessage(this.language.translate('cart.added'));
       },
       error: () => {
-        this.cartApi.showCartMessage('تعذر إضافة المنتج للسلة');
+        this.cartApi.showCartMessage(this.language.translate('cart.addFailed'));
       }
     });
   }
@@ -114,7 +140,11 @@ goToDetails(productId: string): void {
   }
 
   getCategoryName(categoryId: string): string {
-    return this.categories.find((category) => category.id === categoryId)?.name || categoryId;
+    const category = this.categories.find((item) => item.id === categoryId);
+    if (!category) {
+      return categoryId;
+    }
+    return this.language.pickLocalized(category.nameAr, category.nameEn, category.name);
   }
 
   private resolveCategoryParam(categoryParam: string): string {
@@ -161,8 +191,8 @@ goToDetails(productId: string): void {
 
   private resetAdvertisementMode(): void {
     this.isAdvertisementMode = false;
-    this.pageTitle = 'منتجاتنا';
-    this.pageDescription = 'استكشف مجموعتنا الكاملة من مواد البناء عالية الجودة المصممة لتحمل أصعب الظروف.';
+    this.pageTitle = this.language.translate('products.title');
+    this.pageDescription = this.language.translate('products.description');
     this.advertisementProductIds.clear();
   }
 

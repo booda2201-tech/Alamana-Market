@@ -3,9 +3,13 @@ import { Router } from '@angular/router';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as AOS from 'aos';
+import { Subscription } from 'rxjs';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { Category, Product } from '../../core/models/product.model';
 import { Advertisement, AdvertisementsApiService } from '../../core/services/advertisements-api.service';
 import { CartApiService } from '../../core/services/cart-api.service';
+import { CountryService } from '../../core/services/country.service';
+import { LanguageService } from '../../core/services/language.service';
 import { ProductsApiService } from '../../core/services/products-api.service';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -16,25 +20,28 @@ gsap.registerPlugin(ScrollTrigger);
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-  private categoryLabels: Record<string, string> = {};
   private readonly brokenCategoryImageKeys = new Set<string>();
   private readonly preloadedAdvertisementImages = new Set<string>();
   categories: Category[] = [];
 
   bestSellers: Product[] = [];
   randomProducts: Product[] = [];
+  heroProduct?: Product;
   advertisements: Advertisement[] = [];
   activeAdvertisementIndex = 0;
   adAnimationActive = false;
   private advertisementTouchStartX = 0;
   private advertisementTouchStartY = 0;
+  private countrySubscription?: Subscription;
 
   constructor(
     private readonly productsApi: ProductsApiService,
     private readonly advertisementsApi: AdvertisementsApiService,
     private readonly cartApi: CartApiService,
+    private readonly countryService: CountryService,
     private readonly router: Router,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    public readonly language: LanguageService
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +54,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       delay: 0,
     });
 
+    this.countrySubscription = this.countryService.selectedCountryId$.pipe(
+      filter((countryId): countryId is number => !!countryId && countryId > 0),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.loadCatalogData();
+    });
+
+    this.countryService.loadCountries().subscribe();
+  }
+
+  private loadCatalogData(): void {
     this.productsApi.getBestSellers().subscribe((products) => {
       this.bestSellers = products.slice(0, 4);
     });
@@ -65,15 +83,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productsApi.getCategories().subscribe((categories) => {
       this.brokenCategoryImageKeys.clear();
       this.categories = categories.filter((category) => category.id !== 'all');
-      this.categoryLabels = this.categories.reduce((acc, category) => {
-        acc[category.id] = category.name;
-        return acc;
-      }, {} as Record<string, string>);
+    });
+
+    this.productsApi.getHeroProduct().subscribe((product) => {
+      this.heroProduct = product;
+      this.cdr.detectChanges();
     });
   }
 
   getCategoryName(categoryId: string): string {
-    return this.categoryLabels[categoryId] || categoryId;
+    const category = this.categories.find((item) => item.id === categoryId);
+    if (!category) {
+      return categoryId;
+    }
+
+    return this.language.pickLocalized(category.nameAr, category.nameEn, category.name);
   }
 
   getCategoryImage(category: Category): string {
@@ -185,6 +209,7 @@ productImg?.addEventListener('mouseleave', () => {
 
 
   ngOnDestroy(): void {
+    this.countrySubscription?.unsubscribe();
     // تنظيف الـ ScrollTrigger لما تخرج من الصفحة عشان الأداء
     ScrollTrigger.getAll().forEach(t => t.kill());
   }
@@ -199,10 +224,10 @@ addToCart(product: Product): void {
     this.cartApi.addCartItem(userId, product, 1).subscribe({
       next: () => {
         this.cartApi.refreshCartCount(userId);
-        this.cartApi.showCartMessage('تمت إضافة المنتج إلى السلة');
+        this.cartApi.showCartMessage(this.language.translate('cart.added'));
       },
       error: () => {
-        this.cartApi.showCartMessage('تعذر إضافة المنتج للسلة');
+        this.cartApi.showCartMessage(this.language.translate('cart.addFailed'));
       }
     });
   }

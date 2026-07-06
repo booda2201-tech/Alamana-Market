@@ -8,6 +8,8 @@ export interface Product {
   price: number;
   weight: string;
   description: string;
+  descriptionAr?: string;
+  descriptionEn?: string;
   specs: Record<string, string>;
   image: string;
   isNew?: boolean;
@@ -17,7 +19,11 @@ export interface Product {
   details?: ProductDetail[];
   galleryUrls?: string[];
   categoryName?: string;
+  categoryNameAr?: string;
+  categoryNameEn?: string;
   categoryDescription?: string;
+  categoryDescriptionAr?: string;
+  categoryDescriptionEn?: string;
   discount?: number;
   priceAfterDiscount?: number;
 }
@@ -32,5 +38,7 @@ export interface ProductDetail {
 export interface Category {
   id: string;
   name: string;
+  nameAr?: string;
+  nameEn?: string;
   image?: string;
 }

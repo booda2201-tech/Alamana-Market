@@ -3,96 +3,127 @@
     'bg-white/90 backdrop-blur-md shadow-sm py-2 border-b': isScrolled,
     'bg-transparent py-3': !isScrolled
   }">
-  <div class="container mx-auto px-4 flex items-center justify-between flex-row-reverse">
+  <div class="container mx-auto px-3 sm:px-4">
+  <!-- Layout dir=ltr keeps bar structure stable; text menus use language.dir -->
+    <div class="navbar__inner flex items-center gap-2 sm:gap-3 lg:gap-5 min-h-[56px] w-full" dir="ltr">
 
-    <a routerLink="/" class="flex items-center gap-2 cursor-pointer no-underline flex-row-reverse">
-      <div class="w-20 h-10 rounded ">
-        <img src="../../../assets//images/alamanaWithoutbg.png" alt="">
-      </div>
-      <!-- <div class="text-right">
-        <h1 class="font-bold text-xl leading-none transition-colors"
-          [ngClass]="(isScrolled || currentUrl !== '/') ? 'text-gray-900' : 'text-white'">
-          الأمانة
-        </h1>
-        <p class="text-[10px] tracking-wider uppercase transition-colors"
-          [ngClass]="(isScrolled || currentUrl !== '/') ? 'text-gray-500' : 'text-white/80'">
-          لمواد البناء
-        </p>
-      </div> -->
-    </a>
+      <a routerLink="/" class="navbar__brand shrink-0 no-underline"
+        [class.order-1]="!language.isRtl"
+        [class.order-3]="language.isRtl">
+        <img src="../../../assets//images/alamanaWithoutbg.png" alt="Alamana" class="h-8 sm:h-9 w-auto object-contain">
+      </a>
 
-    <nav class="hidden lg:flex items-center gap-8" dir="rtl">
-      <div *ngFor="let link of navLinks" class="relative group">
-        <a [routerLink]="link.href" [queryParams]="link.queryParams"
-          class="text-sm font-medium flex items-center gap-1 hover:text-[#0275d8] transition-colors cursor-pointer no-underline py-4"
-          [ngClass]="{
-                  'text-[#0275d8]': currentUrl === link.href,
-                  'text-gray-900': isScrolled || (currentUrl !== '/' && currentUrl !== link.href),
-                  'text-white': !isScrolled && currentUrl === '/' && currentUrl !== link.href
-                }">
-          {{ link.name }}
-          <i *ngIf="link.hasMegaMenu"
-            class="bi bi-chevron-down text-[10px] group-hover:rotate-180 transition-transform"></i>
-        </a>
+      <nav class="navbar__links order-2 hidden lg:flex flex-1 items-center justify-center gap-3 xl:gap-5 min-w-0"
+        [attr.dir]="language.dir">
+        <div *ngFor="let link of navLinks" class="relative group shrink-0">
+          <a [routerLink]="link.href" [queryParams]="link.queryParams"
+            class="text-sm font-medium flex items-center gap-1 hover:text-[#0275d8] transition-colors cursor-pointer no-underline py-3 whitespace-nowrap"
+            [ngClass]="{
+              'text-[#0275d8]': currentUrl === link.href,
+              'text-gray-900': isScrolled || (currentUrl !== '/' && currentUrl !== link.href),
+              'text-white': !isScrolled && currentUrl === '/' && currentUrl !== link.href
+            }">
+            {{ link.name }}
+            <i *ngIf="link.hasMegaMenu" class="bi bi-chevron-down text-[10px] group-hover:rotate-180 transition-transform"></i>
+          </a>
 
-        <div *ngIf="link.hasMegaMenu" class="absolute top-full right-0 pt-4 opacity-0 translate-y-2 pointer-events-none
-                        group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto
-                        transition-all duration-300 w-64 z-[999]">
-          <div
-            class="bg-white rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-gray-100 p-2 overflow-visible">
-            <div class="flex flex-col text-right" dir="rtl">
+          <div *ngIf="link.hasMegaMenu"
+            class="absolute top-full pt-3 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 w-60 z-[999]"
+            [class.right-0]="language.isRtl"
+            [class.left-0]="!language.isRtl">
+            <div class="bg-white rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-gray-100 p-2">
               <a *ngFor="let cat of categories" [routerLink]="['/products']" [queryParams]="{category: cat.id}"
-                class="px-4 py-3 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer flex items-center justify-start gap-3 no-underline group/item">
-                <span class="text-sm font-medium text-gray-700 group-hover/item:text-[#0275d8]">{{ cat.name }}</span>
-                <div
-                  class="w-1.5 h-1.5 rounded-full bg-[#0275d8] opacity-0 group-hover/item:opacity-100 transition-opacity">
-                </div>
+                class="px-4 py-2.5 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer flex items-center gap-2 no-underline group/item"
+                [class.flex-row-reverse]="language.isRtl">
+                <span class="text-sm font-medium text-gray-700 group-hover/item:text-[#0275d8]">
+                  {{ cat.nameAr | localized:cat.nameEn:cat.name }}
+                </span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#0275d8] opacity-0 group-hover/item:opacity-100 transition-opacity"></span>
               </a>
             </div>
           </div>
         </div>
-      </div>
-    </nav>
-    <div class="flex items-center gap-4 flex-row-reverse">
+      </nav>
 
-      <button (click)="goToSearch()" class="p-2 rounded-full transition-colors hidden md:block"
-        [ngClass]="(isScrolled || currentUrl !== '/') ? 'text-gray-900 hover:bg-gray-100' : 'text-white hover:bg-white/20'">
-        <i class="bi bi-search text-xl"></i>
-      </button>
+      <div class="navbar__actions flex items-center gap-1 sm:gap-1.5 shrink-0"
+        [class.order-3]="!language.isRtl"
+        [class.order-1]="language.isRtl"
+        [class.flex-row-reverse]="language.isRtl">
 
+        <div class="relative" (click)="$event.stopPropagation()">
+          <button type="button" (click)="toggleLocaleMenu($event)"
+            class="navbar__icon-btn"
+            [ngClass]="isHeroNavbar
+              ? 'text-white border-white/30 bg-white/10 hover:bg-white/20'
+              : 'text-gray-700 border-gray-200 bg-white hover:border-[#0275d8] hover:text-[#0275d8]'"
+            [attr.aria-label]="'nav.country' | t">
+            <i class="bi bi-globe2 text-base"></i>
+          </button>
 
-      <a routerLink="/cart" class="relative p-2 rounded-full transition-colors no-underline"
-        [ngClass]="(isScrolled || currentUrl !== '/') ? 'text-gray-900 hover:bg-gray-100' : 'text-white hover:bg-white/20'">
-        <i class="bi bi-basket3 text-xl"></i>
-        <span *ngIf="totalItems > 0"
-          class="absolute -top-1 -left-1 w-5 h-5 bg-[#8bc34a] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white">
-          {{ totalItems }}
-        </span>
-      </a>
+          <div *ngIf="isLocaleMenuOpen"
+            class="locale-menu"
+            [class.locale-menu--rtl]="language.isRtl">
+            <p class="locale-menu__label">{{ 'nav.language' | t }}</p>
+            <div class="locale-menu__lang">
+              <button type="button" (click)="language.setLanguage('ar')"
+                [class.is-active]="language.current === 'ar'">AR</button>
+              <button type="button" (click)="language.setLanguage('en')"
+                [class.is-active]="language.current === 'en'">EN</button>
+            </div>
 
+            <div class="locale-menu__divider"></div>
 
-        <button routerLink="/login"
-          class="hidden lg:flex items-center gap-2 bttn text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md hover:bg-[#025bb0] transition-all flex-row-reverse">
-          <span>تسجيل الدخول</span>
-          <i class="bi bi-person-circle text-lg"></i>
+            <p class="locale-menu__label">{{ 'nav.country' | t }}</p>
+            <div class="locale-menu__countries">
+              <button *ngFor="let country of countries" type="button" (click)="selectCountry(country.id)"
+                [class.is-active]="selectedCountryId === country.id">
+                <span>{{ getLocalizedCountryName(country) }}</span>
+                <span class="locale-menu__currency">{{ getLocalizedCurrency(country) }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" (click)="goToSearch()"
+          class="navbar__icon-btn hidden sm:inline-flex"
+          [ngClass]="isHeroNavbar
+            ? 'text-white border-white/30 bg-white/10 hover:bg-white/20'
+            : 'text-gray-700 border-gray-200 bg-white hover:bg-gray-50'">
+          <i class="bi bi-search text-base"></i>
         </button>
-    
 
+        <a routerLink="/cart" class="navbar__icon-btn no-underline relative"
+          [ngClass]="isHeroNavbar
+            ? 'text-white border-white/30 bg-white/10 hover:bg-white/20'
+            : 'text-gray-700 border-gray-200 bg-white hover:bg-gray-50'">
+          <i class="bi bi-basket3 text-base"></i>
+          <span *ngIf="totalItems > 0"
+            class="absolute -top-1.5 -right-1.5 w-4.5 h-4.5 min-w-[18px] min-h-[18px] px-0.5 bg-[#8bc34a] text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
+            {{ totalItems }}
+          </span>
+        </a>
 
+        <a routerLink="/login"
+          class="navbar__login hidden lg:inline-flex items-center gap-1.5 bttn text-white rounded-lg font-bold text-sm shadow-md hover:bg-[#025bb0] transition-all no-underline"
+          [class.flex-row-reverse]="language.isRtl">
+          <i class="bi bi-person-circle text-base"></i>
+          <span class="hidden xl:inline">{{ 'nav.login' | t }}</span>
+        </a>
 
-      <button class="lg:hidden p-2 rounded-full transition-transform active:scale-90" (click)="toggleMobileMenu()"
-        [ngClass]="(isScrolled || currentUrl !== '/') ? 'text-gray-900' : 'text-white'">
-        <i class="bi bi-list text-3xl"></i>
-      </button>
-
-
+        <button type="button" class="navbar__icon-btn navbar__menu-toggle"
+          (click)="toggleMobileMenu()"
+          [ngClass]="isHeroNavbar
+            ? 'text-white border-white/30 bg-white/10'
+            : 'text-gray-700 border-gray-200 bg-white'">
+          <i class="bi bi-list text-xl"></i>
+        </button>
+      </div>
     </div>
-
   </div>
 </header>
 
 <div *ngIf="cartMessage"
-  dir="rtl"
+  [attr.dir]="language.dir"
   class="cart-toast fixed bottom-5 sm:bottom-auto sm:top-24 left-1/2 -translate-x-1/2 z-[80] w-[calc(100%-2rem)] sm:w-auto max-w-sm flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl shadow-black/15 text-sm font-bold text-white backdrop-blur-md"
   [ngClass]="isErrorMessage ? 'bg-red-600/95' : 'bg-[#1D76B9]/95'">
   <span class="shrink-0 w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-lg">
@@ -101,87 +132,85 @@
   <span class="flex-1 leading-snug">{{ cartMessage }}</span>
 </div>
 
-
-
-
 <div *ngIf="isMobileMenuOpen" (click)="toggleMobileMenu()"
   class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] lg:hidden transition-opacity">
 </div>
 
 <div
-  class="fixed top-0 right-0 h-full w-[280px] bg-white z-[70] lg:hidden transform transition-transform duration-300 shadow-2xl"
-  [class.translate-x-full]="!isMobileMenuOpen" [class.translate-x-0]="isMobileMenuOpen">
+  class="navbar__drawer fixed top-0 h-full w-[min(300px,88vw)] bg-white z-[70] lg:hidden transform transition-transform duration-300 shadow-2xl"
+  [class.right-0]="language.isRtl"
+  [class.left-0]="!language.isRtl"
+  [class.translate-x-full]="!isMobileMenuOpen && language.isRtl"
+  [class.-translate-x-full]="!isMobileMenuOpen && !language.isRtl"
+  [class.translate-x-0]="isMobileMenuOpen">
 
-  <div class="p-6 border-b flex justify-between items-center flex-row-reverse">
-    <span class="font-bold text-xl text-gray-900">القائمة</span>
-    <button (click)="toggleMobileMenu()" class="text-gray-500">
-      <i class="bi bi-x-lg text-2xl"></i>
+  <div class="p-4 sm:p-5 border-b flex justify-between items-center gap-3" [attr.dir]="language.dir">
+    <span class="font-bold text-lg text-gray-900">{{ 'nav.menu' | t }}</span>
+    <button type="button" (click)="toggleMobileMenu()" class="text-gray-500 p-1 shrink-0">
+      <i class="bi bi-x-lg text-xl"></i>
     </button>
   </div>
 
-  <nav class="p-4 flex flex-col gap-2 text-right">
-    <a *ngFor="let link of navLinks" [routerLink]="link.href" (click)="toggleMobileMenu()"
-      class="p-4 rounded-xl text-gray-700 font-medium hover:bg-blue-50 hover:text-[#0275d8] transition-all no-underline">
+  <nav class="p-3 sm:p-4 flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-72px)]" [attr.dir]="language.dir">
+    <a *ngFor="let link of navLinks" [routerLink]="link.href" [queryParams]="link.queryParams"
+      (click)="toggleMobileMenu()"
+      class="p-3 rounded-xl text-gray-700 font-medium hover:bg-blue-50 hover:text-[#0275d8] transition-all no-underline">
       {{ link.name }}
     </a>
 
-    <div class="px-3 pt-1 pb-2">
-      <div class="text-xs text-gray-400 font-bold mb-2">أقسام المنتجات</div>
+    <button type="button" (click)="goToSearch(); toggleMobileMenu()"
+      class="p-3 rounded-xl text-gray-700 font-medium hover:bg-blue-50 hover:text-[#0275d8] transition-all text-start w-full sm:hidden">
+      <i class="bi bi-search me-2"></i>
+      {{ 'products.searchPlaceholder' | t }}
+    </button>
+
+    <div class="px-1 pt-3 pb-1">
+      <div class="text-xs text-gray-400 font-bold mb-2">{{ 'nav.language' | t }}</div>
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" (click)="language.setLanguage('ar')"
+          class="px-3 py-2 rounded-xl text-sm font-medium border transition-colors"
+          [ngClass]="language.current === 'ar' ? 'border-[#0275d8] bg-blue-50 text-[#0275d8]' : 'border-gray-200 text-gray-700'">
+          العربية
+        </button>
+        <button type="button" (click)="language.setLanguage('en')"
+          class="px-3 py-2 rounded-xl text-sm font-medium border transition-colors"
+          [ngClass]="language.current === 'en' ? 'border-[#0275d8] bg-blue-50 text-[#0275d8]' : 'border-gray-200 text-gray-700'">
+          English
+        </button>
+      </div>
+    </div>
+
+    <div class="px-1 py-2">
+      <div class="text-xs text-gray-400 font-bold mb-2">{{ 'nav.country' | t }}</div>
+      <div class="grid grid-cols-1 gap-2">
+        <button *ngFor="let country of countries" type="button"
+          (click)="selectCountry(country.id); toggleMobileMenu()"
+          class="px-3 py-2.5 rounded-xl text-sm font-medium border transition-colors flex items-center justify-between gap-2"
+          [ngClass]="selectedCountryId === country.id
+            ? 'border-[#0275d8] bg-blue-50 text-[#0275d8]'
+            : 'border-gray-200 text-gray-700'">
+          <span>{{ getLocalizedCountryName(country) }}</span>
+          <span class="text-xs opacity-80">{{ getLocalizedCurrency(country) }}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="px-1 py-2">
+      <div class="text-xs text-gray-400 font-bold mb-2">{{ 'nav.categories' | t }}</div>
       <a *ngFor="let cat of categories" [routerLink]="['/products']" [queryParams]="{category: cat.id}"
         (click)="toggleMobileMenu()"
         class="block p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-[#0275d8] transition-all no-underline">
-        {{ cat.name }}
+        {{ cat.nameAr | localized:cat.nameEn:cat.name }}
       </a>
     </div>
 
     <hr class="my-2 border-gray-100">
 
-    <button class="w-full bttn text-white p-3 rounded-xl font-bold flex items-center justify-center gap-2">
-      <span>تسجيل الدخول</span>
+    <a routerLink="/login" (click)="toggleMobileMenu()"
+      class="bttn text-white p-3 rounded-xl font-bold flex items-center justify-center gap-2 no-underline"
+      [class.flex-row-reverse]="language.isRtl">
       <i class="bi bi-person-circle"></i>
-    </button>
+      <span>{{ 'nav.login' | t }}</span>
+    </a>
   </nav>
 </div>
-
-
-
-
-
-
-
-
-<!-- <header [ngClass]="{
-    'fixed top-0 left-0 right-0 z-50 transition-all duration-300': true,
-    'bg-white shadow-md py-3': isScrolled,
-    'bg-transparent py-5': !isScrolled
-  }">
-  <div class="container mx-auto px-4 flex items-center justify-between flex-row-reverse">
-
-    <div class="flex items-center gap-2">
-      <div class="text-right">
-        <h1 class="font-bold text-xl leading-none" [ngClass]="isScrolled ? 'text-gray-900' : 'text-white'">الأمانة</h1>
-        <p class="text-[10px] tracking-wider uppercase" [ngClass]="isScrolled ? 'text-gray-500' : 'text-white/80'">لمواد البناء</p>
-      </div>
-      <div class="w-10 h-10 bttn text-white rounded flex items-center justify-center font-bold text-xl shadow-lg">A</div>
-    </div>
-
-    <nav class="hidden lg:flex items-center gap-8" dir="rtl">
-      <a *ngFor="let link of navLinks"
-          class="text-sm font-medium hover:text-primary transition-colors cursor-pointer no-underline"
-          [ngClass]="isScrolled ? 'text-gray-900' : 'text-white'">
-        {{ link.name }}
-      </a>
-    </nav>
-
-    <div class="flex items-center gap-4">
-      <button class="bttn text-white px-5 py-2 rounded-lg font-bold text-sm hover:bg-blue-700 transition-all">
-        تسجيل الدخول
-      </button>
-      <div class="relative p-2 cursor-pointer" [ngClass]="isScrolled ? 'text-gray-900' : 'text-white'">
-        <i class="bi bi-basket3 text-xl"></i>
-        <span class="absolute -top-1 -right-1 bg-secondary text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">1</span>
-      </div>
-    </div>
-
-  </div>
-</header> -->

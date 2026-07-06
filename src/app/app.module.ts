@@ -22,6 +22,9 @@ import { CheckoutComponent } from './features/checkout/checkout.component';
 import { VideosComponent } from './features/videos/videos.component';
 import { LoginComponent } from './components/login/login.component';
 import { CreateAccountComponent } from './components/create-account/create-account.component';
+import { TranslatePipe } from './core/pipes/translate.pipe';
+import { LocalizedPipe } from './core/pipes/localized.pipe';
+import { CurrencyLabelPipe } from './core/pipes/currency-label.pipe';
 
 
 @NgModule({
@@ -40,6 +43,9 @@ import { CreateAccountComponent } from './components/create-account/create-accou
     VideosComponent,
     LoginComponent,
     CreateAccountComponent,
+    TranslatePipe,
+    LocalizedPipe,
+    CurrencyLabelPipe,
   ],
   imports: [
     CommonModule,

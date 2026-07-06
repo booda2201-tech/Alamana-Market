@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppCartItem, CartApiService } from '../../core/services/cart-api.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-cart',
@@ -18,7 +19,8 @@ export class CartComponent implements OnInit {
 
   constructor(
     private readonly cartApi: CartApiService,
-    private readonly router: Router
+    private readonly router: Router,
+    public readonly language: LanguageService
   ) {}
 
   ngOnInit(): void {
@@ -26,7 +28,7 @@ export class CartComponent implements OnInit {
 
     if (!this.userId) {
       this.isLoading = false;
-      this.errorMessage = 'لازم تسجل دخول أولاً علشان تشوف السلة.';
+      this.errorMessage = this.language.translate('cart.loginRequired');
       return;
     }
 
@@ -63,17 +65,17 @@ export class CartComponent implements OnInit {
       }, 1).subscribe({
         next: () => this.loadCart(),
         error: () => {
-          this.errorMessage = 'تعذر تحديث الكمية حالياً.';
+          this.errorMessage = this.language.translate('cart.updateFailed');
         }
       });
       return;
     }
 
-    this.deleteFromCart(currentItem.id, 'تعذر تقليل الكمية حالياً.');
+    this.deleteFromCart(currentItem.id, this.language.translate('cart.decreaseFailed'));
   }
 
   removeFromCart(cartItemId: number): void {
-    this.deleteFromCart(cartItemId, 'تعذر حذف المنتج من السلة.');
+    this.deleteFromCart(cartItemId, this.language.translate('cart.removeFailed'));
   }
 
   goToLogin(): void {
@@ -92,7 +94,7 @@ export class CartComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
-        this.errorMessage = 'تعذر تحميل السلة حالياً. حاول مرة أخرى.';
+        this.errorMessage = this.language.translate('cart.loadFailed');
       }
     });
   }
@@ -100,7 +102,7 @@ export class CartComponent implements OnInit {
   private deleteFromCart(cartItemId: number, failMessage: string): void {
     this.cartApi.deleteCartItem(cartItemId).subscribe({
       next: () => {
-        this.cartApi.showCartMessage('تم حذف المنتج من السلة');
+        this.cartApi.showCartMessage(this.language.translate('cart.removed'));
         this.loadCart();
       },
       error: () => {

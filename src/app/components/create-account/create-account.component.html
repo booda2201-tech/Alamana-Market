@@ -1,76 +1,71 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-50 relative overflow-hidden px-4 py-6">
 
-  <!-- تأثيرات الخلفية -->
   <div class="absolute top-0 -left-20 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
   <div class="absolute bottom-0 -right-20 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-30"></div>
 
   <div class="w-full max-w-xl mx-auto relative z-10">
 
       <div class="bg-white rounded-3xl shadow-xl shadow-blue-900/5 border border-gray-100 overflow-hidden" data-aos="fade-up">
-        <div class="p-6 sm:p-8 text-right" dir="rtl">
+        <div class="p-6 sm:p-8" [attr.dir]="language.dir" [class.text-right]="language.isRtl" [class.text-left]="!language.isRtl">
 
           <div class="logo w-20 h-20 mb-3 mx-auto">
             <img src="../../../assets/images/logo.png" alt="" class="w-full h-full object-contain">
           </div>
           <div class="text-center mb-6">
-            <h2 class="text-2xl font-black text-gray-900 mb-1">إنشاء حساب جديد</h2>
-            <p class="text-gray-400 text-sm font-medium">انضم إلى عملاء الأمانة واستمتع بأفضل مواد البناء</p>
+            <h2 class="text-2xl font-black text-gray-900 mb-1">{{ 'signup.title' | t }}</h2>
+            <p class="text-gray-400 text-sm font-medium">{{ 'signup.subtitle' | t }}</p>
           </div>
 
               <form class="grid grid-cols-1 md:grid-cols-2 gap-4" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-                <!-- الاسم الكامل -->
                 <div class="space-y-2 md:col-span-2">
-                  <label class="text-sm font-bold text-gray-700 mr-1">الاسم الكامل</label>
+                  <label class="text-sm font-bold text-gray-700" [class.mr-1]="language.isRtl" [class.ml-1]="!language.isRtl">{{ 'signup.fullName' | t }}</label>
                   <div class="relative">
-                    <input type="text" class="form-input-custom pr-12" placeholder="أدخل اسمك الكامل" formControlName="fullName">
+                    <input type="text" class="form-input-custom pr-12" [placeholder]="'signup.fullName' | t" formControlName="fullName">
                     <i class="bi bi-person absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
                   </div>
                   <p *ngIf="fullNameControl.touched && fullNameControl.invalid" class="text-red-500 text-xs">
-                    الاسم الكامل مطلوب (3 حروف على الأقل).
+                    {{ 'signup.fullNameInvalid' | t }}
                   </p>
                 </div>
 
-                <!-- البريد الإلكتروني -->
                 <div class="space-y-2">
-                  <label class="text-sm font-bold text-gray-700 mr-1">البريد الإلكتروني</label>
+                  <label class="text-sm font-bold text-gray-700" [class.mr-1]="language.isRtl" [class.ml-1]="!language.isRtl">{{ 'login.email' | t }}</label>
                   <div class="relative">
                     <input type="email" class="form-input-custom pr-12" placeholder="example@mail.com" formControlName="email">
                     <i class="bi bi-envelope absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
                   </div>
                   <p *ngIf="emailControl.touched && emailControl.invalid" class="text-red-500 text-xs">
-                    أدخل بريد إلكتروني صحيح.
+                    {{ 'login.emailInvalid' | t }}
                   </p>
                 </div>
 
-                <!-- كلمة المرور -->
                 <div class="space-y-2">
-                  <label class="text-sm font-bold text-gray-700 mr-1">كلمة المرور</label>
+                  <label class="text-sm font-bold text-gray-700" [class.mr-1]="language.isRtl" [class.ml-1]="!language.isRtl">{{ 'login.password' | t }}</label>
                   <div class="relative">
                     <input type="password" class="form-input-custom pr-12" placeholder="••••••••" formControlName="password">
                     <i class="bi bi-shield-lock absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
                   </div>
                   <p *ngIf="passwordControl.touched && passwordControl.errors?.['required']" class="text-red-500 text-xs">
-                    كلمة المرور مطلوبة.
+                    {{ 'signup.passwordRequired' | t }}
                   </p>
-                  <ul *ngIf="passwordRulesErrors.length" class="text-red-500 text-xs space-y-1 pr-4 list-disc">
+                  <ul *ngIf="passwordRulesErrors.length" class="text-red-500 text-xs space-y-1 list-disc" [class.pr-4]="language.isRtl" [class.pl-4]="!language.isRtl">
                     <li *ngFor="let ruleError of passwordRulesErrors">{{ ruleError }}</li>
                   </ul>
                 </div>
 
-            <!-- الشروط والأحكام -->
-            <div class="md:col-span-2 flex items-center justify-start gap-2 py-2">
+            <div class="md:col-span-2 flex items-center gap-2 py-2" [class.justify-start]="language.isRtl" [class.justify-end]="!language.isRtl">
               <input type="checkbox" id="terms" class="w-4 h-4 rounded border-gray-300 text-[#0275d8] focus:ring-[#0275d8]" formControlName="terms">
               <label class="text-sm text-gray-500 font-medium cursor-pointer" for="terms">
-                أوافق على <span class="text-[#0275d8] underline">الشروط والأحكام</span> وسياسة الخصوصية
+                {{ 'signup.terms' | t }}
               </label>
             </div>
             <p *ngIf="signupForm.controls.terms.touched && signupForm.controls.terms.invalid" class="md:col-span-2 text-red-500 text-xs -mt-4">
-              يجب الموافقة على الشروط والأحكام.
+              {{ 'signup.termsRequired' | t }}
             </p>
 
             <div *ngIf="errorMessage" class="md:col-span-2 text-red-600 text-sm bg-red-50 border border-red-100 rounded-xl p-3">
               <p>{{ errorMessage }}</p>
-              <ul *ngIf="errorDetails.length" class="mt-2 list-disc pr-5 space-y-1 text-xs sm:text-sm">
+              <ul *ngIf="errorDetails.length" class="mt-2 list-disc space-y-1 text-xs sm:text-sm" [class.pr-5]="language.isRtl" [class.pl-5]="!language.isRtl">
                 <li *ngFor="let err of errorDetails">{{ err }}</li>
               </ul>
             </div>
@@ -78,24 +73,22 @@
               {{ successMessage }}
             </p>
 
-            <!-- زر التسجيل -->
             <button type="submit"
                     [disabled]="isSubmitting"
                     class="md:col-span-2 w-full h-12 bg-[#0275d8] text-white rounded-xl font-bold text-base hover:bg-[#025bb0] shadow-lg shadow-blue-200 transition-all duration-300 transform hover:-translate-y-1 mt-1">
-              {{ isSubmitting ? 'جاري إنشاء الحساب...' : 'إنشاء الحساب' }}
+              {{ isSubmitting ? ('signup.submitting' | t) : ('signup.submit' | t) }}
             </button>
           </form>
 
-          <!-- العودة للوجين -->
           <div class="mt-6 pt-5 border-t border-gray-100 text-center">
             <p class="text-gray-500 text-sm">
-              لديك حساب بالفعل؟
-              <a routerLink="/login" class="text-[#0275d8] font-bold hover:underline">سجل دخولك هنا</a>
+              {{ 'signup.hasAccount' | t }}
+              <a routerLink="/login" class="text-[#0275d8] font-bold hover:underline">{{ 'signup.login' | t }}</a>
             </p>
             <div class="mt-3 flex items-center justify-center gap-4 text-sm">
-              <a routerLink="/" class="text-gray-500 hover:text-[#0275d8] transition-colors">العودة للرئيسية</a>
+              <a routerLink="/" class="text-gray-500 hover:text-[#0275d8] transition-colors">{{ 'login.backHome' | t }}</a>
               <span class="text-gray-300">|</span>
-              <a routerLink="/products" class="text-gray-500 hover:text-[#0275d8] transition-colors">تصفح المنتجات</a>
+              <a routerLink="/products" class="text-gray-500 hover:text-[#0275d8] transition-colors">{{ 'common.products' | t }}</a>
             </div>
           </div>
         </div>

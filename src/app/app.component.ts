@@ -4,13 +4,14 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 import * as AOS from 'aos';
 import { filter } from 'rxjs/operators';
+import { CountryService } from './core/services/country.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'AlamanaMarket';
   private readonly defaultTitle = 'الأمانة لمواد البناء | أفضل مواد البناء والاسمنت والعوازل واللواصق';
   private readonly defaultDescription = 'الأمانة لمواد البناء متجر متخصص في مواد البناء، الاسمنت، اللواصق، العوازل، الترويبات، الجراوت، موانع التسرب ومنتجات الترميم بجودة عالية وأسعار تنافسية.';
@@ -45,10 +46,12 @@ export class AppComponent {
     private readonly activatedRoute: ActivatedRoute,
     private readonly titleService: Title,
     private readonly metaService: Meta,
-    @Inject(DOCUMENT) private readonly document: Document
+    @Inject(DOCUMENT) private readonly document: Document,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit() {
+    this.countryService.loadCountries().subscribe();
     AOS.init({
       duration: 2000,
       once: false, 

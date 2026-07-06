@@ -1,6 +1,8 @@
-<div class="min-h-screen bg-gray-50/50 pt-32 pb-20" dir="rtl">
+<div class="min-h-screen bg-gray-50/50 pt-32 pb-20" [attr.dir]="language.dir">
   <div class="bg-[#0275d8] text-white py-16 mb-12 relative overflow-hidden">
-    <div class="container mx-auto px-4 relative z-10 text-right">
+    <div class="container mx-auto px-4 relative z-10"
+      [class.text-right]="language.isRtl"
+      [class.text-left]="!language.isRtl">
       <h1 class="text-4xl md:text-5xl font-bold mb-4" data-aos="fade-left">{{ pageTitle }}</h1>
       <p class="text-white/80 max-w-2xl text-lg" data-aos="fade-left" data-aos-delay="200">
         {{ pageDescription }}
@@ -14,7 +16,13 @@
 
       <aside *ngIf="!isAdvertisementMode" class="hidden lg:block w-72 shrink-0">
         <div class="sticky top-32 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h3 class="font-bold text-xl mb-6 border-r-4 border-[#0275d8] pr-3">الأقسام</h3>
+          <h3 class="font-bold text-xl mb-6 border-[#0275d8] pr-3"
+            [class.border-r-4]="language.isRtl"
+            [class.border-l-4]="!language.isRtl"
+            [class.pl-3]="!language.isRtl"
+            [class.pr-0]="!language.isRtl">
+            {{ 'products.sections' | t }}
+          </h3>
           <div class="space-y-4">
             <div *ngFor="let cat of categories" class="flex items-center gap-3 group cursor-pointer">
               <input type="radio" [id]="cat.id" name="category"
@@ -22,18 +30,24 @@
                       (change)="selectedCategory = cat.id; applyFilters()"
                       class="w-5 h-5 text-[#0275d8] focus:ring-[#0275d8]">
               <label [for]="cat.id" class="text-gray-700 cursor-pointer group-hover:text-[#0275d8] transition-colors">
-                {{ cat.name }}
+                {{ cat.nameAr | localized:cat.nameEn:cat.name }}
               </label>
             </div>
           </div>
 
           <hr class="my-8">
 
-          <h3 class="font-bold text-xl mb-6 border-r-4 border-[#0275d8] pr-3">تصفية إضافية</h3>
+          <h3 class="font-bold text-xl mb-6 border-[#0275d8] pr-3"
+            [class.border-r-4]="language.isRtl"
+            [class.border-l-4]="!language.isRtl"
+            [class.pl-3]="!language.isRtl"
+            [class.pr-0]="!language.isRtl">
+            {{ 'products.extraFilters' | t }}
+          </h3>
           <div class="flex items-center gap-3">
             <input type="checkbox" id="new-products" [(ngModel)]="showNewOnly" (change)="applyFilters()"
                     class="w-5 h-5 rounded text-[#0275d8] focus:ring-[#0275d8]">
-            <label for="new-products" class="text-gray-700 font-medium">منتجات جديدة فقط</label>
+            <label for="new-products" class="text-gray-700 font-medium">{{ 'products.newOnly' | t }}</label>
           </div>
         </div>
       </aside>
@@ -44,22 +58,28 @@
             <input type="text"
                     [(ngModel)]="searchQuery"
                     (input)="applyFilters()"
-                    placeholder="ابحث عن منتج بالاسم العربي أو الإنجليزي..."
-                    class="w-full h-14 pr-12 pl-4 rounded-xl border border-gray-200 focus:border-[#0275d8] focus:ring-2 focus:ring-[#0275d8]/20 outline-none transition-all shadow-sm">
-            <i class="bi bi-search absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl"></i>
+                    [placeholder]="'products.searchPlaceholder' | t"
+                    class="w-full h-14 rounded-xl border border-gray-200 focus:border-[#0275d8] focus:ring-2 focus:ring-[#0275d8]/20 outline-none transition-all shadow-sm"
+                    [class.pr-12]="language.isRtl"
+                    [class.pl-12]="!language.isRtl"
+                    [class.pl-4]="language.isRtl"
+                    [class.pr-4]="!language.isRtl">
+            <i class="bi bi-search absolute top-1/2 -translate-y-1/2 text-gray-400 text-xl"
+              [class.right-4]="language.isRtl"
+              [class.left-4]="!language.isRtl"></i>
           </div>
           <div class="bg-white px-6 h-14 flex items-center rounded-xl border border-gray-100 text-gray-500 font-medium shadow-sm">
-            {{ filteredProducts.length }} منتج
+            {{ filteredProducts.length }} {{ 'products.count' | t }}
           </div>
         </div>
 
         <div *ngIf="filteredProducts.length === 0" class="text-center py-24 bg-white rounded-3xl border border-dashed border-gray-300">
           <i class="bi bi-box-seam text-6xl text-gray-200 mb-4 block"></i>
-          <h3 class="text-2xl font-bold text-gray-800">لا توجد نتائج بحث</h3>
+          <h3 class="text-2xl font-bold text-gray-800">{{ 'products.noResults' | t }}</h3>
           <p class="text-gray-500 mt-2">
-            {{ isAdvertisementMode ? 'لا توجد منتجات مرتبطة بهذا الإعلان حالياً' : 'جرب البحث بكلمات أخرى أو تغيير خيارات التصفية' }}
+            {{ isAdvertisementMode ? ('products.noAdProducts' | t) : ('products.noResultsHint' | t) }}
           </p>
-          <button *ngIf="!isAdvertisementMode" (click)="clearFilters()" class="mt-6 text-[#0275d8] font-bold hover:underline">مسح التصفية</button>
+          <button *ngIf="!isAdvertisementMode" (click)="clearFilters()" class="mt-6 text-[#0275d8] font-bold hover:underline">{{ 'products.clearFilters' | t }}</button>
         </div>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -69,32 +89,37 @@
         data-aos="fade-up" [attr.data-aos-delay]="(i % 3) * 100">
 
     <div class="relative aspect-square p-3 bg-gray-50/50 flex items-center justify-center overflow-hidden">
-      <span *ngIf="product.isNew" class="absolute top-4 right-4 bg-[#0275d8] text-white text-xs font-bold px-3 py-1 rounded-full z-10">جديد</span>
-      <span *ngIf="product.hasOffer" class="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full z-10">عرض خاص</span>
+      <span *ngIf="product.isNew" class="absolute top-4 bg-[#0275d8] text-white text-xs font-bold px-3 py-1 rounded-full z-10"
+        [class.right-4]="language.isRtl"
+        [class.left-4]="!language.isRtl">
+        {{ 'product.new' | t }}
+      </span>
 
-      <img [src]="product.image" [alt]="product.nameAr"
+      <img [src]="product.image" [alt]="product.nameAr | localized:product.nameEn"
             class="max-h-full object-contain group-hover:scale-110 transition-transform duration-700">
 
       <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <span class="bg-white text-black px-6 py-2 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-          تفاصيل المنتج
+          {{ 'products.viewDetails' | t }}
         </span>
       </div>
     </div>
 
-    <div class="p-4 text-right">
-      <p class="text-xs text-[#0275d8] font-bold mb-1 uppercase tracking-wider line-clamp-1">{{ getCategoryName(product.category) }}</p>
+    <div class="p-4" [class.text-right]="language.isRtl" [class.text-left]="!language.isRtl">
+      <p class="text-xs text-[#0275d8] font-bold mb-1 uppercase tracking-wider line-clamp-1">
+        {{ product.categoryNameAr | localized:product.categoryNameEn:product.categoryName }}
+      </p>
       <h3 class="text-lg font-bold text-gray-900 mb-4 line-clamp-1 group-hover:text-[#0275d8] transition-colors">
-        {{ product.nameAr }}
+        {{ product.nameAr | localized:product.nameEn }}
       </h3>
 
       <div class="flex items-center justify-between border-t pt-4">
         <div class="flex flex-col">
           <span *ngIf="product.hasOffer && product.oldPrice" class="text-xs text-gray-400 line-through">
-            {{ product.oldPrice | number:'1.3-3' }} د.ك
+            {{ product.oldPrice | number:'1.3-3' }} {{ '' | currencyLabel }}
           </span>
           <span class="text-xl font-extrabold text-gray-900">
-            {{ product.price | number:'1.3-3' }} <small class="text-sm font-medium">د.ك</small>
+            {{ product.price | number:'1.3-3' }} <small class="text-sm font-medium">{{ '' | currencyLabel }}</small>
           </span>
         </div>
         <button (click)="$event.stopPropagation(); addToCart(product)"
