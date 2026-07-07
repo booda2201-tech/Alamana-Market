@@ -67,7 +67,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildNavLinks();
-    this.languageSubscription = this.language.language$.subscribe(() => this.buildNavLinks());
+    this.languageSubscription = this.language.language$.subscribe(() => {
+      this.buildNavLinks();
+      this.isMobileMenuOpen = false;
+    });
 
     this.countryService.loadCountries().subscribe((countries) => {
       this.countries = countries;

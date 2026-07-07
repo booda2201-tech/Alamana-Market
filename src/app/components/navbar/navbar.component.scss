@@ -32,6 +32,15 @@
   padding-inline: 0.75rem;
 }
 
+.navbar__drawer {
+  transition: none;
+}
+
+.navbar__drawer--open {
+  transition: transform 300ms ease;
+  visibility: visible;
+}
+
 .locale-menu {
   position: absolute;
   top: calc(100% + 8px);
