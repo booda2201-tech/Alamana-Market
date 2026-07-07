@@ -16,11 +16,111 @@
   overflow-x: hidden;
 }
 
+.home-copy {
+  text-align: left;
+}
+
+:host-context(html[dir='rtl']) .home-copy {
+  text-align: right;
+}
+
+.home-hero-shell {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+:host-context(html[dir='rtl']) .home-hero-shell {
+  justify-content: flex-end;
+}
+
+.home-section-head {
+  text-align: left;
+}
+
+:host-context(html[dir='rtl']) .home-section-head {
+  text-align: right;
+}
+
+.home-product-card {
+  text-align: left;
+}
+
+:host-context(html[dir='rtl']) .home-product-card {
+  direction: rtl;
+  text-align: right;
+}
+
+.home-ad-panel {
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .home-ad-panel {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  :host-context(html[dir='rtl']) .home-ad-panel {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .home-ad-panel .ad-action {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  :host-context(html[dir='rtl']) .home-ad-panel .ad-action,
+  :host-context(html[dir='ltr']) .home-ad-panel .ad-action {
+    justify-content: center;
+  }
+}
+
+@media (min-width: 768px) {
+  :host-context(html[dir='ltr']) .home-ad-panel .ad-action {
+    justify-content: flex-start;
+  }
+
+  :host-context(html[dir='rtl']) .home-ad-panel .ad-action {
+    justify-content: flex-end;
+  }
+}
+
 .hero-section {
   /* لضمان ثبات الخلفية أثناء الـ Parallax */
   will-change: transform;
 }
 
+.hero-content {
+  margin-inline-end: auto;
+
+  &--ltr {
+    direction: ltr;
+    text-align: left;
+  }
+
+  &--rtl {
+    direction: rtl;
+    text-align: right;
+  }
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
 .group:hover .group-hover\:translate-y-0 {
   transform: translate(-50%, 0); /* لتصحيح وضع الزرار في النص */
@@ -85,7 +185,6 @@
   );
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
-  /* قناع يجعل البلور نفسه يتلاشى تدريجياً بدل القطع المفاجئ */
   -webkit-mask-image: linear-gradient(
     to right,
     rgba(0, 0, 0, 1) 0%,
@@ -102,6 +201,34 @@
     rgba(0, 0, 0, 0.15) 90%,
     rgba(0, 0, 0, 0) 100%
   );
+
+  &--rtl {
+    background: linear-gradient(
+      to left,
+      rgba(255, 255, 255, 0.72) 40%,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0.4) 58%,
+      rgba(255, 255, 255, 0.2) 78%,
+      rgba(255, 255, 255, 0.06) 92%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to left,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 45%,
+      rgba(0, 0, 0, 0.5) 72%,
+      rgba(0, 0, 0, 0.15) 90%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    mask-image: linear-gradient(
+      to left,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 45%,
+      rgba(0, 0, 0, 0.5) 72%,
+      rgba(0, 0, 0, 0.15) 90%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
 }
 
 /* لجعل النص واضحًا فوق الصورة الظاهرة من الخلف */

@@ -30,12 +30,12 @@
 <div class="min-h-screen bg-gray-50/50 pt-32 pb-20" [attr.dir]="language.dir" *ngIf="!isLoading && product">
   <div class="container mx-auto px-4" [class.text-right]="language.isRtl" [class.text-left]="!language.isRtl">
 
-    <nav class="flex items-center text-sm text-gray-500 mb-8 font-medium"
-      [class.flex-row-reverse]="language.isRtl">
+    <nav class="flex w-full items-center justify-start flex-wrap text-sm text-gray-500 mb-8 font-medium"
+      [attr.dir]="language.dir">
       <a routerLink="/" class="hover:text-[#0275d8] transition-colors">{{ 'common.home' | t }}</a>
-      <i class="bi bi-chevron-left mx-2 text-[10px]" [class.rotate-180]="!language.isRtl"></i>
+      <i class="bi mx-2 text-[10px]" [ngClass]="language.isRtl ? 'bi-chevron-left' : 'bi-chevron-right'"></i>
       <a routerLink="/products" class="hover:text-[#0275d8] transition-colors">{{ 'common.products' | t }}</a>
-      <i class="bi bi-chevron-left mx-2 text-[10px]" [class.rotate-180]="!language.isRtl"></i>
+      <i class="bi mx-2 text-[10px]" [ngClass]="language.isRtl ? 'bi-chevron-left' : 'bi-chevron-right'"></i>
       <span class="text-gray-900">{{ product.nameAr | localized:product.nameEn }}</span>
     </nav>
 

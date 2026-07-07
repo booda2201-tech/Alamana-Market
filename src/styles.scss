@@ -32,6 +32,14 @@
 }
 
 
+html[dir='rtl'] body {
+  text-align: right;
+}
+
+html[dir='ltr'] body {
+  text-align: left;
+}
+
 // 5. الستايلات العالمية
 body {
   font-family: 'Cairo', sans-serif; // العربي هو الأساسي
