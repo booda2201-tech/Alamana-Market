@@ -29,10 +29,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
   cartMessage = '';
   countries: CatalogCountry[] = [];
   selectedCountryId: number | null = null;
-  isLocaleMenuOpen = false;
+  isLocaleMenuRendered = false;
+  isLocaleMenuActive = false;
   navLinks: NavLink[] = [];
   private countrySubscription?: Subscription;
   private languageSubscription?: Subscription;
+  private localeMenuTimer?: ReturnType<typeof setTimeout>;
 
   get isErrorMessage(): boolean {
     return /تعذر|خطأ|فشل|Could not|failed/i.test(this.cartMessage);
@@ -52,6 +54,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     return !this.isScrolled && this.currentUrl === '/';
   }
 
+  private syncRouteState(): void {
+    this.currentUrl = this.router.url.split('?')[0];
+    this.isScrolled = window.scrollY > 20;
+  }
+
   getSelectedCountryName(): string {
     const country = this.countries.find((item) => item.id === this.selectedCountryId);
     return this.countryService.getLocalizedName(country);
@@ -66,6 +73,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.syncRouteState();
     this.buildNavLinks();
     this.languageSubscription = this.language.language$.subscribe(() => {
       this.buildNavLinks();
@@ -86,8 +94,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      this.currentUrl = event.urlAfterRedirects.split('?')[0];
+    ).subscribe(() => {
+      this.syncRouteState();
+      this.isMobileMenuOpen = false;
+      this.closeLocaleMenuSmooth();
     });
 
     this.cartApi.cartCount$.subscribe((count) => {
@@ -104,6 +114,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.countrySubscription?.unsubscribe();
     this.languageSubscription?.unsubscribe();
+    this.clearLocaleMenuTimer();
   }
 
   toggleLanguage(): void {
@@ -124,18 +135,61 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   toggleLocaleMenu(event: Event): void {
     event.stopPropagation();
-    this.isLocaleMenuOpen = !this.isLocaleMenuOpen;
+    if (this.isLocaleMenuActive) {
+      this.closeLocaleMenuSmooth();
+      return;
+    }
+
+    if (this.isLocaleMenuRendered) {
+      this.clearLocaleMenuTimer();
+      this.isLocaleMenuActive = true;
+      return;
+    }
+
+    this.openLocaleMenu();
   }
 
   selectCountry(countryId: number): void {
     this.selectedCountryId = countryId;
-    this.isLocaleMenuOpen = false;
+    this.closeLocaleMenuSmooth();
     this.countryService.setSelectedCountryId(countryId);
+  }
+
+  selectLanguage(language: 'ar' | 'en'): void {
+    this.language.setLanguage(language);
+    this.closeLocaleMenuSmooth();
   }
 
   @HostListener('document:click')
   closeLocaleMenu(): void {
-    this.isLocaleMenuOpen = false;
+    this.closeLocaleMenuSmooth();
+  }
+
+  private openLocaleMenu(): void {
+    this.clearLocaleMenuTimer();
+    this.isLocaleMenuRendered = true;
+    requestAnimationFrame(() => {
+      this.isLocaleMenuActive = true;
+    });
+  }
+
+  private closeLocaleMenuSmooth(): void {
+    if (!this.isLocaleMenuRendered) {
+      return;
+    }
+
+    this.isLocaleMenuActive = false;
+    this.clearLocaleMenuTimer();
+    this.localeMenuTimer = setTimeout(() => {
+      this.isLocaleMenuRendered = false;
+    }, 200);
+  }
+
+  private clearLocaleMenuTimer(): void {
+    if (this.localeMenuTimer) {
+      clearTimeout(this.localeMenuTimer);
+      this.localeMenuTimer = undefined;
+    }
   }
 
   private loadCategories(): void {

@@ -1,8 +1,8 @@
 
 
-<app-navbar *ngIf="showLayout"></app-navbar>
+<app-navbar [hidden]="!showLayout"></app-navbar>
 <!-- <app-home></app-home> -->
 <!-- <app-about-us></app-about-us> -->
 <!-- <app-product-details></app-product-details> -->
 <router-outlet></router-outlet>
-<app-footer *ngIf="showLayout"></app-footer>
+<app-footer [hidden]="!showLayout"></app-footer>

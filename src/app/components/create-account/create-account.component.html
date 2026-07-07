@@ -20,8 +20,8 @@
                 <div class="space-y-2 md:col-span-2">
                   <label class="text-sm font-bold text-gray-700" [class.mr-1]="language.isRtl" [class.ml-1]="!language.isRtl">{{ 'signup.fullName' | t }}</label>
                   <div class="relative">
-                    <input type="text" class="form-input-custom pr-12" [placeholder]="'signup.fullName' | t" formControlName="fullName">
-                    <i class="bi bi-person absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" class="form-input-custom" [placeholder]="'signup.fullName' | t" formControlName="fullName">
+                    <i class="bi bi-person text-gray-400"></i>
                   </div>
                   <p *ngIf="fullNameControl.touched && fullNameControl.invalid" class="text-red-500 text-xs">
                     {{ 'signup.fullNameInvalid' | t }}
@@ -31,8 +31,8 @@
                 <div class="space-y-2">
                   <label class="text-sm font-bold text-gray-700" [class.mr-1]="language.isRtl" [class.ml-1]="!language.isRtl">{{ 'login.email' | t }}</label>
                   <div class="relative">
-                    <input type="email" class="form-input-custom pr-12" placeholder="example@mail.com" formControlName="email">
-                    <i class="bi bi-envelope absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="email" class="form-input-custom" placeholder="example@mail.com" formControlName="email">
+                    <i class="bi bi-envelope text-gray-400"></i>
                   </div>
                   <p *ngIf="emailControl.touched && emailControl.invalid" class="text-red-500 text-xs">
                     {{ 'login.emailInvalid' | t }}
@@ -42,8 +42,8 @@
                 <div class="space-y-2">
                   <label class="text-sm font-bold text-gray-700" [class.mr-1]="language.isRtl" [class.ml-1]="!language.isRtl">{{ 'login.password' | t }}</label>
                   <div class="relative">
-                    <input type="password" class="form-input-custom pr-12" placeholder="••••••••" formControlName="password">
-                    <i class="bi bi-shield-lock absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="password" class="form-input-custom" placeholder="••••••••" formControlName="password">
+                    <i class="bi bi-shield-lock text-gray-400"></i>
                   </div>
                   <p *ngIf="passwordControl.touched && passwordControl.errors?.['required']" class="text-red-500 text-xs">
                     {{ 'signup.passwordRequired' | t }}
@@ -53,7 +53,7 @@
                   </ul>
                 </div>
 
-            <div class="md:col-span-2 flex items-center gap-2 py-2" [class.justify-start]="language.isRtl" [class.justify-end]="!language.isRtl">
+            <div class="md:col-span-2 flex items-center gap-2 py-2">
               <input type="checkbox" id="terms" class="w-4 h-4 rounded border-gray-300 text-[#0275d8] focus:ring-[#0275d8]" formControlName="terms">
               <label class="text-sm text-gray-500 font-medium cursor-pointer" for="terms">
                 {{ 'signup.terms' | t }}

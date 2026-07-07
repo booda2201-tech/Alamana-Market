@@ -1,9 +1,16 @@
 :host {
   .form-input-custom {
-    @apply w-full h-12 bg-gray-50 border-none rounded-xl px-6 pr-12 text-right transition-all outline-none border border-transparent;
+    @apply w-full bg-gray-50 border-none rounded-xl text-base text-start transition-all outline-none border border-transparent;
+    height: 3.5rem;
+    box-sizing: border-box;
+    line-height: 1.25;
+    padding-block: 1.125rem;
+    padding-inline-start: 2.375rem;
+    padding-inline-end: 1rem;
 
     &::placeholder {
       @apply text-gray-400 text-sm opacity-60;
+      line-height: 1.25;
     }
 
     &:focus {
@@ -13,8 +20,9 @@
 
   // ضبط مكان الأيقونة وتفاعلها مع الفوكس
   .relative i {
-    @apply transition-all duration-300 pointer-events-none;
-    font-size: 1.2rem;
+    @apply absolute start-3 top-1/2 -translate-y-1/2 transition-all duration-300 pointer-events-none;
+    font-size: 1.05rem;
+    line-height: 1;
   }
 
   input:focus + i {

@@ -22,11 +22,9 @@
                   <div class="relative">
                     <input type="email"
                             formControlName="email"
-                            class="w-full h-12 bg-gray-50 border-none rounded-xl px-6 pr-12 focus:ring-2 focus:ring-[#0275d8]/20 transition-all outline-none"
-                            [class.text-right]="language.isRtl"
-                            [class.text-left]="!language.isRtl"
+                            class="auth-input"
                             placeholder="example@mail.com">
-                    <i class="bi bi-envelope absolute top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" [class.right-5]="language.isRtl" [class.left-5]="!language.isRtl"></i>
+                    <i class="bi bi-envelope auth-input-icon"></i>
                   </div>
                   <p *ngIf="emailControl.touched && emailControl.invalid" class="text-red-500 text-xs">
                     {{ 'login.emailInvalid' | t }}
@@ -41,11 +39,9 @@
                   <div class="relative">
                     <input type="password"
                             formControlName="password"
-                            class="w-full h-12 bg-gray-50 border-none rounded-xl px-6 pr-12 focus:ring-2 focus:ring-[#0275d8]/20 transition-all outline-none"
-                            [class.text-right]="language.isRtl"
-                            [class.text-left]="!language.isRtl"
+                            class="auth-input"
                             placeholder="••••••••">
-                    <i class="bi bi-shield-lock absolute top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" [class.right-5]="language.isRtl" [class.left-5]="!language.isRtl"></i>
+                    <i class="bi bi-shield-lock auth-input-icon"></i>
                   </div>
                   <p *ngIf="passwordControl.touched && passwordControl.invalid" class="text-red-500 text-xs">
                     {{ 'login.passwordRequired' | t }}
@@ -68,7 +64,7 @@
               {{ isSubmitting ? ('login.submitting' | t) : ('login.submit' | t) }}
             </button>
 
-            <div class="flex items-center gap-2 px-1" [class.justify-start]="language.isRtl" [class.justify-end]="!language.isRtl">
+            <div class="flex items-center gap-2 px-1">
               <input type="checkbox" formControlName="rememberMe" class="w-4 h-4 rounded-4 border-gray-300 text-[#0275d8] focus:ring-[#0275d8]">
               <span class="text-sm text-gray-500 font-medium">{{ 'login.remember' | t }}</span>
             </div>

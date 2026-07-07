@@ -20,8 +20,8 @@
             class="text-sm font-medium flex items-center gap-1 hover:text-[#0275d8] transition-colors cursor-pointer no-underline py-3 whitespace-nowrap"
             [ngClass]="{
               'text-[#0275d8]': currentUrl === link.href,
-              'text-gray-900': isScrolled || (currentUrl !== '/' && currentUrl !== link.href),
-              'text-white': !isScrolled && currentUrl === '/' && currentUrl !== link.href
+              'text-gray-900': !isHeroNavbar && currentUrl !== link.href,
+              'text-white': isHeroNavbar && currentUrl !== link.href
             }">
             {{ link.name }}
             <i *ngIf="link.hasMegaMenu" class="bi bi-chevron-down text-[10px] group-hover:rotate-180 transition-transform"></i>
@@ -60,14 +60,15 @@
             <i class="bi bi-globe2 text-base"></i>
           </button>
 
-          <div *ngIf="isLocaleMenuOpen"
+          <div *ngIf="isLocaleMenuRendered"
             class="locale-menu"
+            [class.locale-menu--open]="isLocaleMenuActive"
             [class.locale-menu--rtl]="language.isRtl">
             <p class="locale-menu__label">{{ 'nav.language' | t }}</p>
             <div class="locale-menu__lang">
-              <button type="button" (click)="language.setLanguage('ar')"
+              <button type="button" (click)="selectLanguage('ar')"
                 [class.is-active]="language.current === 'ar'">AR</button>
-              <button type="button" (click)="language.setLanguage('en')"
+              <button type="button" (click)="selectLanguage('en')"
                 [class.is-active]="language.current === 'en'">EN</button>
             </div>
 

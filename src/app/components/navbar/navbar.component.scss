@@ -51,7 +51,16 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   padding: 0.75rem;
   z-index: 999;
-  animation: localeMenuIn 180ms ease-out;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 200ms ease, transform 200ms ease;
+
+  &--open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
 
   &--rtl {
     left: 0;
@@ -142,15 +151,8 @@
   white-space: nowrap;
 }
 
-@keyframes localeMenuIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.cart-toast {
+  animation: cartToastIn 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 header,
@@ -163,10 +165,6 @@ header,
   visibility: visible !important;
   display: block !important;
   z-index: 9999 !important;
-}
-
-.cart-toast {
-  animation: cartToastIn 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes cartToastIn {
