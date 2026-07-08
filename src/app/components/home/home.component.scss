@@ -51,47 +51,35 @@
   text-align: right;
 }
 
-.home-ad-panel {
-  align-items: center;
-  text-align: center;
-}
-
-@media (min-width: 768px) {
-  .home-ad-panel {
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  :host-context(html[dir='rtl']) .home-ad-panel {
-    align-items: flex-end;
-    text-align: right;
-  }
-
-  .home-ad-panel .ad-action {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  :host-context(html[dir='rtl']) .home-ad-panel .ad-action,
-  :host-context(html[dir='ltr']) .home-ad-panel .ad-action {
-    justify-content: center;
-  }
-}
-
-@media (min-width: 768px) {
-  :host-context(html[dir='ltr']) .home-ad-panel .ad-action {
-    justify-content: flex-start;
-  }
-
-  :host-context(html[dir='rtl']) .home-ad-panel .ad-action {
-    justify-content: flex-end;
-  }
-}
-
 .hero-section {
   /* لضمان ثبات الخلفية أثناء الـ Parallax */
   will-change: transform;
+}
+
+.ad-panel {
+  align-items: flex-start;
+
+  &--ltr {
+    direction: ltr;
+    text-align: left;
+  }
+
+  &--rtl {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .ad-badge {
+    align-self: flex-start;
+  }
+
+  .ad-action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 3rem;
+  }
 }
 
 .hero-content {
@@ -266,3 +254,5 @@
     transform: translateX(0);
   }
 }
+
+

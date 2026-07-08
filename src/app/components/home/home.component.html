@@ -159,18 +159,20 @@
     </div>
   </section>
 
-  <section *ngIf="activeAdvertisement as ad" class="py-8 ">
-    <div class=" mx-auto px-4 text-center">
+  <section *ngIf="activeAdvertisement as ad" class="py-8" [attr.dir]="language.dir">
+    <div class="container mx-auto px-4"
+      [class.text-right]="language.isRtl"
+      [class.text-left]="!language.isRtl">
       <span class="inline-block py-1 px-3 rounded-full bg-blue-50 text-[#0275d8] text-sm font-bold mb-3"
         data-aos="fade-up">{{ 'home.adsBadge' | t }}</span>
       <h2 class="text-3xl font-bold mb-4" data-aos="fade-up">{{ 'home.adsTitle' | t }}</h2>
-      <p class="text-gray-500 max-w-2xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">
+      <p class="text-gray-500 max-w-2xl mb-12" [class.me-auto]="language.isRtl" data-aos="fade-up" data-aos-delay="100">
         {{ 'home.adsSubtitle' | t }}
       </p>
     </div>
     <div class="mx-auto px-4">
       <div class="max-w-7xl mx-auto relative bg-white rounded-3xl shadow-lg shadow-blue-900/5 overflow-hidden md:min-h-[320px] lg:min-h-[340px]"
-        data-aos="fade-up" [attr.dir]="language.dir" (touchstart)="onAdvertisementTouchStart($event)"
+        data-aos="fade-up" (touchstart)="onAdvertisementTouchStart($event)"
         (touchend)="onAdvertisementTouchEnd($event)">
         <div class="relative h-56 md:absolute md:inset-0 md:h-auto" [class.ad-image-enter-soft]="adAnimationActive">
           <img *ngFor="let item of advertisements; let i = index"
@@ -184,29 +186,31 @@
             [class.opacity-0]="activeAdvertisementIndex !== i">
         </div>
 
-        <div class="hidden md:block absolute inset-y-0 w-full lg:w-[86%] ad-copy-gradient"
-          [class.ad-copy-gradient--rtl]="language.isRtl"
-          [class.left-0]="!language.isRtl"
-          [class.right-0]="language.isRtl"></div>
+        <div class="hidden md:block absolute inset-y-0 left-0 w-full lg:w-[86%] ad-copy-gradient"></div>
 
-        <div class="relative z-10 md:min-h-[320px] lg:min-h-[340px] flex items-center">
-          <div class="ad-text-readable home-ad-panel w-full md:w-[58%] lg:w-[54%] p-7 sm:p-8 lg:p-12 flex flex-col justify-center"
-            [class.lg:me-auto]="!language.isRtl"
-            [class.lg:ms-auto]="language.isRtl"
+        <div class="relative z-10 md:min-h-[320px] lg:min-h-[340px]">
+          <div class="ad-panel ad-text-readable flex flex-col justify-center w-full p-7 sm:p-8 lg:p-12 md:absolute md:inset-y-0 md:left-0 md:w-[58%] lg:w-[54%]"
+            [class.ad-panel--rtl]="language.isRtl"
+            [class.ad-panel--ltr]="!language.isRtl"
+            [attr.dir]="language.dir"
             [class.ad-text-enter-soft]="adAnimationActive">
             <span
               class="ad-badge inline-flex items-center gap-2 text-xs font-bold text-[#0275d8] bg-blue-50/80 px-3 py-1 rounded-full mb-4">
               <i class="bi bi-megaphone"></i>
               {{ 'home.latestAds' | t }}
             </span>
-            <h2 class="text-2xl lg:text-[28px] font-black text-gray-900 mb-4 leading-snug">
+            <h2 class="text-2xl lg:text-[28px] font-black text-gray-900 mb-4 leading-snug w-full"
+              [class.text-right]="language.isRtl"
+              [class.text-left]="!language.isRtl">
               {{ ad.title || ('home.adFallbackTitle' | t) }}
             </h2>
-            <p class="text-gray-500 leading-relaxed mb-6 line-clamp-3 max-w-xl">
+            <p class="text-gray-500 leading-relaxed mb-6 line-clamp-3 w-full"
+              [class.text-right]="language.isRtl"
+              [class.text-left]="!language.isRtl">
               {{ ad.description || ('home.adFallbackDesc' | t) }}
             </p>
 
-            <div class="ad-action min-h-[48px] flex items-center">
+            <div class="ad-action">
               <button *ngIf="ad.productIds.length"
                 routerLink="/products" [queryParams]="{ advertisementId: ad.id }"
                 class="bg-[#0275d8] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#025bb0] transition-all shadow-lg shadow-blue-100">
@@ -218,8 +222,8 @@
         </div>
 
         <div class="hidden md:flex absolute bottom-16 items-center gap-3 z-20"
-          [class.start-8]="language.isRtl"
-          [class.end-8]="!language.isRtl"
+          [class.right-8]="language.isRtl"
+          [class.left-8]="!language.isRtl"
           *ngIf="advertisements.length > 1">
           <button type="button" (click)="previousAdvertisement()"
             class="w-10 h-10 rounded-full border border-gray-200 bg-white/95 hover:border-[#0275d8] hover:text-[#0275d8] transition-colors shadow-sm">

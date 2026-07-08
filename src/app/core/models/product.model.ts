@@ -31,7 +31,11 @@ export interface Product {
 export interface ProductDetail {
   id: number;
   key: string;
+  keyAr: string;
+  keyEn: string;
   value: string;
+  valueAr: string;
+  valueEn: string;
   sortOrder: number;
 }
 

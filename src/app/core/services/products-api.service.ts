@@ -31,7 +31,16 @@ interface ApiProduct {
   discount?: number | string;
   priceAfterDiscount?: number | string;
   specs?: Record<string, string>;
-  details?: Array<{ id?: number; key?: string; value?: string; sortOrder?: number }>;
+  details?: Array<{
+    id?: number;
+    key?: string;
+    keyAr?: string;
+    keyEn?: string;
+    value?: string;
+    valueAr?: string;
+    valueEn?: string;
+    sortOrder?: number;
+  }>;
   gallery?: Array<{ imageUrl?: string; url?: string; path?: string; Url?: string }>;
   galleryUrls?: Array<{ imageUrl?: string; url?: string; path?: string; Url?: string; type?: string }>;
 }
@@ -258,13 +267,28 @@ export class ProductsApiService {
       isBestSeller: Boolean(apiProduct.isBestSeller),
       hasOffer,
       details: (apiProduct.details || [])
-        .map((detail) => ({
-          id: Number(detail.id || 0),
-          key: detail.key || '',
-          value: detail.value || '',
-          sortOrder: Number(detail.sortOrder || 0)
-        }))
-        .filter((detail) => detail.key.trim() && detail.value.trim())
+        .map((detail) => {
+          const keyAr = (detail.keyAr || '').trim();
+          const keyEn = (detail.keyEn || '').trim();
+          const valueAr = (detail.valueAr || '').trim();
+          const valueEn = (detail.valueEn || '').trim();
+          const keyFallback = (detail.key || '').trim();
+          const valueFallback = (detail.value || '').trim();
+          const key = this.pickLocalizedText(keyAr || keyEn || keyFallback, keyEn || keyAr || keyFallback);
+          const value = this.pickLocalizedText(valueAr || valueEn || valueFallback, valueEn || valueAr || valueFallback);
+
+          return {
+            id: Number(detail.id || 0),
+            key,
+            keyAr: keyAr || keyEn || keyFallback,
+            keyEn: keyEn || keyAr || keyFallback,
+            value,
+            valueAr: valueAr || valueEn || valueFallback,
+            valueEn: valueEn || valueAr || valueFallback,
+            sortOrder: Number(detail.sortOrder || 0)
+          };
+        })
+        .filter((detail) => (detail.keyAr || detail.keyEn).trim() && (detail.valueAr || detail.valueEn).trim())
         .sort((a, b) => a.sortOrder - b.sortOrder),
       galleryUrls: galleryUrls.length ? galleryUrls : [this.normalizeImageUrl(apiProduct.imageUrl || apiProduct.image || galleryImage) || 'assets/images/product-1.png'],
       categoryName,

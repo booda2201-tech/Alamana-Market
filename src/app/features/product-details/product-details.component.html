@@ -164,15 +164,15 @@
             <div class="relative flex items-start gap-4"
               [class.flex-row-reverse]="language.isRtl">
               <div class="w-12 h-12 rounded-2xl bg-[#0275d8] text-white flex items-center justify-center shadow-lg shadow-blue-200 shrink-0">
-                <i class="bi text-xl" [ngClass]="getDetailIcon(detail.key)"></i>
+                <i class="bi text-xl" [ngClass]="getDetailIcon(detail.keyAr || detail.keyEn || detail.key)"></i>
               </div>
 
               <div class="flex-1">
                 <div class="flex items-center justify-between gap-3 mb-3">
-                  <h3 class="font-black text-gray-900 text-lg">{{ detail.key }}</h3>
+                  <h3 class="font-black text-gray-900 text-lg">{{ detail.keyAr | localized:detail.keyEn:detail.key }}</h3>
                   <span class="text-xs font-black text-[#0275d8] bg-blue-50 px-3 py-1 rounded-full">0{{ detail.sortOrder }}</span>
                 </div>
-                <p class="text-gray-600 leading-loose text-sm lg:text-base">{{ detail.value }}</p>
+                <p class="text-gray-600 leading-loose text-sm lg:text-base">{{ detail.valueAr | localized:detail.valueEn:detail.value }}</p>
               </div>
             </div>
           </div>

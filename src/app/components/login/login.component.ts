@@ -7,18 +7,23 @@ import { CartApiService } from '../../core/services/cart-api.service';
 import { LanguageService } from '../../core/services/language.service';
 
 interface LoginApiResponse {
+  success?: boolean;
   token?: string;
   userId?: string;
   userID?: string;
   userid?: string;
+  UserId?: string;
   userName?: string;
+  fullName?: string;
   email?: string;
   data?: {
     token?: string;
     userId?: string;
     userID?: string;
     userid?: string;
+    UserId?: string;
     userName?: string;
+    fullName?: string;
     email?: string;
   };
 }
@@ -118,17 +123,26 @@ export class LoginComponent implements OnInit {
 
     return {
       token: payload.token || nested.token || '',
-      userId: payload.userId || payload.userID || payload.userid || nested.userId || nested.userID || nested.userid,
-      userName: payload.userName || nested.userName,
+      userId:
+        payload.userId ||
+        payload.userID ||
+        payload.userid ||
+        payload.UserId ||
+        nested.userId ||
+        nested.userID ||
+        nested.userid ||
+        nested.UserId,
+      userName: payload.userName || payload.fullName || nested.userName || nested.fullName,
       email: payload.email || nested.email
     };
   }
 
   private persistAuthData(loginData: { token: string; userId?: string; userName?: string; email?: string }): void {
+    localStorage.removeItem('auth_user');
     localStorage.setItem('auth_token', loginData.token);
 
     const user = {
-      userId: loginData.userId || '',
+      userId: loginData.userId || this.cartApi.getCurrentUserId(),
       userName: loginData.userName || '',
       email: loginData.email || ''
     };

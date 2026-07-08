@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map, switchMap } from 'rxjs';
 import { Product } from '../models/product.model';
+import { CountryService } from './country.service';
 
 interface CartApiItem {
   id?: number;
@@ -41,21 +42,40 @@ export class CartApiService {
   private readonly cartMessageSubject = new BehaviorSubject<string>('');
   readonly cartMessage$ = this.cartMessageSubject.asObservable();
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly countryService: CountryService
+  ) {}
 
   getOrCreateCart(userId: string): Observable<AppCartItem[]> {
-    return this.http
-      .get<CartApiResponse>(`${this.baseUrl}/Cart/GetOrCreateCart/${encodeURIComponent(userId)}`, this.getAuthOptions())
-      .pipe(map((response) => this.mapCartItems(response)));
+    return this.withCountryId((countryId) =>
+      this.http
+        .get<CartApiResponse | CartApiResponse[]>(
+          `${this.baseUrl}/Cart/GetOrCreateCart/${encodeURIComponent(userId)}`,
+          {
+            ...this.getAuthOptions(),
+            params: { countryId: String(countryId) }
+          }
+        )
+        .pipe(map((response) => this.mapCartItems(response)))
+    );
   }
 
   addCartItem(userId: string, product: Product, quantity = 1): Observable<unknown> {
-    const payload = {
-      userId,
-      quantity,
-      productId: Number(product.id)
-    };
-    return this.http.post(`${this.baseUrl}/CartItems/AddCartItem`, payload, this.getAuthOptions());
+    const productId = Number(product.id);
+    if (!productId || Number.isNaN(productId)) {
+      throw new Error('Invalid product id');
+    }
+
+    return this.withCountryId((countryId) => {
+      const payload = {
+        userId,
+        quantity,
+        productId,
+        countryId
+      };
+      return this.http.post(`${this.baseUrl}/CartItems/AddCartItem`, payload, this.getAuthOptions());
+    });
   }
 
   deleteCartItem(cartItemId: number): Observable<unknown> {
@@ -100,8 +120,13 @@ export class CartApiService {
     setTimeout(() => this.cartMessageSubject.next(''), 2200);
   }
 
-  private mapCartItems(response: CartApiResponse): AppCartItem[] {
-    const items = Array.isArray(response?.cartItems) ? response.cartItems : [];
+  private withCountryId<T>(project: (countryId: number) => Observable<T>): Observable<T> {
+    return this.countryService.whenReady().pipe(switchMap((countryId) => project(countryId)));
+  }
+
+  private mapCartItems(response: CartApiResponse | CartApiResponse[]): AppCartItem[] {
+    const cart = Array.isArray(response) ? response[0] : response;
+    const items = Array.isArray(cart?.cartItems) ? cart.cartItems : [];
     return items.map((item) => ({
       id: Number(item.id || 0),
       productId: String(item.productId ?? ''),
@@ -118,8 +143,10 @@ export class CartApiService {
       payload['userId'],
       payload['userid'],
       payload['userID'],
+      payload['UserId'],
       payload['id'],
       payload['sub'],
+      payload['name'],
       payload['nameid'],
       payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
     ];
