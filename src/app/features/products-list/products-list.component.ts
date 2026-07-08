@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -16,6 +16,7 @@ import { ProductsApiService } from '../../core/services/products-api.service';
   styleUrls: ['./products-list.component.scss']
 })
 export class ProductsListComponent implements OnInit, OnDestroy {
+  @ViewChild('categoryChips') categoryChips?: ElementRef<HTMLElement>;
 
   // 2. البيانات (Data)
   categories: Category[] = [];
@@ -114,6 +115,30 @@ constructor(
     this.selectedCategory = 'all';
     this.showNewOnly = false;
     this.applyFilters();
+  }
+
+  selectCategory(categoryId: string): void {
+    this.selectedCategory = categoryId;
+    this.applyFilters();
+  }
+
+  toggleNewOnly(): void {
+    this.showNewOnly = !this.showNewOnly;
+    this.applyFilters();
+  }
+
+  scrollCategoryChips(direction: 1 | -1): void {
+    const row = this.categoryChips?.nativeElement;
+    if (!row) {
+      return;
+    }
+
+    const amount = Math.max(160, row.clientWidth * 0.55);
+    const rtlFactor = this.language.isRtl ? -1 : 1;
+    row.scrollBy({
+      left: direction * amount * rtlFactor,
+      behavior: 'smooth'
+    });
   }
 
   addToCart(product: Product): void {

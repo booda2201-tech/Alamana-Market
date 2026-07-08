@@ -10,14 +10,14 @@
       <a routerLink="/" class="navbar__brand shrink-0 no-underline"
         [class.order-1]="!language.isRtl"
         [class.order-3]="language.isRtl">
-        <img src="../../../assets//images/alamanaWithoutbg.png" alt="Alamana" class="h-8 sm:h-9 w-auto object-contain">
+        <img src="../../../assets//images/alamanaWithoutbg.png" alt="Alamana" class="h-10 sm:h-11 w-auto object-contain">
       </a>
 
-      <nav class="navbar__links order-2 hidden lg:flex flex-1 items-center justify-center gap-3 xl:gap-5 min-w-0"
+      <nav class="navbar__links order-2 hidden lg:flex flex-1 items-center justify-center gap-6 xl:gap-8 min-w-0"
         [attr.dir]="language.dir">
         <div *ngFor="let link of navLinks" class="relative group shrink-0">
           <a [routerLink]="link.href" [queryParams]="link.queryParams"
-            class="text-sm font-medium flex items-center gap-1 hover:text-[#0275d8] transition-colors cursor-pointer no-underline py-3 whitespace-nowrap"
+            class="text-sm font-medium flex items-center gap-1.5 hover:text-[#0275d8] transition-colors cursor-pointer no-underline py-3 px-1 whitespace-nowrap"
             [ngClass]="{
               'text-[#0275d8]': currentUrl === link.href,
               'text-gray-900': !isHeroNavbar && currentUrl !== link.href,
@@ -30,11 +30,11 @@
           <div *ngIf="link.hasMegaMenu"
             class="absolute top-full pt-3 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 w-60 z-[999]"
             [class.right-0]="language.isRtl"
-            [class.left-0]="!language.isRtl">
+            [class.left-0]="!language.isRtl"
+            [attr.dir]="language.dir">
             <div class="bg-white rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-gray-100 p-2">
               <a *ngFor="let cat of categories" [routerLink]="['/products']" [queryParams]="{category: cat.id}"
-                class="px-4 py-2.5 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer flex items-center gap-2 no-underline group/item"
-                [class.flex-row-reverse]="language.isRtl">
+                class="px-4 py-2.5 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer flex items-center justify-start gap-2 no-underline group/item text-start">
                 <span class="text-sm font-medium text-gray-700 group-hover/item:text-[#0275d8]">
                   {{ cat.nameAr | localized:cat.nameEn:cat.name }}
                 </span>
@@ -134,11 +134,10 @@
 </div>
 
 <div *ngIf="isMobileMenuOpen" (click)="toggleMobileMenu()"
-  class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] lg:hidden transition-opacity">
-</div>
+  class="navbar__backdrop fixed inset-0 bg-black/55 backdrop-blur-sm z-[60] lg:hidden"></div>
 
 <div
-  class="navbar__drawer fixed top-0 h-full w-[min(300px,88vw)] bg-white z-[70] lg:hidden transform shadow-2xl"
+  class="navbar__drawer fixed top-0 h-full w-[min(320px,92vw)] bg-white z-[70] lg:hidden transform shadow-2xl flex flex-col"
   [class.navbar__drawer--open]="isMobileMenuOpen"
   [class.right-0]="language.isRtl"
   [class.left-0]="!language.isRtl"
@@ -146,75 +145,73 @@
   [class.-translate-x-full]="!isMobileMenuOpen && !language.isRtl"
   [class.translate-x-0]="isMobileMenuOpen"
   [class.invisible]="!isMobileMenuOpen"
-  [class.pointer-events-none]="!isMobileMenuOpen">
+  [class.pointer-events-none]="!isMobileMenuOpen"
+  [attr.dir]="language.dir">
 
-  <div class="p-4 sm:p-5 border-b flex justify-between items-center gap-3" [attr.dir]="language.dir">
-    <span class="font-bold text-lg text-gray-900">{{ 'nav.menu' | t }}</span>
-    <button type="button" (click)="toggleMobileMenu()" class="text-gray-500 p-1 shrink-0">
-      <i class="bi bi-x-lg text-xl"></i>
+  <div class="navbar__drawer-header">
+    <div class="navbar__drawer-brand">
+      <img src="../../../assets//images/alamanaWithoutbg.png" alt="Alamana" class="h-8 w-auto object-contain">
+      <span class="font-bold text-base text-gray-900">{{ 'nav.menu' | t }}</span>
+    </div>
+    <button type="button" (click)="toggleMobileMenu()" class="navbar__drawer-close" [attr.aria-label]="'nav.menu' | t">
+      <i class="bi bi-x-lg"></i>
     </button>
   </div>
 
-  <nav class="p-3 sm:p-4 flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-72px)]" [attr.dir]="language.dir">
-    <a *ngFor="let link of navLinks" [routerLink]="link.href" [queryParams]="link.queryParams"
-      (click)="toggleMobileMenu()"
-      class="p-3 rounded-xl text-gray-700 font-medium hover:bg-blue-50 hover:text-[#0275d8] transition-all no-underline">
-      {{ link.name }}
-    </a>
-
-    <button type="button" (click)="goToSearch(); toggleMobileMenu()"
-      class="p-3 rounded-xl text-gray-700 font-medium hover:bg-blue-50 hover:text-[#0275d8] transition-all text-start w-full sm:hidden">
-      <i class="bi bi-search me-2"></i>
-      {{ 'products.searchPlaceholder' | t }}
-    </button>
-
-    <div class="px-1 pt-3 pb-1">
-      <div class="text-xs text-gray-400 font-bold mb-2">{{ 'nav.language' | t }}</div>
-      <div class="grid grid-cols-2 gap-2">
-        <button type="button" (click)="language.setLanguage('ar')"
-          class="px-3 py-2 rounded-xl text-sm font-medium border transition-colors"
-          [ngClass]="language.current === 'ar' ? 'border-[#0275d8] bg-blue-50 text-[#0275d8]' : 'border-gray-200 text-gray-700'">
-          العربية
-        </button>
-        <button type="button" (click)="language.setLanguage('en')"
-          class="px-3 py-2 rounded-xl text-sm font-medium border transition-colors"
-          [ngClass]="language.current === 'en' ? 'border-[#0275d8] bg-blue-50 text-[#0275d8]' : 'border-gray-200 text-gray-700'">
-          English
-        </button>
-      </div>
-    </div>
-
-    <div class="px-1 py-2">
-      <div class="text-xs text-gray-400 font-bold mb-2">{{ 'nav.country' | t }}</div>
-      <div class="grid grid-cols-1 gap-2">
-        <button *ngFor="let country of countries" type="button"
-          (click)="selectCountry(country.id); toggleMobileMenu()"
-          class="px-3 py-2.5 rounded-xl text-sm font-medium border transition-colors flex items-center justify-between gap-2"
-          [ngClass]="selectedCountryId === country.id
-            ? 'border-[#0275d8] bg-blue-50 text-[#0275d8]'
-            : 'border-gray-200 text-gray-700'">
-          <span>{{ getLocalizedCountryName(country) }}</span>
-          <span class="text-xs opacity-80">{{ getLocalizedCurrency(country) }}</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="px-1 py-2">
-      <div class="text-xs text-gray-400 font-bold mb-2">{{ 'nav.categories' | t }}</div>
-      <a *ngFor="let cat of categories" [routerLink]="['/products']" [queryParams]="{category: cat.id}"
+  <nav class="navbar__drawer-body">
+    <div class="navbar__drawer-section">
+      <a *ngFor="let link of navLinks" [routerLink]="link.href" [queryParams]="link.queryParams"
         (click)="toggleMobileMenu()"
-        class="block p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-[#0275d8] transition-all no-underline">
-        {{ cat.nameAr | localized:cat.nameEn:cat.name }}
+        class="navbar__drawer-link"
+        [class.is-active]="currentUrl === link.href">
+        {{ link.name }}
       </a>
     </div>
 
-    <hr class="my-2 border-gray-100">
+    <button type="button" (click)="goToSearch(); toggleMobileMenu()"
+      class="navbar__drawer-search sm:hidden">
+      <i class="bi bi-search"></i>
+      <span>{{ 'products.searchPlaceholder' | t }}</span>
+    </button>
 
+    <div class="navbar__drawer-section">
+      <div class="navbar__drawer-label">{{ 'nav.language' | t }}</div>
+      <div class="navbar__drawer-lang">
+        <button type="button" (click)="language.setLanguage('ar')"
+          [class.is-active]="language.current === 'ar'">العربية</button>
+        <button type="button" (click)="language.setLanguage('en')"
+          [class.is-active]="language.current === 'en'">English</button>
+      </div>
+    </div>
+
+    <div class="navbar__drawer-section">
+      <div class="navbar__drawer-label">{{ 'nav.country' | t }}</div>
+      <div class="navbar__drawer-countries">
+        <button *ngFor="let country of countries" type="button"
+          (click)="selectCountry(country.id); toggleMobileMenu()"
+          [class.is-active]="selectedCountryId === country.id">
+          <span>{{ getLocalizedCountryName(country) }}</span>
+          <span class="navbar__drawer-currency">{{ getLocalizedCurrency(country) }}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="navbar__drawer-section" *ngIf="categories.length">
+      <div class="navbar__drawer-label">{{ 'nav.categories' | t }}</div>
+      <a *ngFor="let cat of categories" [routerLink]="['/products']" [queryParams]="{category: cat.id}"
+        (click)="toggleMobileMenu()"
+        class="navbar__drawer-link navbar__drawer-link--soft">
+        {{ cat.nameAr | localized:cat.nameEn:cat.name }}
+      </a>
+    </div>
+  </nav>
+
+  <div class="navbar__drawer-footer">
     <a routerLink="/login" (click)="toggleMobileMenu()"
-      class="bttn text-white p-3 rounded-xl font-bold flex items-center justify-center gap-2 no-underline"
+      class="navbar__drawer-login no-underline"
       [class.flex-row-reverse]="language.isRtl">
       <i class="bi bi-person-circle"></i>
       <span>{{ 'nav.login' | t }}</span>
     </a>
-  </nav>
+  </div>
 </div>

@@ -54,10 +54,12 @@
       <h2 class="text-3xl font-bold mb-4" data-aos="fade-up">{{ 'home.solutionsTitle' | t }}</h2>
       <p class="text-gray-500 max-w-2xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">{{ 'home.solutionsSubtitle' | t }}</p>
 
-      <div class="flex md:flex-wrap justify-start md:justify-center items-stretch gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth hide-scrollbar -mx-4 px-4 pb-2"
-        [attr.dir]="language.dir">
+      <div #categoriesCarousel
+        class="flex md:flex-wrap justify-start md:justify-center items-stretch gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth hide-scrollbar -mx-4 px-4 pb-2"
+        [attr.dir]="language.dir"
+        (scroll)="onProductCarouselScroll($event, 'categories')">
         <div *ngFor="let cat of categories; let i = index"
-          class="group shrink-0 snap-start w-[78%] sm:w-[45%] md:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)] max-w-[320px] cursor-pointer border rounded-xl overflow-hidden hover:border-[#0275d8] transition-all duration-500 hover:shadow-xl hover:-translate-y-2"
+          class="group shrink-0 snap-center w-[calc(100vw-2.5rem)] sm:w-[calc(50%-0.75rem)] md:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)] sm:max-w-[320px] cursor-pointer border rounded-xl overflow-hidden hover:border-[#0275d8] transition-all duration-500 hover:shadow-xl hover:-translate-y-2"
           data-aos="fade-up" [attr.data-aos-delay]="(i % 4) * 150"> <a [routerLink]="['/products']"
             [queryParams]="{category: cat.id}" class="no-underline text-inherit ">
             <div class="h-48 bg-gray-50 flex items-center justify-center overflow-hidden ">
@@ -70,16 +72,26 @@
             </div>
             <div class="p-6 home-copy">
               <h3 class="font-bold text-lg mb-2 group-hover:text-[#0275d8] transition-colors">{{ cat.nameAr | localized:cat.nameEn:cat.name }}</h3>
-              <div class="flex items-center text-sm text-[#0275d8] font-medium">
+              <div class="flex w-full items-center justify-end gap-1 text-sm text-[#0275d8] font-medium"
+                [attr.dir]="language.dir">
                 {{ 'home.browseCategory' | t }}
                 <i class="bi transition-transform"
                   [ngClass]="language.isRtl
-                    ? 'bi-chevron-left ms-1 group-hover:-translate-x-1'
-                    : 'bi-chevron-right me-1 group-hover:translate-x-1'"></i>
+                    ? 'bi-chevron-left group-hover:-translate-x-1'
+                    : 'bi-chevron-right group-hover:translate-x-1'"></i>
               </div>
             </div>
           </a>
         </div>
+      </div>
+
+      <div class="product-carousel-dots" *ngIf="categories.length > 1">
+        <button type="button"
+          *ngFor="let cat of categories; let i = index"
+          class="product-carousel-dots__dot"
+          [class.is-active]="categoriesActiveIndex === i"
+          (click)="goToCarouselSlide('categories', i)"
+          [attr.aria-label]="'Slide ' + (i + 1)"></button>
       </div>
     </div>
   </section>
@@ -101,10 +113,12 @@
         </a>
       </div>
 
-      <div class="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-smooth hide-scrollbar -mx-4 px-4 pb-2"
-        [attr.dir]="language.dir">
+      <div #bestSellersCarousel
+        class="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-smooth hide-scrollbar -mx-4 px-4 pb-2"
+        [attr.dir]="language.dir"
+        (scroll)="onProductCarouselScroll($event, 'bestSellers')">
         <div *ngFor="let product of bestSellers; let i = index" (click)="goToDetails(product.id)"
-          class="group shrink-0 snap-start w-[78%] sm:w-auto home-product-card bg-white rounded-3xl border border-gray-100 p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-100 cursor-pointer"
+          class="group shrink-0 snap-center w-[calc(100vw-2.5rem)] sm:w-auto home-product-card bg-white rounded-3xl border border-gray-100 p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-100 cursor-pointer"
           data-aos="fade-up" [attr.data-aos-delay]="i * 100">
 
           <div
@@ -147,6 +161,15 @@
         </div>
       </div>
 
+      <div class="product-carousel-dots" *ngIf="bestSellers.length > 1">
+        <button type="button"
+          *ngFor="let product of bestSellers; let i = index"
+          class="product-carousel-dots__dot"
+          [class.is-active]="bestSellersActiveIndex === i"
+          (click)="goToCarouselSlide('bestSellers', i)"
+          [attr.aria-label]="'Slide ' + (i + 1)"></button>
+      </div>
+
       <div *ngIf="bestSellers.length === 0" class="text-center py-12 text-gray-500 font-medium">
         {{ 'home.noBestSellers' | t }}
       </div>
@@ -160,13 +183,11 @@
   </section>
 
   <section *ngIf="activeAdvertisement as ad" class="py-8" [attr.dir]="language.dir">
-    <div class="container mx-auto px-4"
-      [class.text-right]="language.isRtl"
-      [class.text-left]="!language.isRtl">
+    <div class="container mx-auto px-4 text-center">
       <span class="inline-block py-1 px-3 rounded-full bg-blue-50 text-[#0275d8] text-sm font-bold mb-3"
         data-aos="fade-up">{{ 'home.adsBadge' | t }}</span>
       <h2 class="text-3xl font-bold mb-4" data-aos="fade-up">{{ 'home.adsTitle' | t }}</h2>
-      <p class="text-gray-500 max-w-2xl mb-12" [class.me-auto]="language.isRtl" data-aos="fade-up" data-aos-delay="100">
+      <p class="text-gray-500 max-w-2xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">
         {{ 'home.adsSubtitle' | t }}
       </p>
     </div>
@@ -186,16 +207,18 @@
             [class.opacity-0]="activeAdvertisementIndex !== i">
         </div>
 
-        <div class="hidden md:block absolute inset-y-0 left-0 w-full lg:w-[86%] ad-copy-gradient"></div>
+        <div class="hidden md:block absolute inset-y-0 w-full lg:w-[86%] ad-copy-gradient"
+          [class.ad-copy-gradient--rtl]="language.isRtl"></div>
 
         <div class="relative z-10 md:min-h-[320px] lg:min-h-[340px]">
-          <div class="ad-panel ad-text-readable flex flex-col justify-center w-full p-7 sm:p-8 lg:p-12 md:absolute md:inset-y-0 md:left-0 md:w-[58%] lg:w-[54%]"
+          <div class="ad-panel ad-text-readable flex flex-col justify-center w-full p-7 sm:p-8 lg:p-12 md:absolute md:inset-y-0 md:w-[58%] lg:w-[54%]"
             [class.ad-panel--rtl]="language.isRtl"
             [class.ad-panel--ltr]="!language.isRtl"
             [attr.dir]="language.dir"
-            [class.ad-text-enter-soft]="adAnimationActive">
+            [class.ad-text-enter-soft]="adAnimationActive && !language.isRtl"
+            [class.ad-text-enter-soft-rtl]="adAnimationActive && language.isRtl">
             <span
-              class="ad-badge inline-flex items-center gap-2 text-xs font-bold text-[#0275d8] bg-blue-50/80 px-3 py-1 rounded-full mb-4">
+              class="ad-badge items-center gap-2 text-xs font-bold text-[#0275d8] bg-blue-50/80 px-3 py-1 rounded-full mb-4">
               <i class="bi bi-megaphone"></i>
               {{ 'home.latestAds' | t }}
             </span>
@@ -222,8 +245,8 @@
         </div>
 
         <div class="hidden md:flex absolute bottom-16 items-center gap-3 z-20"
-          [class.right-8]="language.isRtl"
-          [class.left-8]="!language.isRtl"
+          [class.left-8]="language.isRtl"
+          [class.right-8]="!language.isRtl"
           *ngIf="advertisements.length > 1">
           <button type="button" (click)="previousAdvertisement()"
             class="w-10 h-10 rounded-full border border-gray-200 bg-white/95 hover:border-[#0275d8] hover:text-[#0275d8] transition-colors shadow-sm">
@@ -264,10 +287,12 @@
         </a>
       </div>
 
-      <div class="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-smooth hide-scrollbar -mx-4 px-4 pb-2"
-        [attr.dir]="language.dir">
+      <div #randomProductsCarousel
+        class="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-smooth hide-scrollbar -mx-4 px-4 pb-2"
+        [attr.dir]="language.dir"
+        (scroll)="onProductCarouselScroll($event, 'randomProducts')">
         <div *ngFor="let product of randomProducts; let i = index" (click)="goToDetails(product.id)"
-          class="group shrink-0 snap-start w-[78%] sm:w-auto home-product-card bg-white rounded-3xl border border-gray-100 p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-100 cursor-pointer"
+          class="group shrink-0 snap-center w-[calc(100vw-2.5rem)] sm:w-auto home-product-card bg-white rounded-3xl border border-gray-100 p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-100 cursor-pointer"
           data-aos="fade-up" [attr.data-aos-delay]="i * 100">
 
           <div
@@ -301,6 +326,15 @@
         </div>
       </div>
 
+      <div class="product-carousel-dots" *ngIf="randomProducts.length > 1">
+        <button type="button"
+          *ngFor="let product of randomProducts; let i = index"
+          class="product-carousel-dots__dot"
+          [class.is-active]="randomProductsActiveIndex === i"
+          (click)="goToCarouselSlide('randomProducts', i)"
+          [attr.aria-label]="'Slide ' + (i + 1)"></button>
+      </div>
+
       <div *ngIf="randomProducts.length === 0" class="text-center py-12 text-gray-500 font-medium">
         {{ 'home.noRandomProducts' | t }}
       </div>
@@ -312,10 +346,10 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center" [attr.dir]="language.dir">
         <div class="text-white home-copy" data-aos="fade-left">
           <ng-container *ngIf="heroProduct; else heroFallback">
-            <h2 class="text-3xl md:text-5xl font-bold mb-5 leading-[1.3]">
+            <h2 class="hero-product-title text-3xl md:text-5xl font-bold mb-5">
               {{ heroProduct.nameAr | localized:heroProduct.nameEn }}
             </h2>
-            <p class="text-white/80 text-l mb-8 max-w-md">
+            <p class="text-white/80 text-l mb-8 max-w-md leading-relaxed">
               {{ (heroProduct.descriptionAr || heroProduct.description) | localized:heroProduct.descriptionEn }}
             </p>
             <button
@@ -353,35 +387,111 @@
     </div>
   </section>
 
-  <section class="py-20 bg-gray-50">
+  <section class="home-features pt-12 md:pt-20 pb-6 md:pb-10 bg-gray-50">
     <div class="container mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-        <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100" data-aos="zoom-in" data-aos-delay="100">
-          <div
-            class="w-16 h-16 mx-auto bg-blue-100 text-[#0275d8] rounded-2xl flex items-center justify-center mb-6 text-3xl">
-            <i class="bi bi-patch-check"></i>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 md:text-center">
+        <div class="home-feature-card p-4 sm:p-6 bg-white rounded-2xl shadow-sm border border-gray-100"
+          data-aos="zoom-in" data-aos-delay="100"
+          [attr.dir]="language.dir"
+          [class.text-right]="language.isRtl"
+          [class.text-left]="!language.isRtl">
+          <div class="flex items-center gap-3 mb-2 md:flex-col md:mb-0">
+            <div class="w-11 h-11 md:w-16 md:h-16 shrink-0 md:mx-auto bg-blue-100 text-[#0275d8] rounded-xl md:rounded-2xl flex items-center justify-center text-xl md:text-3xl md:mb-6">
+              <i class="bi bi-patch-check"></i>
+            </div>
+            <h3 class="text-base md:text-xl font-bold md:mb-3 flex-1 md:flex-none leading-snug md:text-center">{{ 'home.featureQuality' | t }}</h3>
           </div>
-          <h3 class="text-xl font-bold mb-3">{{ 'home.featureQuality' | t }}</h3>
-          <p class="text-gray-500">{{ 'home.featureQualityDesc' | t }}</p>
+          <p class="text-sm md:text-base text-gray-500 leading-relaxed md:text-center">{{ 'home.featureQualityDesc' | t }}</p>
         </div>
 
-        <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100" data-aos="zoom-in" data-aos-delay="300">
-          <div
-            class="w-16 h-16 mx-auto bg-blue-100 text-[#0275d8] rounded-2xl flex items-center justify-center mb-6 text-3xl">
-            <i class="bi bi-truck"></i>
+        <div class="home-feature-card p-4 sm:p-6 bg-white rounded-2xl shadow-sm border border-gray-100"
+          data-aos="zoom-in" data-aos-delay="300"
+          [attr.dir]="language.dir"
+          [class.text-right]="language.isRtl"
+          [class.text-left]="!language.isRtl">
+          <div class="flex items-center gap-3 mb-2 md:flex-col md:mb-0">
+            <div class="w-11 h-11 md:w-16 md:h-16 shrink-0 md:mx-auto bg-blue-100 text-[#0275d8] rounded-xl md:rounded-2xl flex items-center justify-center text-xl md:text-3xl md:mb-6">
+              <i class="bi bi-truck"></i>
+            </div>
+            <h3 class="text-base md:text-xl font-bold md:mb-3 flex-1 md:flex-none leading-snug md:text-center">{{ 'home.featureDelivery' | t }}</h3>
           </div>
-          <h3 class="text-xl font-bold mb-3">{{ 'home.featureDelivery' | t }}</h3>
-          <p class="text-gray-500">{{ 'home.featureDeliveryDesc' | t }}</p>
+          <p class="text-sm md:text-base text-gray-500 leading-relaxed md:text-center">{{ 'home.featureDeliveryDesc' | t }}</p>
         </div>
 
-        <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100" data-aos="zoom-in" data-aos-delay="500">
-          <div
-            class="w-16 h-16 mx-auto bg-blue-100 text-[#0275d8] rounded-2xl flex items-center justify-center mb-6 text-3xl">
-            <i class="bi bi-shield-lock"></i>
+        <div class="home-feature-card p-4 sm:p-6 bg-white rounded-2xl shadow-sm border border-gray-100"
+          data-aos="zoom-in" data-aos-delay="500"
+          [attr.dir]="language.dir"
+          [class.text-right]="language.isRtl"
+          [class.text-left]="!language.isRtl">
+          <div class="flex items-center gap-3 mb-2 md:flex-col md:mb-0">
+            <div class="w-11 h-11 md:w-16 md:h-16 shrink-0 md:mx-auto bg-blue-100 text-[#0275d8] rounded-xl md:rounded-2xl flex items-center justify-center text-xl md:text-3xl md:mb-6">
+              <i class="bi bi-shield-lock"></i>
+            </div>
+            <h3 class="text-base md:text-xl font-bold md:mb-3 flex-1 md:flex-none leading-snug md:text-center">{{ 'home.featureTrust' | t }}</h3>
           </div>
-          <h3 class="text-xl font-bold mb-3">{{ 'home.featureTrust' | t }}</h3>
-          <p class="text-gray-500">{{ 'home.featureTrustDesc' | t }}</p>
+          <p class="text-sm md:text-base text-gray-500 leading-relaxed md:text-center">{{ 'home.featureTrustDesc' | t }}</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="catalog-promo pt-8 pb-16 md:pt-12 md:pb-20 overflow-hidden" [attr.dir]="language.dir">
+    <div class="container mx-auto px-4">
+      <div class="catalog-promo__panel grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+        <div class="catalog-promo__copy home-copy" data-aos="fade-up">
+          <span class="catalog-promo__badge">{{ 'home.catalogBadge' | t }}</span>
+          <h2 class="catalog-promo__title">{{ 'home.catalogTitle' | t }}</h2>
+          <p class="catalog-promo__subtitle">{{ 'home.catalogSubtitle' | t }}</p>
+
+          <ul class="catalog-promo__points">
+            <li>
+              <i class="bi bi-book"></i>
+              <span>{{ 'home.catalogPointBrowse' | t }}</span>
+            </li>
+            <li>
+              <i class="bi bi-download"></i>
+              <span>{{ 'home.catalogPointDownload' | t }}</span>
+            </li>
+            <li>
+              <i class="bi bi-printer"></i>
+              <span>{{ 'home.catalogPointPrint' | t }}</span>
+            </li>
+          </ul>
+
+          <a routerLink="/catalog"
+            class="catalog-promo__cta no-underline">
+            {{ 'home.catalogCta' | t }}
+            <i class="bi" [ngClass]="language.isRtl ? 'bi-arrow-left' : 'bi-arrow-right'"></i>
+          </a>
+        </div>
+
+        <a routerLink="/catalog" class="catalog-book-link no-underline" data-aos="fade-up" data-aos-delay="120"
+          [attr.aria-label]="'home.catalogCta' | t">
+          <div class="spiral-notebook" [class.spiral-notebook--rtl]="language.isRtl">
+            <div class="spiral-notebook__shadow" aria-hidden="true"></div>
+            <div class="spiral-notebook__page spiral-notebook__page--3" aria-hidden="true"></div>
+            <div class="spiral-notebook__page spiral-notebook__page--2" aria-hidden="true"></div>
+            <div class="spiral-notebook__page spiral-notebook__page--1" aria-hidden="true"></div>
+            <div class="spiral-notebook__stack" aria-hidden="true"></div>
+
+            <div class="spiral-notebook__spiral" aria-hidden="true">
+              <span *ngFor="let coil of [1,2,3,4,5,6,7,8,9,10,11,12]" class="spiral-notebook__coil"></span>
+            </div>
+
+            <div class="spiral-notebook__cover">
+              <img
+                src="assets/catalog/cover.png?v=3"
+                [alt]="'home.catalogBadge' | t"
+                class="spiral-notebook__cover-img"
+                loading="lazy">
+              <div class="spiral-notebook__sheen" aria-hidden="true"></div>
+              <span class="spiral-notebook__open">
+                <i class="bi bi-book"></i>
+                {{ 'home.catalogCta' | t }}
+              </span>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
   </section>

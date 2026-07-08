@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -20,12 +20,19 @@ gsap.registerPlugin(ScrollTrigger);
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('categoriesCarousel') categoriesCarousel?: ElementRef<HTMLElement>;
+  @ViewChild('bestSellersCarousel') bestSellersCarousel?: ElementRef<HTMLElement>;
+  @ViewChild('randomProductsCarousel') randomProductsCarousel?: ElementRef<HTMLElement>;
+
   private readonly brokenCategoryImageKeys = new Set<string>();
   private readonly preloadedAdvertisementImages = new Set<string>();
   categories: Category[] = [];
+  categoriesActiveIndex = 0;
 
   bestSellers: Product[] = [];
   randomProducts: Product[] = [];
+  bestSellersActiveIndex = 0;
+  randomProductsActiveIndex = 0;
   heroProduct?: Product;
   advertisements: Advertisement[] = [];
   activeAdvertisementIndex = 0;
@@ -67,10 +74,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private loadCatalogData(): void {
     this.productsApi.getBestSellers().subscribe((products) => {
       this.bestSellers = products.slice(0, 4);
+      this.bestSellersActiveIndex = 0;
     });
 
     this.productsApi.getRandomProducts().subscribe((products) => {
       this.randomProducts = products.slice(0, 4);
+      this.randomProductsActiveIndex = 0;
     });
 
     this.advertisementsApi.getAdvertisements().subscribe((advertisements) => {
@@ -83,6 +92,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productsApi.getCategories().subscribe((categories) => {
       this.brokenCategoryImageKeys.clear();
       this.categories = categories.filter((category) => category.id !== 'all');
+      this.categoriesActiveIndex = 0;
     });
 
     this.productsApi.getHeroProduct().subscribe((product) => {
@@ -234,6 +244,91 @@ addToCart(product: Product): void {
 
   goToDetails(productId: string): void {
     this.router.navigate(['/products', productId]);
+  }
+
+  onProductCarouselScroll(event: Event, section: 'categories' | 'bestSellers' | 'randomProducts'): void {
+    const container = event.target as HTMLElement | null;
+    if (!container) {
+      return;
+    }
+
+    this.setCarouselActiveIndex(container, section);
+  }
+
+  goToCarouselSlide(section: 'categories' | 'bestSellers' | 'randomProducts', index: number): void {
+    const container = this.getCarouselElement(section);
+    if (!container) {
+      return;
+    }
+
+    const cards = Array.from(container.children) as HTMLElement[];
+    const target = cards[index];
+    if (!target) {
+      return;
+    }
+
+    const containerRect = container.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const delta =
+      targetRect.left -
+      containerRect.left -
+      (container.clientWidth - target.offsetWidth) / 2;
+
+    container.scrollTo({
+      left: container.scrollLeft + delta,
+      behavior: 'smooth'
+    });
+
+    if (section === 'categories') {
+      this.categoriesActiveIndex = index;
+    } else if (section === 'bestSellers') {
+      this.bestSellersActiveIndex = index;
+    } else {
+      this.randomProductsActiveIndex = index;
+    }
+  }
+
+  private getCarouselElement(section: 'categories' | 'bestSellers' | 'randomProducts'): HTMLElement | undefined {
+    if (section === 'categories') {
+      return this.categoriesCarousel?.nativeElement;
+    }
+    if (section === 'bestSellers') {
+      return this.bestSellersCarousel?.nativeElement;
+    }
+    return this.randomProductsCarousel?.nativeElement;
+  }
+
+  private setCarouselActiveIndex(
+    container: HTMLElement,
+    section: 'categories' | 'bestSellers' | 'randomProducts'
+  ): void {
+    const cards = Array.from(container.children) as HTMLElement[];
+    if (!cards.length) {
+      return;
+    }
+
+    const containerRect = container.getBoundingClientRect();
+    const containerCenter = containerRect.left + containerRect.width / 2;
+    let nearestIndex = 0;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+
+    cards.forEach((card, index) => {
+      const cardRect = card.getBoundingClientRect();
+      const cardCenter = cardRect.left + cardRect.width / 2;
+      const distance = Math.abs(cardCenter - containerCenter);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestIndex = index;
+      }
+    });
+
+    if (section === 'categories') {
+      this.categoriesActiveIndex = nearestIndex;
+    } else if (section === 'bestSellers') {
+      this.bestSellersActiveIndex = nearestIndex;
+    } else {
+      this.randomProductsActiveIndex = nearestIndex;
+    }
   }
 
   get activeAdvertisement(): Advertisement | undefined {

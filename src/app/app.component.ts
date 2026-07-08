@@ -40,6 +40,7 @@ export class AppComponent implements OnInit {
   private readonly siteUrl = 'https://alamanamarket.com';
   private readonly defaultImage = `${this.siteUrl}/assets/images/logo.png`;
   showLayout = true;
+  showFooter = true;
 
   constructor(
     private readonly router: Router,
@@ -188,7 +189,9 @@ export class AppComponent implements OnInit {
   private updateLayoutVisibility(): void {
     const currentPath = this.router.url.split('?')[0];
     const authRoutes = ['/login', '/create-account'];
+    const noFooterRoutes = [...authRoutes, '/catalog'];
     this.showLayout = !authRoutes.includes(currentPath);
+    this.showFooter = !noFooterRoutes.includes(currentPath);
   }
 
 

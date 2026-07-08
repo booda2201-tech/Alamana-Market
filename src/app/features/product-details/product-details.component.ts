@@ -1,4 +1,13 @@
-import { Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { gsap } from 'gsap';
 import { Subscription, combineLatest } from 'rxjs';
@@ -15,6 +24,8 @@ import { ProductsApiService } from '../../core/services/products-api.service';
   styleUrls: ['./product-details.component.scss']
 })
 export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('cartActions') cartActions?: ElementRef<HTMLElement>;
+
   product?: Product;
   isLoading = true;
   notAvailable = false;
@@ -23,7 +34,9 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   activeTab: 'overview' | 'details' | 'category' = 'overview';
   specsArray: [string, string][] = [];
   activeImage = '';
+  showStickyCart = true;
   private countrySubscription?: Subscription;
+  private cartObserver?: IntersectionObserver;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -31,6 +44,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private readonly cartApi: CartApiService,
     private readonly countryService: CountryService,
     private readonly router: Router,
+    private readonly cdr: ChangeDetectorRef,
     public readonly language: LanguageService
   ) {}
 
@@ -46,6 +60,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         this.isLoading = false;
         this.notAvailable = true;
         this.product = undefined;
+        this.teardownCartObserver();
         return;
       }
 
@@ -57,10 +72,16 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnDestroy(): void {
     this.countrySubscription?.unsubscribe();
+    this.teardownCartObserver();
   }
 
   ngAfterViewInit(): void {
     this.initAnimation();
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.setupCartObserver();
   }
 
   get unavailableMessage(): string {
@@ -78,13 +99,59 @@ export class ProductDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
       if (!product) {
         this.notAvailable = true;
+        this.teardownCartObserver();
         return;
       }
 
       this.product = product;
       this.specsArray = Object.entries(product.specs ?? {});
       this.activeImage = product.galleryUrls?.[0] || product.image || '';
+      this.showStickyCart = true;
+      this.cdr.detectChanges();
+      this.setupCartObserver();
+      this.initAnimation();
     });
+  }
+
+  private setupCartObserver(): void {
+    this.teardownCartObserver();
+
+    if (typeof window === 'undefined' || window.innerWidth >= 640) {
+      this.showStickyCart = false;
+      return;
+    }
+
+    const target = this.cartActions?.nativeElement;
+    if (!target) {
+      setTimeout(() => {
+        if (this.cartActions?.nativeElement && !this.cartObserver) {
+          this.setupCartObserver();
+        }
+      }, 50);
+      return;
+    }
+
+    const rect = target.getBoundingClientRect();
+    this.showStickyCart = rect.bottom > window.innerHeight * 0.88;
+
+    this.cartObserver = new IntersectionObserver(
+      ([entry]) => {
+        this.showStickyCart = !entry.isIntersecting;
+        this.cdr.detectChanges();
+      },
+      {
+        root: null,
+        rootMargin: '0px 0px -12% 0px',
+        threshold: 0
+      }
+    );
+
+    this.cartObserver.observe(target);
+  }
+
+  private teardownCartObserver(): void {
+    this.cartObserver?.disconnect();
+    this.cartObserver = undefined;
   }
 
   initAnimation() {

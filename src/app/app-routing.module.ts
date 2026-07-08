@@ -11,6 +11,7 @@ import { CheckoutComponent } from './features/checkout/checkout.component';
 import { LoginComponent } from './components/login/login.component';
 import { CreateAccountComponent } from './components/create-account/create-account.component';
 import { VideosComponent } from './features/videos/videos.component';
+import { CatalogComponent } from './features/catalog/catalog.component';
 
 const routes: Routes = [
   // الصفحة الرئيسية
@@ -100,6 +101,17 @@ const routes: Routes = [
     data: {
       title: 'فيديوهات | الأمانة لمواد البناء',
       description: 'شاهد فيديوهات قصيرة لطرق الاستخدام والتطبيق العملي لمنتجات الأمانة.'
+    }
+  },
+
+  // كتالوج الأمانة
+  {
+    path: 'catalog',
+    component: CatalogComponent,
+    data: {
+      title: 'كتالوج الأمانة | الأمانة لمواد البناء',
+      description: 'استعرض كتالوج الأمانة التفاعلي داخل الموقع: تصفّح منتجات مواد البناء والمواصفات بجودة عالية.',
+      keywords: 'كتالوج الأمانة, كتالوج مواد البناء, ALAMANA Catalog, كتالوج تفاعلي, منتجات الأمانة'
     }
   },
 

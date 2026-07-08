@@ -27,32 +27,33 @@
   </div>
 </div>
 
-<div class="min-h-screen bg-gray-50/50 pt-32 pb-20" [attr.dir]="language.dir" *ngIf="!isLoading && product">
+<div class="pd-page min-h-screen bg-gray-50/50 pt-32 pb-20" [attr.dir]="language.dir" *ngIf="!isLoading && product">
   <div class="container mx-auto px-4" [class.text-right]="language.isRtl" [class.text-left]="!language.isRtl">
 
-    <nav class="flex w-full items-center justify-start flex-wrap text-sm text-gray-500 mb-8 font-medium"
+    <nav class="pd-breadcrumb flex w-full items-center justify-start flex-wrap text-sm text-gray-500 mb-8 font-medium"
       [attr.dir]="language.dir">
-      <a routerLink="/" class="hover:text-[#0275d8] transition-colors">{{ 'common.home' | t }}</a>
-      <i class="bi mx-2 text-[10px]" [ngClass]="language.isRtl ? 'bi-chevron-left' : 'bi-chevron-right'"></i>
-      <a routerLink="/products" class="hover:text-[#0275d8] transition-colors">{{ 'common.products' | t }}</a>
-      <i class="bi mx-2 text-[10px]" [ngClass]="language.isRtl ? 'bi-chevron-left' : 'bi-chevron-right'"></i>
-      <span class="text-gray-900">{{ product.nameAr | localized:product.nameEn }}</span>
+      <a routerLink="/" class="hover:text-[#0275d8] transition-colors shrink-0">{{ 'common.home' | t }}</a>
+      <i class="bi mx-2 text-[10px] shrink-0" [ngClass]="language.isRtl ? 'bi-chevron-left' : 'bi-chevron-right'"></i>
+      <a routerLink="/products" class="hover:text-[#0275d8] transition-colors shrink-0">{{ 'common.products' | t }}</a>
+      <i class="bi mx-2 text-[10px] shrink-0" [ngClass]="language.isRtl ? 'bi-chevron-left' : 'bi-chevron-right'"></i>
+      <span class="pd-breadcrumb__current text-gray-900">{{ product.nameAr | localized:product.nameEn }}</span>
     </nav>
 
-    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-12">
+    <div class="pd-main-card bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-12">
       <div class="grid grid-cols-1 lg:grid-cols-2">
 
-        <div class="p-6 lg:p-10 bg-white flex flex-col items-center justify-center relative border-b lg:border-b-0 lg:border-l border-gray-100">
+        <div class="pd-gallery p-6 lg:p-10 bg-white flex flex-col items-center justify-center relative border-b lg:border-b-0 lg:border-l border-gray-100">
           <span *ngIf="product.isNew"
-            class="absolute top-8 bg-[#0275d8] text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest"
+            class="pd-gallery__badge absolute top-8 bg-[#0275d8] text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest"
             [class.right-8]="language.isRtl"
             [class.left-8]="!language.isRtl">
             {{ 'product.new' | t }}
           </span>
-          <img [src]="activeImage || product.image" [alt]="product.nameAr | localized:product.nameEn" class="product-img w-full max-w-[240px] lg:max-w-[280px] h-auto object-contain">
-          <div *ngIf="product.galleryUrls?.length" class="flex gap-3 mt-8 overflow-x-auto max-w-full pb-2">
+          <img [src]="activeImage || product.image" [alt]="product.nameAr | localized:product.nameEn"
+            class="pd-gallery__image product-img w-full max-w-[240px] lg:max-w-[280px] h-auto object-contain">
+          <div *ngIf="product.galleryUrls?.length" class="pd-thumbs flex gap-3 mt-8 overflow-x-auto max-w-full pb-2 hide-scrollbar">
             <button *ngFor="let image of product.galleryUrls" type="button" (click)="setActiveImage(image)"
-              class="w-16 h-16 rounded-2xl border bg-gray-50 p-2 shrink-0 transition-all"
+              class="pd-thumbs__item w-16 h-16 rounded-2xl border bg-gray-50 p-2 shrink-0 transition-all"
               [class.border-[#0275d8]]="activeImage === image"
               [class.shadow-md]="activeImage === image">
               <img [src]="image" [alt]="product.nameAr | localized:product.nameEn" class="w-full h-full object-contain">
@@ -60,21 +61,21 @@
           </div>
         </div>
 
-        <div class="p-8 lg:p-16 flex flex-col">
-          <div class="mb-2 text-[#0275d8] font-bold tracking-widest uppercase text-sm">
+        <div class="pd-info p-8 lg:p-16 flex flex-col">
+          <div class="pd-info__category mb-2 text-[#0275d8] font-bold tracking-widest uppercase text-sm">
             {{ product.categoryNameAr | localized:product.categoryNameEn:product.categoryName }}
           </div>
-          <h1 class="text-2xl lg:text-4xl font-black text-gray-900 mb-6 leading-tight">
+          <h1 class="pd-info__title text-2xl lg:text-4xl font-black text-gray-900 mb-6 leading-tight">
             {{ product.nameAr | localized:product.nameEn }}
           </h1>
 
-          <div class="flex items-center gap-6 mb-8">
-            <div class="text-4xl font-black text-gray-900">
+          <div class="pd-info__price-row flex items-center gap-6 mb-8">
+            <div class="pd-info__price text-4xl font-black text-gray-900">
               {{ product.price | number:'1.3-3' }} <span class="text-xl font-bold">{{ '' | currencyLabel }}</span>
             </div>
           </div>
 
-          <p class="text-gray-600 text-lg leading-relaxed mb-10 border-gray-100 pr-6"
+          <p class="pd-info__desc text-gray-600 text-lg leading-relaxed mb-10 border-gray-100 pr-6"
             [class.border-r-4]="language.isRtl"
             [class.border-l-4]="!language.isRtl"
             [class.pl-6]="!language.isRtl"
@@ -82,36 +83,36 @@
             {{ product.descriptionAr | localized:product.descriptionEn:product.description }}
           </p>
 
-          <div class="flex items-center gap-4 mb-12 flex-wrap">
-            <div class="flex items-center gap-3 bg-gray-50 px-5 py-3 rounded-2xl border border-gray-100">
+          <div class="pd-meta flex items-center gap-4 mb-12 flex-wrap">
+            <div class="pd-meta__item flex items-center gap-3 bg-gray-50 px-5 py-3 rounded-2xl border border-gray-100">
               <i class="bi bi-box-seam text-[#0275d8] text-xl"></i>
               <span class="text-gray-500 font-medium">{{ 'product.weight' | t }}:</span>
               <span class="text-gray-900 font-bold">{{ product.weight }} {{ 'common.kg' | t }}</span>
             </div>
-            <div *ngIf="product.discount" class="flex items-center gap-3 bg-green-50 px-5 py-3 rounded-2xl border border-green-100">
+            <div *ngIf="product.discount" class="pd-meta__item flex items-center gap-3 bg-green-50 px-5 py-3 rounded-2xl border border-green-100">
               <i class="bi bi-percent text-green-600 text-xl"></i>
               <span class="text-green-700 font-bold">{{ 'product.discount' | t }} {{ product.discount }}%</span>
             </div>
           </div>
 
-          <div class="mt-auto flex flex-col sm:flex-row gap-4">
-            <div class="flex items-center justify-between border-2 border-gray-100 rounded-2xl w-full sm:w-40 bg-white h-16 p-1">
-              <button (click)="changeQuantity(-1)" class="w-12 h-full flex items-center justify-center text-2xl hover:bg-gray-50 rounded-xl transition-colors">-</button>
-              <div class="flex-1 text-center font-black text-xl">{{ quantity }}</div>
-              <button (click)="changeQuantity(1)" class="w-12 h-full flex items-center justify-center text-2xl hover:bg-gray-50 rounded-xl transition-colors">+</button>
+          <div #cartActions class="pd-actions mt-auto flex flex-row items-stretch gap-3 sm:gap-4">
+            <div class="pd-actions__qty flex items-center justify-between border-2 border-gray-100 rounded-2xl w-[7.5rem] sm:w-40 shrink-0 bg-white h-12 sm:h-16 p-1">
+              <button type="button" (click)="changeQuantity(-1)" class="w-10 sm:w-12 h-full flex items-center justify-center text-xl sm:text-2xl hover:bg-gray-50 rounded-xl transition-colors">-</button>
+              <div class="flex-1 text-center font-black text-lg sm:text-xl">{{ quantity }}</div>
+              <button type="button" (click)="changeQuantity(1)" class="w-10 sm:w-12 h-full flex items-center justify-center text-xl sm:text-2xl hover:bg-gray-50 rounded-xl transition-colors">+</button>
             </div>
 
-            <button (click)="addToCart()" class="w-full sm:flex-1 h-14 sm:h-16 bg-gray-900 text-white rounded-2xl text-base sm:text-lg font-bold flex items-center justify-center gap-3 hover:bg-[#0275d8] transition-all shadow-xl shadow-blue-900/10 active:scale-95">
-              <i class="bi bi-cart-plus text-2xl"></i>
-              {{ 'product.addToCart' | t }}
+            <button type="button" (click)="addToCart()" class="pd-actions__btn flex-1 min-w-0 h-12 sm:h-16 bg-gray-900 text-white rounded-xl sm:rounded-2xl text-sm sm:text-lg font-bold flex items-center justify-center gap-2 sm:gap-3 hover:bg-[#0275d8] transition-all shadow-lg sm:shadow-xl sm:shadow-blue-900/10 active:scale-[0.98] px-3 sm:px-4">
+              <i class="bi bi-cart-plus text-lg sm:text-2xl shrink-0"></i>
+              <span class="truncate">{{ 'product.addToCart' | t }}</span>
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 lg:p-12">
-      <div class="flex border-b border-gray-100 mb-10 overflow-x-auto gap-10">
+    <div class="pd-tabs-card bg-white rounded-3xl shadow-sm border border-gray-100 p-8 lg:p-12">
+      <div class="pd-tabs flex border-b border-gray-100 mb-10 overflow-x-auto gap-10 hide-scrollbar">
         <button (click)="activeTab = 'overview'" [class.border-[#0275d8]]="activeTab === 'overview'"
           class="pb-4 text-lg font-bold transition-all border-b-4 border-transparent whitespace-nowrap"
           [class.text-gray-400]="activeTab !== 'overview'">{{ 'product.overview' | t }}</button>
@@ -127,20 +128,20 @@
 
       <div *ngIf="activeTab === 'overview'" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 text-gray-600 leading-loose text-lg">
-          <h3 class="text-2xl font-black text-gray-900 mb-4">{{ 'product.descriptionTitle' | t }}</h3>
-          <p>{{ product.descriptionAr | localized:product.descriptionEn:('product.noDescription' | t) }}</p>
+          <h3 class="pd-overview__title text-2xl font-black text-gray-900 mb-4">{{ 'product.descriptionTitle' | t }}</h3>
+          <p class="pd-overview__text">{{ product.descriptionAr | localized:product.descriptionEn:('product.noDescription' | t) }}</p>
         </div>
-        <div class="bg-gray-50 rounded-3xl border border-gray-100 p-6 space-y-4">
-          <div class="flex justify-between border-b border-gray-200 pb-3">
-            <span class="text-gray-500">{{ 'product.category' | t }}</span>
-            <span class="font-bold text-gray-900">{{ product.categoryNameAr | localized:product.categoryNameEn:('common.undefined' | t) }}</span>
+        <div class="pd-overview__side bg-gray-50 rounded-3xl border border-gray-100 p-6 space-y-4">
+          <div class="flex justify-between border-b border-gray-200 pb-3 gap-3">
+            <span class="text-gray-500 shrink-0">{{ 'product.category' | t }}</span>
+            <span class="font-bold text-gray-900 text-end">{{ product.categoryNameAr | localized:product.categoryNameEn:('common.undefined' | t) }}</span>
           </div>
-          <div class="flex justify-between border-b border-gray-200 pb-3">
-            <span class="text-gray-500">{{ 'product.weight' | t }}</span>
+          <div class="flex justify-between border-b border-gray-200 pb-3 gap-3">
+            <span class="text-gray-500 shrink-0">{{ 'product.weight' | t }}</span>
             <span class="font-bold text-gray-900">{{ product.weight }} {{ 'common.kg' | t }}</span>
           </div>
-          <div class="flex justify-between">
-            <span class="text-gray-500">{{ 'product.status' | t }}</span>
+          <div class="flex justify-between gap-3">
+            <span class="text-gray-500 shrink-0">{{ 'product.status' | t }}</span>
             <span class="font-bold text-[#0275d8]">{{ product.isNew ? ('product.statusNew' | t) : ('product.statusAvailable' | t) }}</span>
           </div>
         </div>
@@ -183,15 +184,30 @@
         </div>
       </div>
 
-      <div *ngIf="activeTab === 'category'" class="bg-blue-50/60 rounded-3xl border border-blue-100 p-8">
-        <h3 class="text-2xl font-black text-gray-900 mb-4">
+      <div *ngIf="activeTab === 'category'" class="pd-category-panel bg-blue-50/60 rounded-3xl border border-blue-100 p-8">
+        <h3 class="pd-category__title text-2xl font-black text-gray-900 mb-4">
           {{ product.categoryNameAr | localized:product.categoryNameEn:('product.categoryFallback' | t) }}
         </h3>
-        <p class="text-gray-600 leading-loose text-lg">
+        <p class="pd-category__text text-gray-600 leading-loose text-lg">
           {{ product.categoryDescriptionAr | localized:product.categoryDescriptionEn:('product.categoryDefaultText' | t) }}
         </p>
       </div>
     </div>
 
+  </div>
+
+  <div class="pd-sticky-cart"
+    [class.is-docked]="!showStickyCart"
+    [attr.dir]="language.dir"
+    [attr.aria-hidden]="!showStickyCart">
+    <div class="pd-sticky-cart__qty">
+      <button type="button" (click)="changeQuantity(-1)" aria-label="Decrease quantity">-</button>
+      <span>{{ quantity }}</span>
+      <button type="button" (click)="changeQuantity(1)" aria-label="Increase quantity">+</button>
+    </div>
+    <button type="button" class="pd-sticky-cart__btn" (click)="addToCart()">
+      <i class="bi bi-cart-plus"></i>
+      <span>{{ 'product.addToCart' | t }}</span>
+    </button>
   </div>
 </div>

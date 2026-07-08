@@ -1,0 +1,315 @@
+:host {
+  display: block;
+}
+
+.catalog-page {
+  min-height: 100vh;
+  padding-top: 5.5rem;
+  background:
+    radial-gradient(circle at top, rgba(2, 117, 216, 0.18), transparent 40%),
+    linear-gradient(180deg, #0b1220 0%, #111827 55%, #0f172a 100%);
+}
+
+@media (min-width: 640px) {
+  .catalog-page {
+    padding-top: 6.5rem;
+  }
+}
+
+.catalog-page__bar {
+  background: linear-gradient(135deg, #0b3d6b 0%, #0275d8 55%, #1d76b9 100%);
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.catalog-page__bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.catalog-page__badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #bfdbfe;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.25rem 0.7rem;
+  margin-bottom: 0.45rem;
+}
+
+.catalog-page__title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.catalog-page__desc {
+  margin: 0.35rem 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.88rem;
+  max-width: 36rem;
+}
+
+.catalog-page__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.catalog-page__back,
+.catalog-page__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 0.75rem;
+  padding: 0.55rem 0.95rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: background 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.35);
+    color: #fff;
+  }
+}
+
+.catalog-page__stage {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 12rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 0.75rem 1.5rem;
+  overflow: hidden;
+}
+
+.catalog-page__book-shell {
+  width: 100%;
+  max-width: 1180px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+
+  &.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+  }
+}
+
+.catalog-page__book {
+  width: 100%;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.catalog-page__nav {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(2, 117, 216, 0.85);
+    border-color: rgba(2, 117, 216, 0.9);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+.catalog-page__pager {
+  margin-top: 1rem;
+  color: rgba(226, 232, 240, 0.9);
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 0.45rem 0.95rem;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.catalog-page__pager-hint {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #93c5fd;
+}
+
+.catalog-page__loading,
+.catalog-page__error {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  color: #e5e7eb;
+  background: rgba(15, 23, 42, 0.92);
+  font-weight: 600;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.catalog-page__progress {
+  font-size: 0.9rem;
+  color: #93c5fd;
+}
+
+.catalog-page__retry {
+  border: 0;
+  border-radius: 0.75rem;
+  background: #0275d8;
+  color: #fff;
+  font-weight: 700;
+  padding: 0.7rem 1.15rem;
+}
+
+.catalog-page__spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #60a5fa;
+  animation: catalogSpin 0.8s linear infinite;
+}
+
+@keyframes catalogSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+:host ::ng-deep {
+  .stf__parent {
+    margin: 0 auto;
+  }
+
+  .stf__wrapper {
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+  }
+
+  .stf__item {
+    background: #fff;
+  }
+
+  .stf__block {
+    background: #fff;
+  }
+}
+
+/* Mobile-only */
+@media (max-width: 900px) {
+  .catalog-page {
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  .catalog-page__bar {
+    padding: 0.75rem 0;
+  }
+
+  .catalog-page__desc {
+    display: none;
+  }
+
+  .catalog-page__title {
+    font-size: 1.05rem;
+  }
+
+  .catalog-page__stage {
+    min-height: calc(100dvh - 10.5rem);
+    padding: 0.75rem 0.75rem 1rem;
+    justify-content: flex-start;
+    overflow-x: hidden;
+  }
+
+  .catalog-page__book-shell {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'book book'
+      'prev next';
+    gap: 0.75rem 1rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .catalog-page__book {
+    grid-area: book;
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .catalog-page__nav--prev {
+    grid-area: prev;
+    justify-self: end;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .catalog-page__nav--next {
+    grid-area: next;
+    justify-self: start;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  :host ::ng-deep {
+    .stf__parent {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      margin: 0 auto;
+    }
+
+    .stf__wrapper {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .catalog-page__actions {
+    width: 100%;
+  }
+
+  .catalog-page__back,
+  .catalog-page__action {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}

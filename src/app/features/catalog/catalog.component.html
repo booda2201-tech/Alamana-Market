@@ -1,0 +1,63 @@
+<div class="catalog-page" [attr.dir]="language.dir">
+  <div class="catalog-page__bar">
+    <div class="container mx-auto px-4">
+      <div class="catalog-page__bar-inner" [attr.dir]="language.dir">
+        <div class="catalog-page__intro">
+          <span class="catalog-page__badge">{{ 'catalog.badge' | t }}</span>
+          <h1 class="catalog-page__title">{{ 'catalog.title' | t }}</h1>
+          <p class="catalog-page__desc">{{ 'catalog.subtitle' | t }}</p>
+        </div>
+
+        <div class="catalog-page__actions">
+          <a [href]="downloadUrl" download="alamana-catalog.pdf"
+            class="catalog-page__action no-underline">
+            <i class="bi bi-download"></i>
+            {{ 'catalog.download' | t }}
+          </a>
+          <a routerLink="/" class="catalog-page__back no-underline">
+            <i class="bi" [ngClass]="language.isRtl ? 'bi-arrow-right' : 'bi-arrow-left'"></i>
+            {{ 'catalog.backHome' | t }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="catalog-page__stage">
+    <div *ngIf="isLoading" class="catalog-page__loading">
+      <div class="catalog-page__spinner"></div>
+      <p>{{ 'catalog.loading' | t }}</p>
+      <span class="catalog-page__progress" *ngIf="loadProgress > 0">{{ loadProgress }}%</span>
+    </div>
+
+    <div *ngIf="loadError" class="catalog-page__error">
+      <p>{{ 'catalog.error' | t }}</p>
+      <button type="button" class="catalog-page__retry" (click)="retry()">
+        {{ 'catalog.retry' | t }}
+      </button>
+    </div>
+
+    <div class="catalog-page__book-shell" [class.is-hidden]="isLoading || loadError">
+      <button type="button" class="catalog-page__nav catalog-page__nav--prev"
+        (click)="prevPage()" [disabled]="isLoading || loadError || currentPage <= 1"
+        [attr.aria-label]="'catalog.prev' | t">
+        <i class="bi" [ngClass]="language.isRtl ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
+      </button>
+
+      <div #bookHost class="catalog-page__book"></div>
+
+      <button type="button" class="catalog-page__nav catalog-page__nav--next"
+        (click)="nextPage()" [disabled]="isLoading || loadError || currentPage >= totalPages"
+        [attr.aria-label]="'catalog.next' | t">
+        <i class="bi" [ngClass]="language.isRtl ? 'bi-chevron-left' : 'bi-chevron-right'"></i>
+      </button>
+    </div>
+
+    <div class="catalog-page__pager" *ngIf="!isLoading && !loadError && totalPages">
+      <span>{{ 'catalog.page' | t }} {{ currentPage }} / {{ totalPages }}</span>
+      <span class="catalog-page__pager-hint" *ngIf="isPreparingPages">
+        {{ 'catalog.preparing' | t }} ({{ readyPages }}/{{ totalPages }})
+      </span>
+    </div>
+  </div>
+</div>

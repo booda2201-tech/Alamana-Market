@@ -14,6 +14,12 @@ import { LanguageService } from '../../core/services/language.service';
 export class ContactComponent implements OnInit, OnDestroy {
   contactForm!: FormGroup;
   isSubmitting = false;
+  isSubjectMenuOpen = false;
+  readonly subjectOptions = [
+    { value: 'sales', labelKey: 'contact.subjectSales' as const },
+    { value: 'support', labelKey: 'contact.subjectSupport' as const },
+    { value: 'other', labelKey: 'contact.subjectOther' as const }
+  ];
   contactInfo = this.countryService.getSelectedContactInfo();
   private countrySubscription?: Subscription;
   private languageSubscription?: Subscription;
@@ -53,6 +59,29 @@ export class ContactComponent implements OnInit, OnDestroy {
       subject: ['', Validators.required],
       message: ['', [Validators.required, Validators.minLength(10)]]
     });
+  }
+
+  get selectedSubjectLabel(): string {
+    const value = this.contactForm.get('subject')?.value;
+    const option = this.subjectOptions.find((item) => item.value === value);
+    return option
+      ? this.language.translate(option.labelKey)
+      : this.language.translate('contact.subjectPlaceholder');
+  }
+
+  toggleSubjectMenu(event?: Event): void {
+    event?.stopPropagation();
+    this.isSubjectMenuOpen = !this.isSubjectMenuOpen;
+  }
+
+  selectSubject(value: string): void {
+    this.contactForm.get('subject')?.setValue(value);
+    this.contactForm.get('subject')?.markAsTouched();
+    this.isSubjectMenuOpen = false;
+  }
+
+  closeSubjectMenu(): void {
+    this.isSubjectMenuOpen = false;
   }
 
   animateHeader() {

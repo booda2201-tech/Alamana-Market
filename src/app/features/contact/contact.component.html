@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50/50 pt-28 pb-20 overflow-hidden" [attr.dir]="language.dir">
+<div class="min-h-screen bg-gray-50/50 pt-28 pb-20 overflow-hidden" [attr.dir]="language.dir" (click)="closeSubjectMenu()">
 
   <div class="bg-[#0275d8] text-white py-16 mb-12 relative overflow-hidden">
     <div class="container mx-auto px-4 text-center max-w-5xl header-content relative z-10">
@@ -11,16 +11,19 @@
   </div>
 
   <div class="container max-w-7xl mx-auto px-4">
-    <!-- Layout stays LTR so sidebar stays left & form stays right in both languages -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mx-auto" dir="ltr">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mx-auto" [attr.dir]="language.dir">
 
-      <div class="lg:col-span-1 space-y-6" data-aos="fade-left" [attr.dir]="language.dir">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-8 h-auto">
+      <div class="lg:col-span-1 space-y-6" [attr.data-aos]="language.isRtl ? 'fade-left' : 'fade-right'">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-8 h-auto"
+          [class.text-right]="language.isRtl"
+          [class.text-left]="!language.isRtl">
           <div class="flex items-start gap-4">
             <div class="w-12 h-12 bg-blue-50 text-[#0275d8] rounded-xl flex items-center justify-center shrink-0">
               <i class="bi bi-geo-alt text-xl"></i>
             </div>
-            <div class="flex-1 min-w-0 text-start">
+            <div class="flex-1 min-w-0"
+              [class.text-right]="language.isRtl"
+              [class.text-left]="!language.isRtl">
               <h3 class="font-bold text-lg mb-2">{{ contactInfo.officeTitle }}</h3>
               <p class="text-gray-500 text-sm leading-relaxed whitespace-pre-line">
                 {{ contactInfo.address }}
@@ -32,9 +35,14 @@
             <div class="w-12 h-12 bg-blue-50 text-[#0275d8] rounded-xl flex items-center justify-center shrink-0">
               <i class="bi bi-telephone text-xl"></i>
             </div>
-            <div class="flex-1 min-w-0 text-start">
+            <div class="flex-1 min-w-0"
+              [class.text-right]="language.isRtl"
+              [class.text-left]="!language.isRtl">
               <h3 class="font-bold text-lg mb-2">{{ 'contact.phone' | t }}</h3>
-              <p class="text-gray-500 text-sm leading-relaxed font-medium" dir="ltr">
+              <p class="text-gray-500 text-sm leading-relaxed font-medium"
+                dir="ltr"
+                [class.text-right]="language.isRtl"
+                [class.text-left]="!language.isRtl">
                 <ng-container *ngFor="let phone of contactInfo.phones; let last = last">
                   {{ phone }}<br *ngIf="!last" />
                 </ng-container>
@@ -46,9 +54,14 @@
             <div class="w-12 h-12 bg-blue-50 text-[#0275d8] rounded-xl flex items-center justify-center shrink-0">
               <i class="bi bi-envelope text-xl"></i>
             </div>
-            <div class="flex-1 min-w-0 text-start">
+            <div class="flex-1 min-w-0"
+              [class.text-right]="language.isRtl"
+              [class.text-left]="!language.isRtl">
               <h3 class="font-bold text-lg mb-2">{{ 'contact.email' | t }}</h3>
-              <p class="text-gray-500 text-sm leading-relaxed" dir="ltr">
+              <p class="text-gray-500 text-sm leading-relaxed"
+                dir="ltr"
+                [class.text-right]="language.isRtl"
+                [class.text-left]="!language.isRtl">
                 {{ contactInfo.email }}
               </p>
             </div>
@@ -58,7 +71,9 @@
             <div class="w-12 h-12 bg-blue-50 text-[#0275d8] rounded-xl flex items-center justify-center shrink-0">
               <i class="bi bi-clock text-xl"></i>
             </div>
-            <div class="flex-1 min-w-0 text-start">
+            <div class="flex-1 min-w-0"
+              [class.text-right]="language.isRtl"
+              [class.text-left]="!language.isRtl">
               <h3 class="font-bold text-lg mb-2">{{ 'contact.hours' | t }}</h3>
               <p class="text-gray-500 text-sm leading-relaxed whitespace-pre-line">
                 {{ contactInfo.workingHours }}
@@ -68,55 +83,90 @@
         </div>
       </div>
 
-      <div class="lg:col-span-2" data-aos="fade-right" [attr.dir]="language.dir">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12 h-full">
+      <div class="lg:col-span-2" [attr.data-aos]="language.isRtl ? 'fade-right' : 'fade-left'">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12 h-full"
+          [class.text-right]="language.isRtl"
+          [class.text-left]="!language.isRtl">
           <div class="flex items-center gap-3 mb-8">
             <i class="bi bi-chat-dots text-[#0275d8] text-2xl shrink-0"></i>
-            <h2 class="text-2xl font-bold text-start">{{ 'contact.formTitle' | t }}</h2>
+            <h2 class="text-2xl font-bold">{{ 'contact.formTitle' | t }}</h2>
           </div>
 
           <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 block text-start">{{ 'contact.name' | t }}</label>
+                <label class="text-sm font-medium text-gray-700 block">{{ 'contact.name' | t }}</label>
                 <input formControlName="name"
-                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] focus:ring-1 focus:ring-[#0275d8] outline-none transition-all text-start">
+                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] focus:ring-1 focus:ring-[#0275d8] outline-none transition-all"
+                        [class.text-right]="language.isRtl"
+                        [class.text-left]="!language.isRtl">
               </div>
               <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 block text-start">{{ 'contact.company' | t }}</label>
+                <label class="text-sm font-medium text-gray-700 block">{{ 'contact.company' | t }}</label>
                 <input formControlName="company"
-                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all text-start">
+                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all"
+                        [class.text-right]="language.isRtl"
+                        [class.text-left]="!language.isRtl">
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 block text-start">{{ 'contact.email' | t }}</label>
+                <label class="text-sm font-medium text-gray-700 block">{{ 'contact.email' | t }}</label>
                 <input formControlName="email" type="email" dir="ltr"
-                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all text-start">
+                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all text-left">
               </div>
               <div class="space-y-2">
-                <label class="text-sm font-medium text-gray-700 block text-start">{{ 'contact.phone' | t }}</label>
+                <label class="text-sm font-medium text-gray-700 block">{{ 'contact.phone' | t }}</label>
                 <input formControlName="phone" type="tel" placeholder="+965" dir="ltr"
-                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all text-start">
+                        class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all text-left">
+              </div>
+            </div>
+
+            <div class="space-y-2 relative" (click)="$event.stopPropagation()">
+              <label class="text-sm font-medium text-gray-700 block">{{ 'contact.subject' | t }}</label>
+              <button type="button"
+                      class="contact-select"
+                      [class.contact-select--open]="isSubjectMenuOpen"
+                      [class.contact-select--placeholder]="!contactForm.get('subject')?.value"
+                      [class.text-right]="language.isRtl"
+                      [class.text-left]="!language.isRtl"
+                      (click)="toggleSubjectMenu($event)"
+                      [attr.aria-expanded]="isSubjectMenuOpen">
+                <span class="contact-select__label">{{ selectedSubjectLabel }}</span>
+                <i class="bi bi-chevron-down contact-select__icon"
+                  [class.contact-select__icon--open]="isSubjectMenuOpen"></i>
+              </button>
+
+              <div *ngIf="isSubjectMenuOpen" class="contact-select__menu"
+                [class.text-right]="language.isRtl"
+                [class.text-left]="!language.isRtl">
+                <button type="button"
+                        class="contact-select__option"
+                        [class.text-right]="language.isRtl"
+                        [class.text-left]="!language.isRtl"
+                        [class.is-active]="!contactForm.get('subject')?.value"
+                        (click)="selectSubject('')">
+                  {{ 'contact.subjectPlaceholder' | t }}
+                </button>
+                <button type="button"
+                        *ngFor="let option of subjectOptions"
+                        class="contact-select__option"
+                        [class.text-right]="language.isRtl"
+                        [class.text-left]="!language.isRtl"
+                        [class.is-active]="contactForm.get('subject')?.value === option.value"
+                        (click)="selectSubject(option.value)">
+                  {{ option.labelKey | t }}
+                </button>
               </div>
             </div>
 
             <div class="space-y-2">
-              <label class="text-sm font-medium text-gray-700 block text-start">{{ 'contact.subject' | t }}</label>
-              <select formControlName="subject"
-                      class="w-full h-12 px-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all bg-white text-start">
-                <option value="">{{ 'contact.subjectPlaceholder' | t }}</option>
-                <option value="sales">{{ 'contact.subjectSales' | t }}</option>
-                <option value="support">{{ 'contact.subjectSupport' | t }}</option>
-                <option value="other">{{ 'contact.subjectOther' | t }}</option>
-              </select>
-            </div>
-
-            <div class="space-y-2">
-              <label class="text-sm font-medium text-gray-700 block text-start">{{ 'contact.message' | t }}</label>
+              <label class="text-sm font-medium text-gray-700 block">{{ 'contact.message' | t }}</label>
               <textarea formControlName="message" rows="5" [placeholder]="'contact.messagePlaceholder' | t"
-                        class="w-full p-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all resize-none text-start"></textarea>
+                        class="w-full p-4 rounded-xl border border-gray-200 focus:border-[#0275d8] outline-none transition-all resize-none"
+                        [class.text-right]="language.isRtl"
+                        [class.text-left]="!language.isRtl"></textarea>
             </div>
 
             <button type="submit"
@@ -128,6 +178,7 @@
           </form>
         </div>
       </div>
+
     </div>
   </div>
 </div>

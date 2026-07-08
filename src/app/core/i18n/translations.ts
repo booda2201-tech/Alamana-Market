@@ -100,6 +100,26 @@ export type TranslationKey =
   | 'home.featureDeliveryDesc'
   | 'home.featureTrust'
   | 'home.featureTrustDesc'
+  | 'home.catalogBadge'
+  | 'home.catalogTitle'
+  | 'home.catalogSubtitle'
+  | 'home.catalogCta'
+  | 'home.catalogPointBrowse'
+  | 'home.catalogPointDownload'
+  | 'home.catalogPointPrint'
+  | 'catalog.badge'
+  | 'catalog.title'
+  | 'catalog.subtitle'
+  | 'catalog.backHome'
+  | 'catalog.loading'
+  | 'catalog.iframeTitle'
+  | 'catalog.download'
+  | 'catalog.error'
+  | 'catalog.retry'
+  | 'catalog.prev'
+  | 'catalog.next'
+  | 'catalog.page'
+  | 'catalog.preparing'
   | 'footer.supplyMaterials'
   | 'footer.waterproofing'
   | 'footer.adhesives'
@@ -282,7 +302,7 @@ export const TRANSLATIONS: Record<SiteLanguage, TranslationMap> = {
     'product.new': 'جديد',
     'product.weight': 'الوزن',
     'product.discount': 'خصم',
-    'product.addToCart': 'إضافة إلى سلة المشتريات',
+    'product.addToCart': 'أضف للسلة',
     'product.overview': 'نظرة عامة',
     'product.details': 'تفاصيل المنتج',
     'product.categoryUses': 'الفئة والاستخدامات',
@@ -355,6 +375,26 @@ export const TRANSLATIONS: Record<SiteLanguage, TranslationMap> = {
     'home.featureDeliveryDesc': 'نضمن وصول الطلبات لموقع العمل في أسرع وقت ممكن',
     'home.featureTrust': 'ضمان الأمانة',
     'home.featureTrustDesc': 'نلتزم بأعلى معايير المصداقية والشفافية مع عملائنا',
+    'home.catalogBadge': 'كتالوج الأمانة',
+    'home.catalogTitle': 'تصفّح الكتالوج التفاعلي للمنتجات',
+    'home.catalogSubtitle': 'استعرض كتالوج الأمانة الرسمي بجودة عالية، قلب الصفحات، وحمّل أو اطبع المواصفات مباشرة من داخل الموقع.',
+    'home.catalogCta': 'افتح الكتالوج',
+    'home.catalogPointBrowse': 'تصفّح تفاعلي لكل المنتجات والمواصفات',
+    'home.catalogPointDownload': 'إمكانية التحميل بجودة عالية',
+    'home.catalogPointPrint': 'طباعة مباشرة لصفحات الكتالوج',
+    'catalog.badge': 'ALAMANA Catalog',
+    'catalog.title': 'كتالوج الأمانة الرسمي',
+    'catalog.subtitle': 'افتح الكتالوج مثل كتاب تفاعلي داخل الموقع مع تقليب الصفحات والتحميل.',
+    'catalog.backHome': 'العودة للرئيسية',
+    'catalog.loading': 'جاري تحميل الكتالوج…',
+    'catalog.iframeTitle': 'كتالوج الأمانة التفاعلي',
+    'catalog.download': 'تحميل PDF',
+    'catalog.error': 'تعذر تحميل الكتالوج. حاول مرة أخرى.',
+    'catalog.retry': 'إعادة المحاولة',
+    'catalog.prev': 'الصفحة السابقة',
+    'catalog.next': 'الصفحة التالية',
+    'catalog.page': 'صفحة',
+    'catalog.preparing': 'جاري تجهيز باقي الصفحات',
     'footer.supplyMaterials': 'توريد مواد البناء',
     'footer.waterproofing': 'حلول العزل المائي',
     'footer.adhesives': 'مواد التأسيس واللواصق',
@@ -607,6 +647,26 @@ export const TRANSLATIONS: Record<SiteLanguage, TranslationMap> = {
     'home.featureDeliveryDesc': 'We ensure orders reach your job site as quickly as possible',
     'home.featureTrust': 'Alamana Guarantee',
     'home.featureTrustDesc': 'We are committed to the highest standards of trust and transparency',
+    'home.catalogBadge': 'Alamana Catalog',
+    'home.catalogTitle': 'Browse the interactive product catalog',
+    'home.catalogSubtitle': 'Explore the official Alamana catalog in high quality, flip through pages, and download or print specs without leaving the site.',
+    'home.catalogCta': 'Open Catalog',
+    'home.catalogPointBrowse': 'Interactive browsing of products and specifications',
+    'home.catalogPointDownload': 'High-quality download support',
+    'home.catalogPointPrint': 'Print catalog pages directly',
+    'catalog.badge': 'ALAMANA Catalog',
+    'catalog.title': 'Official Alamana Catalog',
+    'catalog.subtitle': 'Open the catalog like an interactive book inside the store with page flipping and download.',
+    'catalog.backHome': 'Back to Home',
+    'catalog.loading': 'Loading catalog…',
+    'catalog.iframeTitle': 'Alamana interactive catalog',
+    'catalog.download': 'Download PDF',
+    'catalog.error': 'Could not load the catalog. Please try again.',
+    'catalog.retry': 'Retry',
+    'catalog.prev': 'Previous page',
+    'catalog.next': 'Next page',
+    'catalog.page': 'Page',
+    'catalog.preparing': 'Preparing remaining pages',
     'footer.supplyMaterials': 'Building Materials Supply',
     'footer.waterproofing': 'Waterproofing Solutions',
     'footer.adhesives': 'Primers & Adhesives',
