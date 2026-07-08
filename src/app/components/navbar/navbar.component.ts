@@ -89,6 +89,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.selectedCountryId = countryId;
       if (countryId) {
         this.loadCategories();
+        this.cartApi.refreshCartCount(this.cartApi.getCurrentUserId());
       }
     });
 

@@ -23,6 +23,7 @@ export type TranslationKey =
   | 'common.currency'
   | 'common.country'
   | 'common.undefined'
+  | 'common.retry'
   | 'product.new'
   | 'product.weight'
   | 'product.discount'
@@ -118,6 +119,8 @@ export type TranslationKey =
   | 'cart.title'
   | 'cart.emptyTitle'
   | 'cart.emptyDesc'
+  | 'cart.emptyCountryTitle'
+  | 'cart.emptyCountryDesc'
   | 'cart.browse'
   | 'cart.login'
   | 'cart.summary'
@@ -275,6 +278,7 @@ export const TRANSLATIONS: Record<SiteLanguage, TranslationMap> = {
     'common.currency': 'د.ك',
     'common.country': 'البلد',
     'common.undefined': 'غير محدد',
+    'common.retry': 'حاول مرة أخرى',
     'product.new': 'جديد',
     'product.weight': 'الوزن',
     'product.discount': 'خصم',
@@ -370,6 +374,8 @@ export const TRANSLATIONS: Record<SiteLanguage, TranslationMap> = {
     'cart.title': 'سلة المشتريات',
     'cart.emptyTitle': 'سلة المشتريات فارغة',
     'cart.emptyDesc': 'لم تقم بإضافة أي منتجات بعد. تصفح منتجاتنا واكتشف حلول البناء الحديثة.',
+    'cart.emptyCountryTitle': 'لا توجد سلة في هذا البلد',
+    'cart.emptyCountryDesc': 'سلتك في {country} فارغة حالياً. تصفح المنتجات المتاحة في هذا البلد وأضف ما يناسبك.',
     'cart.browse': 'تصفح المنتجات',
     'cart.login': 'تسجيل الدخول',
     'cart.summary': 'ملخص الطلب',
@@ -524,6 +530,7 @@ export const TRANSLATIONS: Record<SiteLanguage, TranslationMap> = {
     'common.currency': 'KWD',
     'common.country': 'Country',
     'common.undefined': 'Not specified',
+    'common.retry': 'Try again',
     'product.new': 'New',
     'product.weight': 'Weight',
     'product.discount': 'Discount',
@@ -619,6 +626,8 @@ export const TRANSLATIONS: Record<SiteLanguage, TranslationMap> = {
     'cart.title': 'Shopping Cart',
     'cart.emptyTitle': 'Your cart is empty',
     'cart.emptyDesc': 'You have not added any products yet. Browse our catalog and discover modern building solutions.',
+    'cart.emptyCountryTitle': 'No cart in this country',
+    'cart.emptyCountryDesc': 'Your cart in {country} is empty. Browse products available in this country and add what you need.',
     'cart.browse': 'Browse Products',
     'cart.login': 'Sign In',
     'cart.summary': 'Order Summary',

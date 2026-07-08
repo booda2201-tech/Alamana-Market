@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { distinctUntilChanged, skip } from 'rxjs/operators';
 import { AppCartItem, CartApiService } from '../../core/services/cart-api.service';
+import { CountryService } from '../../core/services/country.service';
 import { LanguageService } from '../../core/services/language.service';
 
 @Component({
@@ -8,17 +11,20 @@ import { LanguageService } from '../../core/services/language.service';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss']
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, OnDestroy {
   items: AppCartItem[] = [];
 
   totalPrice: number = 0;
   totalItems: number = 0;
   isLoading = true;
+  requiresLogin = false;
   errorMessage = '';
   private userId = '';
+  private countrySubscription?: Subscription;
 
   constructor(
     private readonly cartApi: CartApiService,
+    private readonly countryService: CountryService,
     private readonly router: Router,
     public readonly language: LanguageService
   ) {}
@@ -28,11 +34,29 @@ export class CartComponent implements OnInit {
 
     if (!this.userId) {
       this.isLoading = false;
-      this.errorMessage = this.language.translate('cart.loginRequired');
+      this.requiresLogin = true;
       return;
     }
 
     this.loadCart();
+
+    this.countrySubscription = this.countryService.selectedCountryId$
+      .pipe(distinctUntilChanged(), skip(1))
+      .subscribe(() => {
+        this.loadCart();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.countrySubscription?.unsubscribe();
+  }
+
+  get selectedCountryName(): string {
+    return this.countryService.getSelectedLocalizedName();
+  }
+
+  get emptyCountryDesc(): string {
+    return this.language.translate('cart.emptyCountryDesc').replace('{country}', this.selectedCountryName);
   }
 
   calculateTotals(): void {
@@ -82,7 +106,7 @@ export class CartComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  private loadCart(): void {
+  loadCart(): void {
     this.isLoading = true;
     this.errorMessage = '';
     this.cartApi.getOrCreateCart(this.userId).subscribe({
@@ -94,6 +118,9 @@ export class CartComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
+        this.items = [];
+        this.totalPrice = 0;
+        this.totalItems = 0;
         this.errorMessage = this.language.translate('cart.loadFailed');
       }
     });

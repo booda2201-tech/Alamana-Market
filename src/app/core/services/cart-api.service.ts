@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, map, of, switchMap, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Product } from '../models/product.model';
 import { CountryService } from './country.service';
 
@@ -51,13 +52,16 @@ export class CartApiService {
     return this.withCountryId((countryId) =>
       this.http
         .get<CartApiResponse | CartApiResponse[]>(
-          `${this.baseUrl}/Cart/GetOrCreateCart/${encodeURIComponent(userId)}`,
+          `${this.baseUrl}/Cart/GetCartByUserId/${encodeURIComponent(userId)}`,
           {
             ...this.getAuthOptions(),
             params: { countryId: String(countryId) }
           }
         )
-        .pipe(map((response) => this.mapCartItems(response)))
+        .pipe(
+          map((response) => this.mapCartItems(response)),
+          catchError((error) => (this.isEmptyCartError(error) ? of([]) : throwError(() => error)))
+        )
     );
   }
 
@@ -136,6 +140,16 @@ export class CartApiService {
       quantity: Number(item.quantity || 1),
       totalPrice: Number(item.totalPrice || 0)
     }));
+  }
+
+  private isEmptyCartError(error: unknown): boolean {
+    const status = (error as { status?: number })?.status;
+    if (status === 404) {
+      return true;
+    }
+
+    const message = String((error as { error?: { message?: string } })?.error?.message || '').toLowerCase();
+    return message.includes('no cart') || message.includes('cart not found');
   }
 
   private pickUserIdFromObject(payload: Record<string, unknown>): string {

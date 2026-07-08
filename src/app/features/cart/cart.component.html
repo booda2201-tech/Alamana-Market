@@ -4,25 +4,40 @@
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0275d8]"></div>
     </div>
 
-    <div *ngIf="!isLoading && errorMessage" class="min-h-[40vh] flex flex-col items-center justify-center text-center">
-      <p class="text-red-600 mb-6">{{ errorMessage }}</p>
+    <div *ngIf="!isLoading && requiresLogin" class="min-h-[40vh] flex flex-col items-center justify-center text-center">
+      <p class="text-red-600 mb-6">{{ 'cart.loginRequired' | t }}</p>
       <button (click)="goToLogin()" class="bg-[#0275d8] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#025bb0] transition-all">
         {{ 'cart.login' | t }}
       </button>
     </div>
 
-    <div *ngIf="!isLoading && !errorMessage && items.length === 0" class="min-h-[60vh] flex flex-col items-center justify-center text-center">
-      <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-        <i class="bi bi-cart-x text-4xl text-gray-400"></i>
+    <div *ngIf="!isLoading && errorMessage && !requiresLogin" class="min-h-[40vh] flex flex-col items-center justify-center text-center">
+      <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-5">
+        <i class="bi bi-exclamation-circle text-3xl text-red-500"></i>
       </div>
-      <h2 class="text-3xl font-bold mb-4">{{ 'cart.emptyTitle' | t }}</h2>
-      <p class="text-gray-500 mb-8 max-w-md">{{ 'cart.emptyDesc' | t }}</p>
-      <button routerLink="/products" class="bg-[#0275d8] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#025bb0] transition-all">
+      <p class="text-red-600 mb-2 font-medium">{{ errorMessage }}</p>
+      <button (click)="loadCart()" class="mt-4 text-[#0275d8] font-bold hover:underline">
+        {{ 'common.retry' | t }}
+      </button>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && !requiresLogin && items.length === 0"
+      class="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+      <div class="w-28 h-28 bg-gradient-to-br from-blue-50 to-blue-100 rounded-full flex items-center justify-center mb-6 shadow-inner">
+        <i class="bi bi-globe-americas text-5xl text-[#0275d8]"></i>
+      </div>
+      <span class="inline-flex items-center gap-2 text-xs font-bold text-[#0275d8] bg-blue-50 px-4 py-2 rounded-full mb-4">
+        <i class="bi bi-geo-alt"></i>
+        {{ selectedCountryName }}
+      </span>
+      <h2 class="text-3xl font-bold mb-3 text-gray-900">{{ 'cart.emptyCountryTitle' | t }}</h2>
+      <p class="text-gray-500 mb-8 max-w-md leading-relaxed">{{ emptyCountryDesc }}</p>
+      <button routerLink="/products" class="bg-[#0275d8] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#025bb0] transition-all shadow-lg shadow-blue-100">
         {{ 'cart.browse' | t }}
       </button>
     </div>
 
-    <div *ngIf="!isLoading && !errorMessage && items.length > 0">
+    <div *ngIf="!isLoading && !errorMessage && !requiresLogin && items.length > 0">
       <h1 class="text-3xl font-bold mb-8" [class.text-right]="language.isRtl" [class.text-left]="!language.isRtl">{{ 'cart.title' | t }}</h1>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
