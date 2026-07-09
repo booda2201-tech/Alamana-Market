@@ -206,6 +206,24 @@
   white-space: nowrap;
 }
 
+:host-context([dir='rtl']) {
+  .navbar__drawer-lang {
+    direction: rtl;
+  }
+
+  .navbar__drawer-countries button {
+    direction: rtl;
+    text-align: right;
+  }
+}
+
+:host-context([dir='ltr']) {
+  .navbar__drawer-countries button {
+    direction: ltr;
+    text-align: left;
+  }
+}
+
 .navbar__drawer-footer {
   padding: 0.85rem 0.9rem calc(0.9rem + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid #f3f4f6;
@@ -251,11 +269,35 @@
   &--rtl {
     left: 0;
     right: auto;
+    direction: rtl;
+
+    .locale-menu__label {
+      text-align: right;
+    }
+
+    .locale-menu__lang {
+      direction: rtl;
+    }
+
+    .locale-menu__countries button {
+      direction: rtl;
+      text-align: right;
+    }
   }
 
   &:not(.locale-menu--rtl) {
     right: 0;
     left: auto;
+    direction: ltr;
+
+    .locale-menu__label {
+      text-align: left;
+    }
+
+    .locale-menu__countries button {
+      direction: ltr;
+      text-align: left;
+    }
   }
 }
 

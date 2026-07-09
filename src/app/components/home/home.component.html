@@ -435,7 +435,7 @@
     </div>
   </section>
 
-  <section class="catalog-promo pt-8 pb-16 md:pt-12 md:pb-20 overflow-hidden" [attr.dir]="language.dir">
+  <section class="catalog-promo pt-8 pb-16 md:pt-12 md:pb-20 overflow-hidden lg:overflow-visible" [attr.dir]="language.dir">
     <div class="container mx-auto px-4">
       <div class="catalog-promo__panel grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
         <div class="catalog-promo__copy home-copy" data-aos="fade-up">
@@ -476,6 +476,15 @@
 
             <div class="spiral-notebook__spiral" aria-hidden="true">
               <span *ngFor="let coil of [1,2,3,4,5,6,7,8,9,10,11,12]" class="spiral-notebook__coil"></span>
+            </div>
+
+            <div class="spiral-notebook__inside" aria-hidden="true">
+              <img
+                src="assets/catalog/inside-page.jpg?v=6"
+                alt=""
+                class="spiral-notebook__inside-img"
+                loading="eager"
+                decoding="async">
             </div>
 
             <div class="spiral-notebook__cover">
