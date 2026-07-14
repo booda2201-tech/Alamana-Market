@@ -8,6 +8,8 @@ import { LanguageService } from './language.service';
 export interface CatalogCountry {
   id: number;
   name: string;
+  nameAr: string;
+  nameEn: string;
   code: string;
   currencyAr: string;
   currencyEn: string;
@@ -21,6 +23,9 @@ export interface CatalogCountry {
 
 interface ApiCountry {
   id?: number;
+  name?: string;
+  nameAr?: string;
+  nameEn?: string;
   country_name?: string;
   country_code?: string;
   currency?: string;
@@ -113,13 +118,28 @@ export class CountryService {
       return this.languageService.translate('common.country');
     }
 
-    const code = (country.code || '').toUpperCase();
-    const translationKey = this.getCountryTranslationKey(code);
+    const isEnglish = this.languageService.current === 'en';
+    const apiPrimary = (isEnglish ? country.nameEn : country.nameAr).trim();
+    if (apiPrimary) {
+      return apiPrimary;
+    }
+
+    // Temporary backend mismatch: Arabic text stored in nameEn while nameAr is empty.
+    if (!isEnglish && this.containsArabic(country.nameEn)) {
+      return country.nameEn.trim();
+    }
+
+    const apiFallback = (isEnglish ? country.nameAr : country.nameEn).trim();
+    if (!isEnglish && apiFallback) {
+      return apiFallback;
+    }
+
+    const translationKey = this.getCountryTranslationKey((country.code || '').toUpperCase());
     if (translationKey) {
       return this.languageService.translate(translationKey);
     }
 
-    return country.name;
+    return country.name || this.languageService.translate('common.country');
   }
 
   getSelectedLocalizedName(): string {
@@ -196,11 +216,14 @@ export class CountryService {
 
   private mapCountry(country: ApiCountry): CatalogCountry {
     const currencyAr = country.currency_ar || country.currency || '';
-    const currencyEn = country.currency_en || country.currency || currencyAr;
+    const currencyEn = (country.currency_en || country.currency || currencyAr).toUpperCase();
+    const { nameAr, nameEn } = this.resolveCountryNames(country);
 
     return {
       id: Number(country.id || 0),
-      name: country.country_name || 'بلد',
+      name: nameAr || nameEn || 'بلد',
+      nameAr,
+      nameEn,
       code: country.country_code || '',
       currencyAr,
       currencyEn,
@@ -211,6 +234,34 @@ export class CountryService {
       email: country.email?.trim() || '',
       workingHours: country.working_hours?.trim() || ''
     };
+  }
+
+  private resolveCountryNames(country: ApiCountry): { nameAr: string; nameEn: string } {
+    const rawAr = (country.nameAr || '').trim();
+    let rawEn = (country.nameEn || '').trim();
+    const legacy = (country.country_name || country.name || '').trim();
+
+    if (!rawEn && legacy) {
+      rawEn = legacy;
+    }
+
+    // Backend currently puts Arabic in nameEn and leaves nameAr empty.
+    if (!rawAr && this.containsArabic(rawEn)) {
+      return { nameAr: rawEn, nameEn: '' };
+    }
+
+    if (rawAr && this.containsArabic(rawEn) && rawAr === rawEn) {
+      return { nameAr: rawAr, nameEn: '' };
+    }
+
+    return {
+      nameAr: rawAr,
+      nameEn: this.containsArabic(rawEn) ? '' : rawEn
+    };
+  }
+
+  private containsArabic(value: string): boolean {
+    return /[\u0600-\u06FF]/.test(value);
   }
 
   private readStoredCountryId(): number | null {

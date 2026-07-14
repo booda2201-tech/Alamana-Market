@@ -53,5 +53,30 @@ declare module 'page-flip' {
 }
 
 declare module 'pdfjs-dist/build/pdf' {
-  export * from 'pdfjs-dist';
+  export interface PDFDocumentProxy {
+    numPages: number;
+    getPage(pageNumber: number): Promise<PDFPageProxy>;
+    destroy(): Promise<void>;
+  }
+
+  export interface PDFPageProxy {
+    getViewport(params: { scale: number }): { width: number; height: number };
+    render(params: {
+      canvasContext: CanvasRenderingContext2D;
+      viewport: { width: number; height: number };
+    }): { promise: Promise<void> };
+    cleanup(): void;
+  }
+
+  export interface PDFDocumentLoadingTask {
+    promise: Promise<PDFDocumentProxy>;
+    onProgress?: (progress: { loaded: number; total: number }) => void;
+  }
+
+  export function getDocument(src: string | { url: string; [key: string]: unknown }): PDFDocumentLoadingTask;
+
+  export const GlobalWorkerOptions: {
+    workerSrc: string;
+  };
 }
+

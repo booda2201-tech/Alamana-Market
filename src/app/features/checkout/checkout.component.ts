@@ -204,7 +204,11 @@ calculateTotal(): void {
     if (catalogCountry) {
       return this.countryService.getLocalizedName(catalogCountry);
     }
-    return country.name;
+    return this.getLocationLabel(country);
+  }
+
+  getLocationLabel(option: LocationOption | PaymentMethodOption): string {
+    return this.language.pickLocalized(option.nameAr, option.nameEn, option.name);
   }
 
   private loadCountries(): void {

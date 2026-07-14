@@ -11,6 +11,7 @@ interface ApiLocationItem {
   districtId?: number;
   name?: string;
   nameAr?: string;
+  nameEn?: string;
   title?: string;
   country_name?: string;
   governorate_name?: string;
@@ -23,11 +24,15 @@ type ApiLocationResponse = ApiLocationItem[] | { data?: ApiLocationItem[]; items
 export interface LocationOption {
   id: number;
   name: string;
+  nameAr: string;
+  nameEn: string;
 }
 
 export interface PaymentMethodOption {
   id: number;
   name: string;
+  nameAr: string;
+  nameEn: string;
 }
 
 export interface CreateOrderPayload {
@@ -55,40 +60,26 @@ export class CheckoutApiService {
 
   getCountries(): Observable<LocationOption[]> {
     return this.http.get<ApiLocationResponse>(`${this.baseUrl}/Location/GetAllCountries`, this.getAuthOptions()).pipe(
-      map((response) =>
-        this.mapLocationItems(response, ['country_name', 'nameAr', 'name', 'title'], ['countryId', 'id', 'locationId'])
-      )
+      map((response) => this.mapLocationItems(response, ['countryId', 'id', 'locationId']))
     );
   }
 
   getGovernoratesByCountry(countryId: number): Observable<LocationOption[]> {
     return this.http
       .get<ApiLocationResponse>(`${this.baseUrl}/Location/GetGovernoratesByCountryId/${countryId}`, this.getAuthOptions())
-      .pipe(
-        map((response) =>
-          this.mapLocationItems(response, ['governorate_name', 'nameAr', 'name', 'title'], ['governorateId', 'id', 'locationId'])
-        )
-      );
+      .pipe(map((response) => this.mapLocationItems(response, ['governorateId', 'id', 'locationId'])));
   }
 
   getCitiesByGovernorate(governorateId: number): Observable<LocationOption[]> {
     return this.http
       .get<ApiLocationResponse>(`${this.baseUrl}/Location/GetCitiesByGovernorateId/${governorateId}`, this.getAuthOptions())
-      .pipe(
-        map((response) =>
-          this.mapLocationItems(response, ['city_name', 'nameAr', 'name', 'title'], ['cityId', 'id', 'locationId'])
-        )
-      );
+      .pipe(map((response) => this.mapLocationItems(response, ['cityId', 'id', 'locationId'])));
   }
 
   getDistrictsByCity(cityId: number): Observable<LocationOption[]> {
     return this.http
       .get<ApiLocationResponse>(`${this.baseUrl}/Location/GetDistrictsByCityId/${cityId}`, this.getAuthOptions())
-      .pipe(
-        map((response) =>
-          this.mapLocationItems(response, ['district_name', 'nameAr', 'name', 'title'], ['districtId', 'id', 'locationId'])
-        )
-      );
+      .pipe(map((response) => this.mapLocationItems(response, ['districtId', 'id', 'locationId'])));
   }
 
   getPaymentMethods(): Observable<PaymentMethodOption[]> {
@@ -103,26 +94,78 @@ export class CheckoutApiService {
 
   private mapLocationItems(
     response: ApiLocationResponse,
-    nameKeys: Array<keyof ApiLocationItem>,
     idKeys: Array<keyof ApiLocationItem>
   ): LocationOption[] {
     const rawItems = Array.isArray(response) ? response : response.data || response.items || [];
     return rawItems
-      .map((item) => ({
-        id: Number(this.pickFirstValue(item, idKeys) ?? 0),
-        name: String(this.pickFirstValue(item, nameKeys) ?? '').trim()
-      }))
-      .filter((item) => item.id > 0 && item.name.length > 0);
+      .map((item) => {
+        const { nameAr, nameEn } = this.resolveNames(item);
+        return {
+          id: Number(this.pickFirstValue(item, idKeys) ?? 0),
+          name: nameAr || nameEn,
+          nameAr,
+          nameEn
+        };
+      })
+      .filter((item) => item.id > 0 && (item.nameAr.length > 0 || item.nameEn.length > 0));
   }
 
   private mapPaymentMethods(response: ApiLocationResponse): PaymentMethodOption[] {
     const rawItems = Array.isArray(response) ? response : response.data || response.items || [];
     return rawItems
-      .map((item) => ({
-        id: Number(item.id ?? item.locationId ?? 0),
-        name: String(item.nameAr || item.name || item.title || '').trim()
-      }))
-      .filter((item) => item.id > 0 && item.name.length > 0);
+      .map((item) => {
+        const { nameAr, nameEn } = this.resolveNames(item);
+        return {
+          id: Number(item.id ?? item.locationId ?? 0),
+          name: nameAr || nameEn,
+          nameAr,
+          nameEn
+        };
+      })
+      .filter((item) => item.id > 0 && (item.nameAr.length > 0 || item.nameEn.length > 0));
+  }
+
+  private resolveNames(item: ApiLocationItem): { nameAr: string; nameEn: string } {
+    const legacy =
+      item.governorate_name ||
+      item.city_name ||
+      item.district_name ||
+      item.country_name ||
+      item.name ||
+      item.title ||
+      '';
+
+    let nameAr = (item.nameAr || '').trim();
+    let nameEn = (item.nameEn || '').trim();
+
+    if (!nameAr && !nameEn && legacy.trim()) {
+      const value = legacy.trim();
+      if (this.containsArabic(value)) {
+        nameAr = value;
+      } else {
+        nameEn = value;
+      }
+    }
+
+    // Backend sometimes stores Arabic text in nameEn while nameAr is empty.
+    if (!nameAr && this.containsArabic(nameEn)) {
+      nameAr = nameEn;
+      nameEn = '';
+    }
+
+    if (nameAr && this.containsArabic(nameEn) && nameAr === nameEn) {
+      nameEn = '';
+    }
+
+    if (this.containsArabic(nameEn)) {
+      nameEn = '';
+    }
+
+    return { nameAr, nameEn };
+  }
+
+  private containsArabic(value: string): boolean {
+    return /[\u0600-\u06FF]/.test(value);
   }
 
   private pickFirstValue(item: ApiLocationItem, keys: Array<keyof ApiLocationItem>): string | number | undefined {
